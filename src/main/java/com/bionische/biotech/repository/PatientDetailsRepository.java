@@ -45,6 +45,11 @@ public interface PatientDetailsRepository extends JpaRepository<PatientDetails, 
 	@Query("UPDATE PatientDetails a SET a.password =:newPassword  WHERE a.patientId=:patientId")
 	int updateNewPassword(@Param("patientId")int patientId,@Param("newPassword")String newPassword);
 	
+	@Transactional
+	@Modifying
+	@Query("UPDATE PatientDetails a SET a.password =:newPassword  WHERE a.userName=:userName")
+	int updateNewPasswordByUserName(@Param("userName")String userName,@Param("newPassword")String newPassword);
+	
 	
 	@Query(value=" SELECT p.patient_id,p.family_id,p.uname,p.password,p.f_name,p.m_name,p.l_name,p.gender,p.address,p.contact,p.email,p.blood_group,p.reg_date,\r\n" + 
 			"p.city_id,p.birth_date,p.del_status,p.age,p.int_1,p.int_2,c.city_name AS string1,p.string2,p.state_id,p.qualification,p.profile_photo,p.country_id\r\n" + 

@@ -1559,20 +1559,31 @@ System.out.println(e.getMessage());
 				//Get Patient username details		
 				
 				@RequestMapping(value = { "/getUserNameForForgetPwd" }, method = RequestMethod.POST)
-				public @ResponseBody PatientDetails getUserNameForForgetPwd(@RequestParam("userName") String uName)
+				public @ResponseBody Info getUserNameForForgetPwd(@RequestParam("userName") String uName)
 				
 				{
 					PatientDetails patientDetailsRes=new PatientDetails();
 					Info info=new Info();
 				 try {
+					 
 					 patientDetailsRes=	patientDetailsRepository.findByUserNameAndDelStatus(uName,0);
-					
+					 if(patientDetailsRes!=null)
+						{
+							info.setMessage(patientDetailsRes.getEmail());
+							info.setError(false);
+						}
+						else {
+							info.setMessage("Failed");
+							info.setError(true);
+						}
+						 
+					 
 					
 				 }
 				 catch (Exception e) {
 			System.out.println(e.getMessage());
 				}
-				 return patientDetailsRes;
+				 return info;
 				 
 				}
 				@RequestMapping(value = { "/doctorDetailsByUsrname" }, method = RequestMethod.POST)
@@ -1667,6 +1678,34 @@ System.out.println(e.getMessage());
 			System.out.println(e.getMessage());
 				}
 				 return patientAddress;
+				 
+				}
+				
+				//change patient password
+				@RequestMapping(value = { "/changePatientPasswordByUserName" }, method = RequestMethod.POST)
+				public @ResponseBody Info changePatientPasswordByUserName(@RequestParam("userName") String userName,@RequestParam("newPassword") String newPassword)
+				
+				{
+					int res;
+					
+					Info info=new Info();
+					try {
+						res = patientDetailsRepository.updateNewPasswordByUserName(userName,newPassword);
+						if(res>0)
+						{
+							info.setMessage("success");
+							info.setError(false);
+						}
+						else {
+							info.setMessage("Failed to change password!");
+							info.setError(true);
+						}
+						 
+					}
+					catch (Exception e) {
+					e.printStackTrace();
+					}
+			        return info;
 				 
 				}
 }
