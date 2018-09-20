@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.model.VaccinationAgeDetails;
+import com.bionische.biotech.model.VaccinationDetails;
 import com.bionische.biotech.patientpasthistory.model.MenstrualObstetricHistory;
 import com.bionische.biotech.patientpasthistory.model.PatientAllPersonalHistory;
 import com.bionische.biotech.patientpasthistory.model.PatientFamilyHistory;
@@ -29,6 +31,8 @@ import com.bionische.biotech.patientpasthistory.repository.PatientPastHistoryRep
 import com.bionische.biotech.patientpasthistory.repository.PatientPersonalHistoryRepository;
 import com.bionische.biotech.patientpasthistory.repository.PatientPsychologicalHistoryRepository;
 import com.bionische.biotech.patientpasthistory.repository.PatientTreatementHistoryRepository;
+import com.bionische.biotech.repository.VaccinationAgeDetailsRepository;
+import com.bionische.biotech.repository.VaccinationDetailsRepository;
 import com.bionische.biotech.stemcell.model.BabyVaxinationDetails;
 import com.bionische.biotech.stemcell.model.BabyVaxinationDetailsList;
 import com.bionische.biotech.stemcell.model.VaxinationDetails;
@@ -46,6 +50,12 @@ public class BabyVaxinationApiController {
 	VaxinationDetailsRepository vaxinationDetailsRepository;
 	@Autowired
 	BabyVaxinationDetailsRepository babyVaxinationDetailsRepository;
+	
+	@Autowired
+	private VaccinationDetailsRepository vaccinationDetailsRepository;
+	
+	@Autowired
+	private VaccinationAgeDetailsRepository vaccinationAgeDetailsRepository;
 	
  
 	@RequestMapping(value = { "/insertBabyVaxinationDetails" }, method = RequestMethod.POST)
@@ -123,7 +133,39 @@ public class BabyVaxinationApiController {
 		return vaxinationDetails;
 	}
 	
+	@RequestMapping(value = { "/getAllVaccination" }, method = RequestMethod.GET)
+	public @ResponseBody List<VaccinationDetails> getAllVaccination()
+	
+	{
+		List<VaccinationDetails> vaccinationDetailsList=new ArrayList<VaccinationDetails>();
+	 try {
+		 vaccinationDetailsList=vaccinationDetailsRepository.getAllVaccinations();
+		 System.out.println("VaccinationDetailsRes:"+vaccinationDetailsList.toString());
+		
+	 }
+	 catch (Exception e) {
+		 	System.out.println(e.getMessage());
+	}
+	 return vaccinationDetailsList;
 	 
+	}       
+	
+	@RequestMapping(value = { "/getAllVaccinationAge" }, method = RequestMethod.GET)
+	public @ResponseBody List<VaccinationAgeDetails> getAllVaccinationAge()
+	
+	{
+		List<VaccinationAgeDetails> vaccinationAgeDetailsList=new ArrayList<VaccinationAgeDetails>();
+	 try {
+		 vaccinationAgeDetailsList=vaccinationAgeDetailsRepository.findAll();
+		 System.out.println("VaccinationDetailsRes:"+vaccinationAgeDetailsList.toString());
+		
+	 }
+	 catch (Exception e) {
+		 	System.out.println(e.getMessage());
+	}
+	 return vaccinationAgeDetailsList;
+	 
+	}
 	
 	
 	
