@@ -1,5 +1,8 @@
 package com.bionische.biotech.controller;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,14 +26,30 @@ public class MedicalApiController {
 	MedicalDetailsRepository medicalDetailsRepository;
 	
 	@RequestMapping(value = { "/insertMedicalDetails" }, method = RequestMethod.POST)
-	public @ResponseBody MedicalDetails insertMedicalDetails(@RequestBody MedicalDetails MedicalDetails)
+	public @ResponseBody MedicalDetails insertMedicalDetails(@RequestBody MedicalDetails medicalDetails)
 	{
-		System.out.println("Comming Listmeeeeedddiiiicccaaalll "+MedicalDetails.toString());
-		MedicalDetails MedicalDetailsRes=new MedicalDetails();
+		System.out.println("Comming Listmeeeeedddiiiicccaaalll "+medicalDetails.toString());
+		MedicalDetails medicalDetailsRes=new MedicalDetails();
 		 
 		try {
-			MedicalDetailsRes=medicalDetailsRepository.save(MedicalDetails); 
-		System.out.println(MedicalDetailsRes.toString());
+			if(medicalDetails.getMedicalId()==0) {
+			MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+			messageDigest.update(medicalDetails.getPassword().getBytes(),0, medicalDetails.getPassword().length());  
+			String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+			if (hashedPass.length() < 32) {
+			   hashedPass = "0" + hashedPass; 
+			}
+			medicalDetails.setPassword(hashedPass);
+			}
+			}
+			catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+		
+		try {
+			medicalDetailsRes=medicalDetailsRepository.save(medicalDetails); 
+			medicalDetailsRes.setPassword("");
+		System.out.println(medicalDetailsRes.toString());
 		 
 		}
 		
@@ -38,7 +57,7 @@ public class MedicalApiController {
 			System.out.println(e.getMessage());
 			 
 		}
-	return MedicalDetailsRes;
+	return medicalDetailsRes;
 	}
 	
 	@RequestMapping(value = { "/medicalDetailsById" }, method = RequestMethod.POST)
@@ -70,8 +89,19 @@ public class MedicalApiController {
 		
 		MedicalLogin medicalLogin=new MedicalLogin();
 		Info info=new Info();
+		 
+		try {
+			MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+			messageDigest.update(password.getBytes(),0, password.length());  
+			String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+			if (hashedPass.length() < 32) {
+			   hashedPass = "0" + hashedPass; 
+			}
+			 
+			medicalDetails=medicalDetailsRepository.findByUserNameAndPassword(userName,hashedPass);
+			
 		
-		medicalDetails=medicalDetailsRepository.findByUserNameAndPassword(userName,password);
+		
 		
 		
 		if(medicalDetails!=null)
@@ -79,10 +109,12 @@ public class MedicalApiController {
 			 
 			//patientDetails=patientDetailsRepository.findByUserNameAndPassword(userName, password);
 			System.out.println("List "+medicalDetails.toString());
-			if(medicalDetails.getPassword().equals(password))
+			if(medicalDetails.getPassword().equals(hashedPass))
 			{
+				medicalDetails.setPassword("");
 				medicalLogin.setMedicalDetails(medicalDetails);
 				info.setError(false);
+				
 				info.setMessage("Login Successfull");
 				medicalLogin.setInfo(info);
 			}
@@ -98,7 +130,11 @@ public class MedicalApiController {
 			medicalLogin.setInfo(info);
 		}
  
-		
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	
 		
 		System.out.println("res "+medicalLogin.toString());
 		return medicalLogin;
@@ -142,7 +178,16 @@ public class MedicalApiController {
 		
 		Info info=new Info();
 		try {
-			res = medicalDetailsRepository.updateNewPassword(medicalId,newPassword);
+			MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+			messageDigest.update(newPassword.getBytes(),0, newPassword.length());  
+			String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+			if (hashedPass.length() < 32) {
+			   hashedPass = "0" + hashedPass; 
+			}
+			res = medicalDetailsRepository.updateNewPassword(medicalId,hashedPass);
+			 
+		
+			
 			if(res>0)
 			{
 				info.setMessage("success");
