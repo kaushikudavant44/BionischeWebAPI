@@ -58,4 +58,5 @@ public interface PatientDetailsRepository extends JpaRepository<PatientDetails, 
  
 	
 	
+	
 }

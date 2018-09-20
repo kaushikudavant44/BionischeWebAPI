@@ -13,10 +13,12 @@ import com.bionische.biotech.model.FamilyDetails;
 import com.bionische.biotech.model.GetBabyBornReports;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.PatientDetails;
+import com.bionische.biotech.model.VaccinationPatientDetails;
 import com.bionische.biotech.repository.BabyBornReportsRepository;
 import com.bionische.biotech.repository.FamilyDetailsRepository;
 import com.bionische.biotech.repository.GetBabyBornReportsRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
+import com.bionische.biotech.repository.VaccinationPatientDetailsRepository;
 
 @RestController
 public class BabyBornReportsController {
@@ -25,6 +27,8 @@ public class BabyBornReportsController {
 	@Autowired 
 	BabyBornReportsRepository babyBornReportsRepository;
 	
+	@Autowired
+	VaccinationPatientDetailsRepository vaccinationPatientDetailsRepository;
 	  
 		@Autowired
 		FamilyDetailsRepository familyDetailsRepository;
@@ -126,6 +130,24 @@ public class BabyBornReportsController {
 		return getBabyBornReports;
 		
 		
+	}
+	
+	
+	@RequestMapping(value = { "/getPatientByPatientId" }, method = RequestMethod.POST)
+	public @ResponseBody VaccinationPatientDetails getPatientDetailsById(@RequestParam("patientId") int patientId)
+	
+	{
+		VaccinationPatientDetails patientDetailsRes=new VaccinationPatientDetails();
+	 try {
+		 patientDetailsRes=	vaccinationPatientDetailsRepository.getPatientByPatientId(patientId);	
+	 }
+	 catch (Exception e) {
+		 
+		 System.out.println(e.getMessage());
+		 
+	}
+	 return patientDetailsRes;
+	 
 	}
 
 }
