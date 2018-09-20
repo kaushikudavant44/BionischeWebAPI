@@ -21,6 +21,10 @@ public interface AppointmentTimeRepository extends JpaRepository<AppointmentTime
 	
 	@Query(value="select t.* from  appointment_time t where t.time_id between :fromTime AND :toTime", nativeQuery=true)
 	List<AppointmentTime> getDoctorAppointMentTime(@Param("fromTime")int fromTime, @Param("toTime")int toTime);
+
+	@Query(value="SELECT t.time_id, t.time, t.string1, COALESCE((SELECT d.time FROM doctor_appointment d WHERE d.time=t.time_id"
+			+ " AND d.date=:date AND d.doctor_id=:doctorId),0) AS int_1 FROM appointment_time t, doc_available_time dt WHERE t.time_id BETWEEN dt.from_time AND dt.to_time AND dt.doctor_id=:doctorId AND dt.date=:date", nativeQuery=true)
+	List<AppointmentTime> getDoctorAppointMentTimeStatus(@Param("doctorId")int doctorId, @Param("date")String date);
 	
 
  

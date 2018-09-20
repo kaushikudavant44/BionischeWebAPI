@@ -714,7 +714,7 @@ System.out.println(e.getMessage());
 					
 					appointmentTime=	appointmentTimeRepository.getAllAppointmentTime(doctorId,date);
 					appointmentTimeList.setAppointmentTimeList(appointmentTime);
-					
+					 
 					
 					allAppointmentTime=	appointmentTimeRepository.getDoctorAppointMentTime(docAvailableTime.getFromTime(), docAvailableTime.getToTime());
 				   System.out.println("allAppointmentTime:"+allAppointmentTime.toString());
@@ -1707,5 +1707,17 @@ System.out.println(e.getMessage());
 					}
 			        return info;
 				 
+				}
+				@RequestMapping(value = { "/getDoctorAppointmentTimeStatus" }, method = RequestMethod.POST)
+				public @ResponseBody List<AppointmentTime> getDoctorAppointTimeStatus(@RequestParam("doctorId") int doctorId,@RequestParam("date") String date) {
+				
+				List<AppointmentTime> allAppointmentTime=new ArrayList<>();
+				try {
+				allAppointmentTime=	appointmentTimeRepository.getDoctorAppointMentTimeStatus(doctorId, date);
+				}
+				catch (Exception e) {
+					System.out.println(e.getMessage());// TODO: handle exception
+				}
+				return allAppointmentTime;
 				}
 }
