@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.model.SavePatientVaccination;
 import com.bionische.biotech.model.VaccinationAgeDetails;
 import com.bionische.biotech.model.VaccinationDetails;
 import com.bionische.biotech.patientpasthistory.model.MenstrualObstetricHistory;
@@ -31,6 +32,7 @@ import com.bionische.biotech.patientpasthistory.repository.PatientPastHistoryRep
 import com.bionische.biotech.patientpasthistory.repository.PatientPersonalHistoryRepository;
 import com.bionische.biotech.patientpasthistory.repository.PatientPsychologicalHistoryRepository;
 import com.bionische.biotech.patientpasthistory.repository.PatientTreatementHistoryRepository;
+import com.bionische.biotech.repository.SavePatientVaccinationRepository;
 import com.bionische.biotech.repository.VaccinationAgeDetailsRepository;
 import com.bionische.biotech.repository.VaccinationDetailsRepository;
 import com.bionische.biotech.stemcell.model.BabyVaxinationDetails;
@@ -44,8 +46,9 @@ import com.bionische.biotech.stemcell.repository.VaxinationDetailsRepository;
 @RestController
 public class BabyVaxinationApiController {
 
+	@Autowired
+	SavePatientVaccinationRepository savePatientVaccinationRepository;
 	
-
 	@Autowired
 	VaxinationDetailsRepository vaxinationDetailsRepository;
 	@Autowired
@@ -169,6 +172,40 @@ public class BabyVaxinationApiController {
 	
 	
 	
+	@RequestMapping(value = { "/insertVaccinationDetails" }, method = RequestMethod.POST)
+	public @ResponseBody SavePatientVaccination insertVaccinationDetails(@RequestBody SavePatientVaccination savePatientVaccination)
+	
+	{
+		SavePatientVaccination savePatientVaccinationRes=new SavePatientVaccination();
+	 try {
+		 savePatientVaccinationRes=savePatientVaccinationRepository.save(savePatientVaccination);
+		 System.out.println("savePatientVaccination:"+savePatientVaccination.toString());
+		
+	 }
+	 catch (Exception e) {
+		 	System.out.println(e.getMessage());
+	}
+	 return savePatientVaccinationRes;
+	 
+	}
+	
+	
+	@RequestMapping(value = { "/getPatientVaccination" }, method = RequestMethod.GET)
+	public @ResponseBody List<SavePatientVaccination> getPatientVaccination()
+	
+	{
+		List<SavePatientVaccination> savePatientVaccinationList=new ArrayList<SavePatientVaccination>();
+	 try {
+		 savePatientVaccinationList=savePatientVaccinationRepository.findAll();
+		 System.out.println("savePatientVaccinationList:"+savePatientVaccinationList.toString());
+		
+	 }
+	 catch (Exception e) {
+		 	System.out.println(e.getMessage());
+	}
+	 return savePatientVaccinationList;
+	 
+	}
 	
 	
 }
