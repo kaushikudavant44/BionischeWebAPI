@@ -24,6 +24,7 @@ import com.bionische.biotech.model.DocAvailableTime;
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.DoctorDetailsInformation;
 import com.bionische.biotech.model.FamilyDetails;
+import com.bionische.biotech.model.ForgetPwdVerificationCode;
 import com.bionische.biotech.model.FreequantlyUsedMedicines;
 import com.bionische.biotech.model.GetAppointmentDetails;
 import com.bionische.biotech.model.GetDoctorListForAppointment;
@@ -53,6 +54,7 @@ import com.bionische.biotech.repository.DocAvailableTimeRepository;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
 import com.bionische.biotech.repository.DoctorPatientMeetingRepository;
 import com.bionische.biotech.repository.FamilyDetailsRepository;
+import com.bionische.biotech.repository.ForgetPwdVerificationCodeRepository;
 import com.bionische.biotech.repository.FreequantlyUsedMedicinesRepository;
 import com.bionische.biotech.repository.GetAppointmentDetailsRepository;
 import com.bionische.biotech.repository.GetDoctorDetailsInformationRepository;
@@ -79,6 +81,9 @@ public class RestApiController {
 	
 	@Autowired
 	FreequantlyUsedMedicinesRepository freequantlyUsedMedicinesRepository;
+	
+	@Autowired
+	ForgetPwdVerificationCodeRepository forgetPwdVerificationCodeRepository;
 	
 	@Autowired
 	DoctorDetailsRepository doctorDetailsRepository;
@@ -1719,5 +1724,45 @@ System.out.println(e.getMessage());
 					System.out.println(e.getMessage());// TODO: handle exception
 				}
 				return allAppointmentTime;
+				}
+				
+				@RequestMapping(value = { "/submitVerificationCode"}, method = RequestMethod.POST)
+				public @ResponseBody Info submitVerificationCode(@RequestBody ForgetPwdVerificationCode forgetPwdVerificationCode) {
+									 
+					Info info=new Info();
+					ForgetPwdVerificationCode forgetPwdVerificationCodeRes = new ForgetPwdVerificationCode();
+					try {
+						forgetPwdVerificationCodeRes=forgetPwdVerificationCodeRepository.save(forgetPwdVerificationCode); 
+						if(forgetPwdVerificationCodeRes!=null)
+						{
+							info.setMessage("success");
+							info.setError(false);
+						}
+						else {
+							info.setMessage("Failed to change password!");
+							info.setError(true);
+						}
+						 
+						}
+					catch (Exception e) {
+					e.printStackTrace();
+					}
+			        return info;
+				}
+
+				
+				
+				@RequestMapping(value = { "/getVerificationCodeByUserName"}, method = RequestMethod.POST)
+				public @ResponseBody ForgetPwdVerificationCode getVerificationCodeByUserName(@RequestParam("userName") String userName, @RequestParam("type") int type) {
+									 
+					ForgetPwdVerificationCode forgetPwdVerificationCode=new ForgetPwdVerificationCode();
+					try {
+						forgetPwdVerificationCode=forgetPwdVerificationCodeRepository.getCodeDetailsByUserName(userName,type); 
+						System.out.println("forgetPwdVerificationCode:"+forgetPwdVerificationCode.toString());
+						}
+					catch (Exception e) {
+					e.printStackTrace();
+					}
+			        return forgetPwdVerificationCode;
 				}
 }
