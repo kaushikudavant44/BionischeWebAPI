@@ -1,5 +1,7 @@
 package com.bionische.biotech.controller;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -152,13 +154,26 @@ public class TempLabApiController {
 		@RequestMapping(value = { "/insertLabDetails" }, method = RequestMethod.POST)
 		public @ResponseBody LabDetails insertLabDetails(@RequestBody LabDetails labDetails)
 		{
-			System.out.println("Comming List "+labDetails.toString());
-			LabDetails labDetailsRes=new LabDetails();
-			System.out.println("labId"+labDetails.getLabId());
-			try {
-				labDetailsRes=labDetailsRepository.save(labDetails); 
-				System.out.println(labDetailsRes.toString());
 			 
+			LabDetails labDetailsRes=new LabDetails();
+			 
+			try {
+				if(labDetails.getLabId()==0) {
+				MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+				messageDigest.update(labDetails.getPassword().getBytes(),0, labDetails.getPassword().length());  
+				String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+				if (hashedPass.length() < 32) {
+				   hashedPass = "0" + hashedPass; 
+				}
+				labDetails.setPassword(hashedPass);
+				}
+				}
+				catch (Exception e) {
+					System.out.println(e.getMessage());
+				}
+			try {
+				
+				labDetailsRes=labDetailsRepository.save(labDetails);  
 			}
 			
 			catch (Exception e) {

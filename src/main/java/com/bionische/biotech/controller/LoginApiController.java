@@ -1,6 +1,7 @@
 package com.bionische.biotech.controller;
 
-import java.util.List;
+import java.math.BigInteger;
+import java.security.MessageDigest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,13 +10,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.DoctorLogin;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.LabLogin;
-import com.bionische.biotech.model.MedicalDetails;
 import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.PatientLogin;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
@@ -47,10 +46,18 @@ public class LoginApiController {
 		if(patientDetails!=null)
 		{
 			 
-			//patientDetails=patientDetailsRepository.findByUserNameAndPassword(userName, password);
-			System.out.println("List "+patientDetails.toString());
-			if(patientDetails.getPassword().equals(password))
+			 
+			 try {
+					MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+					messageDigest.update(password.getBytes(),0, password.length());  
+					String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+					if (hashedPass.length() < 32) {
+					   hashedPass = "0" + hashedPass; 
+					}
+					System.out.println(hashedPass);
+			if(patientDetails.getPassword().equals(hashedPass))
 			{
+				patientDetails.setPassword("");
 				patientLogin.setPatientDetails(patientDetails);
 				info.setError(false);
 				info.setMessage("Login Successfull");
@@ -60,6 +67,9 @@ public class LoginApiController {
 				info.setError(true);
 				info.setMessage("Please enter valid credential");
 				patientLogin.setInfo(info);
+			}
+			 }catch (Exception e) {
+				System.out.println(e.getMessage());// TODO: handle exception
 			}
 		}
 		else {
@@ -95,9 +105,17 @@ public class LoginApiController {
 			 
 			//patientDetails=patientDetailsRepository.findByUserNameAndPassword(userName, password);
 			System.out.println(userName+" Password  "+password+"   List  "+doctorDetails.toString());
-			 
-			if(doctorDetails.getPassword().equals(password))
+			 try {
+			MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+			messageDigest.update(password.getBytes(),0, password.length());  
+			String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+			if (hashedPass.length() < 32) {
+			   hashedPass = "0" + hashedPass; 
+			}
+			System.out.println(hashedPass);
+			if(doctorDetails.getPassword().equals(hashedPass))
 			{
+				doctorDetails.setPassword("");
 				doctorLogin.setDoctorDetails(doctorDetails);
 				info.setError(false);
 				info.setMessage("Login Successfull");
@@ -107,6 +125,10 @@ public class LoginApiController {
 				info.setError(true);
 				info.setMessage("Please enter valid credential");
 				doctorLogin.setInfo(info);
+			}
+			 }
+			 catch (Exception e) {
+				System.out.println(e.getMessage());// TODO: handle exception
 			}
 		}
 		else {
@@ -136,9 +158,17 @@ public class LoginApiController {
 		{
 			 
 			//patientDetails=patientDetailsRepository.findByUserNameAndPassword(userName, password);
-			
-			if(labDetails.getPassword().equals(password))
+			try {
+			MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+			messageDigest.update(password.getBytes(),0, password.length());  
+			String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+			if (hashedPass.length() < 32) {
+			   hashedPass = "0" + hashedPass; 
+			}
+			System.out.println(hashedPass);
+			if(labDetails.getPassword().equals(hashedPass))
 			{
+				labDetails.setPassword("");
 				labLogin.setLabDetails(labDetails);
 				info.setError(false);
 				info.setMessage("Login Successfull");
@@ -148,6 +178,10 @@ public class LoginApiController {
 				info.setError(true);
 				info.setMessage("Please enter valid credential");
 				labLogin.setInfo(info);
+			}
+			}
+			catch (Exception e) {
+				System.out.println(e.getMessage());// TODO: handle exception
 			}
 		}
 		else {
@@ -169,7 +203,13 @@ public class LoginApiController {
 		Info info=new Info();
 		PatientDetails patientDetailsRes=new PatientDetails();
 	 try {
-		 patientDetailsRes=	patientDetailsRepository.passwordValidation(patientId,password);
+		 MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+			messageDigest.update(password.getBytes(),0, password.length());  
+			String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+			if (hashedPass.length() < 32) {
+			   hashedPass = "0" + hashedPass; 
+			}
+		 patientDetailsRes=	patientDetailsRepository.passwordValidation(patientId,hashedPass);
 		
 		 if(patientDetailsRes!=null)
 			{
@@ -200,7 +240,13 @@ System.out.println(e.getMessage());
 		Info info=new Info();
 		DoctorDetails doctorDetailsRes=new DoctorDetails();
 	 try {
-		 doctorDetailsRes=	doctorDetailsRepository.passwordDocValidation(doctorId,password);
+		 MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+			messageDigest.update(password.getBytes(),0, password.length());  
+			String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+			if (hashedPass.length() < 32) {
+			   hashedPass = "0" + hashedPass; 
+			}
+		 doctorDetailsRes=	doctorDetailsRepository.passwordDocValidation(doctorId,hashedPass);
 		
 		 if(doctorDetailsRes!=null)
 			{
@@ -229,7 +275,13 @@ System.out.println(e.getMessage());
 		Info info=new Info();
 		LabDetails labDetailsRes=new LabDetails();
 	 try {
-		 labDetailsRes=	labDetailsRepository.passwordLabValidation(labId,password);
+		 MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+			messageDigest.update(password.getBytes(),0, password.length());  
+			String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+			if (hashedPass.length() < 32) {
+			   hashedPass = "0" + hashedPass; 
+			}
+		 labDetailsRes=	labDetailsRepository.passwordLabValidation(labId,hashedPass);
 		
 		 if(labDetailsRes!=null)
 			{

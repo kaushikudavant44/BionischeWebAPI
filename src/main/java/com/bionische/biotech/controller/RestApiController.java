@@ -1,6 +1,8 @@
 package com.bionische.biotech.controller;
 
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1502,7 +1504,14 @@ System.out.println(e.getMessage());
 					
 					Info info=new Info();
 					try {
-						res = labDetailsRepository.updateNewPassword(labId,newPassword);
+						MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+						messageDigest.update(newPassword.getBytes(),0, newPassword.length());  
+						String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+						if (hashedPass.length() < 32) {
+						   hashedPass = "0" + hashedPass; 
+						}
+						res = labDetailsRepository.updateNewPassword(labId,hashedPass);
+						 
 						if(res>0)
 						{
 							info.setMessage("success");
