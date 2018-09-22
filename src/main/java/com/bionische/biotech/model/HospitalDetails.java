@@ -186,9 +186,6 @@ public class HospitalDetails {
 				+ longitude + "]";
 	}
 
-	
-
-
 }
 
 
