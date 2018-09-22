@@ -30,7 +30,7 @@ public class HospitalDetails {
 	private String address;
 
 	@Column(name="contact_no")
-	private int contactNo;
+	private String contactNo;
 
 	@Column(name="email_id")
 	private String email;
@@ -104,11 +104,12 @@ public class HospitalDetails {
 		this.address = address;
 	}
 
-	public int getContactNo() {
+	
+	public String getContactNo() {
 		return contactNo;
 	}
 
-	public void setContactNo(int contactNo) {
+	public void setContactNo(String contactNo) {
 		this.contactNo = contactNo;
 	}
 
@@ -184,6 +185,8 @@ public class HospitalDetails {
 				+ ", string2=" + string2 + ", delstatus=" + delstatus + ", latitude=" + latitude + ", longitude="
 				+ longitude + "]";
 	}
+
+	
 
 
 }
