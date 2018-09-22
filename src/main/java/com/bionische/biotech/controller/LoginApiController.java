@@ -55,6 +55,7 @@ public class LoginApiController {
 					   hashedPass = "0" + hashedPass; 
 					}
 					System.out.println(hashedPass);
+					System.out.println(patientDetails.getPassword());
 			if(patientDetails.getPassword().equals(hashedPass))
 			{
 				patientDetails.setPassword("");

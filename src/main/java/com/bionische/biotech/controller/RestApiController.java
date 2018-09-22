@@ -169,7 +169,17 @@ public class RestApiController {
 		DoctorDetails doctorDetailsRes=new DoctorDetails();
 		 
 		try {
+			if(doctorDetails.getDoctorId()==0) {
+				MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+				messageDigest.update(doctorDetails.getPassword().getBytes(),0, doctorDetails.getPassword().length());  
+				String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+				if (hashedPass.length() < 32) {
+				   hashedPass = "0" + hashedPass; 
+				}
+				doctorDetails.setPassword(hashedPass);
+				}
 			doctorDetailsRes=doctorDetailsRepository.save(doctorDetails); 
+			doctorDetailsRes.setPassword("");
 		System.out.println(doctorDetailsRes.toString());
 		 
 		}
@@ -187,8 +197,10 @@ public class RestApiController {
 	{
 		DoctorDetails doctorDetailsRes=new DoctorDetails();
 	 try {
+		 
+		 
 		doctorDetailsRes=	doctorDetailsRepository.findByDoctorId(doctorId);
-		
+		 
 	 }
 	 catch (Exception e) {
 		 	System.out.println(e.getMessage());
@@ -228,6 +240,16 @@ System.out.println(e.getMessage());
 			
 			if(patientDetails.getFamilyId()==0)
 			{
+				if(patientDetails.getPatientId()==0) {
+					MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+					messageDigest.update(patientDetails.getPassword().getBytes(),0, patientDetails.getPassword().length());  
+					String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+					if (hashedPass.length() < 32) {
+					   hashedPass = "0" + hashedPass; 
+					}
+					patientDetails.setPassword(hashedPass);
+					}
+				
 				FamilyDetails familyDetails=new FamilyDetails();
 			 
 				FamilyDetails familyDetailsRes=familyDetailsRepository.save(familyDetails);
@@ -268,7 +290,7 @@ System.out.println(e.getMessage());
 	 try {
 		 patientDetailsRes=	patientDetailsRepository.getPatientDetailsBYId(patientId);
 		 System.out.println("patientDetailsRes:"+patientDetailsRes.toString());
-		
+		 
 	 }
 	 catch (Exception e) {
 System.out.println(e.getMessage());
@@ -1476,7 +1498,16 @@ System.out.println(e.getMessage());
 					
 					Info info=new Info();
 					try {
-						res = doctorDetailsRepository.updateNewPassword(doctorId,newPassword);
+						
+						MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+						messageDigest.update(newPassword.getBytes(),0, newPassword.length());  
+						String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+						if (hashedPass.length() < 32) {
+						   hashedPass = "0" + hashedPass; 
+						 
+						
+						}
+						res = doctorDetailsRepository.updateNewPassword(doctorId,hashedPass);
 						if(res>0)
 						{
 							info.setMessage("success");
@@ -1607,7 +1638,8 @@ System.out.println(e.getMessage());
 					Info info=new Info();
 				DoctorDetails doctorDetails=new DoctorDetails();
 				 try {
-					 doctorDetails=	doctorDetailsRepository.getLoginUserName(userName);					 
+					 doctorDetails=	doctorDetailsRepository.getLoginUserName(userName);		
+					 
 			    	 }
 				 catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -1704,7 +1736,16 @@ System.out.println(e.getMessage());
 					
 					Info info=new Info();
 					try {
-						res = patientDetailsRepository.updateNewPasswordByUserName(userName,newPassword);
+						MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+						messageDigest.update(newPassword.getBytes(),0, newPassword.length());  
+						String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+						if (hashedPass.length() < 32) {
+						   hashedPass = "0" + hashedPass; 
+						 
+						
+						}
+						res = patientDetailsRepository.updateNewPasswordByUserName(userName,hashedPass);
+						 
 						if(res>0)
 						{
 							info.setMessage("success");
