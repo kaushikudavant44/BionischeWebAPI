@@ -190,13 +190,14 @@ public class BabyVaxinationApiController {
 	}
 	
 	
-	@RequestMapping(value = { "/getPatientVaccination" }, method = RequestMethod.GET)
-	public @ResponseBody List<SavePatientVaccination> getPatientVaccination()
+	@RequestMapping(value = { "/getPatientVaccination" }, method = RequestMethod.POST)
+	
+	public @ResponseBody List<SavePatientVaccination> getPatientVaccination(@RequestParam("patientId") int patientId)
 	
 	{
 		List<SavePatientVaccination> savePatientVaccinationList=new ArrayList<SavePatientVaccination>();
 	 try {
-		 savePatientVaccinationList=savePatientVaccinationRepository.findAll();
+		 savePatientVaccinationList=savePatientVaccinationRepository.findByPatientId(patientId);
 		 System.out.println("savePatientVaccinationList:"+savePatientVaccinationList.toString());
 		
 	 }

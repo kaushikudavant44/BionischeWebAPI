@@ -10,6 +10,6 @@ public interface SavePatientVaccinationRepository extends JpaRepository<SavePati
 
 	SavePatientVaccination save(SavePatientVaccination savePatientVaccination);
 	
-	List<SavePatientVaccination> findAll();
+	List<SavePatientVaccination> findByPatientId(int patientId);
 	
 }
