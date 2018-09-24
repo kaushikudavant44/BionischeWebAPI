@@ -12,86 +12,79 @@ import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.HospitalDetails;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
 import com.bionische.biotech.repository.HospitalDetailsRepository;
+
 @RestController
 public class HospitalApiController {
 	@Autowired
 	HospitalDetailsRepository hospitalDetailsRepository;
-	
+
 	@RequestMapping(value = { "/getHospitalById" }, method = RequestMethod.POST)
-	public @ResponseBody HospitalDetails getHospitalById(@RequestParam("hospitalId") int hospitalId)
-	{
-		System.out.println("Comming List "+hospitalId);
-		HospitalDetails hospitalDetailsRes=new HospitalDetails();
-		 
-		try {
-			hospitalDetailsRes=hospitalDetailsRepository.findByHospitalId(hospitalId); 
-		System.out.println(hospitalDetailsRes.toString());
-		 
-		}
+	public @ResponseBody HospitalDetails getHospitalById(@RequestParam("hospitalId") int hospitalId) {
 		
+		HospitalDetails hospitalDetailsRes = new HospitalDetails();
+
+		try {
+			hospitalDetailsRes = hospitalDetailsRepository.findByHospitalId(hospitalId);
+			System.out.println(hospitalDetailsRes.toString());
+
+		}
+
 		catch (Exception e) {
 			System.out.println(e.getMessage());
-			 
+
 		}
-	
+
 		return hospitalDetailsRes;
 	}
 
+	@RequestMapping(value = { "/insertHospitalDetails" }, method = RequestMethod.POST)
+	public @ResponseBody HospitalDetails insertHospitalDetails(@RequestBody HospitalDetails hospitalDetails) {
+		System.out.println("Comming List " + hospitalDetails.toString());
+		HospitalDetails hospitalDetailsRes = new HospitalDetails();
 
-@RequestMapping(value = { "/insertHospitalDetails" }, method = RequestMethod.POST)
-public @ResponseBody HospitalDetails insertHospitalDetails(@RequestBody HospitalDetails hospitalDetails)
-{
-System.out.println("Comming List "+hospitalDetails.toString());
-HospitalDetails hospitalDetailsRes=new HospitalDetails();
-
-try {
-hospitalDetailsRes=hospitalDetailsRepository.save(hospitalDetails); 
-System.out.println(hospitalDetails.toString());
-
-}
-
-catch (Exception e) {
-System.out.println(e.getMessage());
- 
-}
-
-return hospitalDetailsRes;
-}
-	
-	/*
-	@RequestMapping(value = { "/insertHospitalsDetails" }, method = RequestMethod.POST)
-	public @ResponseBody HospitalDetails insertHospitalsDetails(@RequestBody HospitalDetails hospitalDetails)
-	{
-		System.out.println("Comming List "+hospitalDetails.toString());
-		HospitalDetails hospitalDetailsRes=new HospitalDetails();
-		 
 		try {
-			hospitalDetailsRes=hospitalDetailsRepository.save(hospitalDetails); 
-		System.out.println(hospitalDetailsRes.toString());
-		   
+			hospitalDetailsRes = hospitalDetailsRepository.save(hospitalDetails);
+			System.out.println(hospitalDetails.toString());
+
 		}
-		
+
 		catch (Exception e) {
 			System.out.println(e.getMessage());
-			 
+
 		}
-	return hospitalDetailsRes;
-	}*/
-	/*@RequestMapping(value = { "/getHospitalDetailsBycityId" }, method = RequestMethod.POST)
-	public @ResponseBody HospitalDetails getHospitalDetailsBycityId(@RequestParam("hospitalCityId") int hospitalCityId)
-	
-	{
-		HospitalDetails hospitalDetailsRes=new HospitalDetails();
-	 try {
-		 hospitalDetailsRes=	hospitalDetailsRepository.findByHospitalCityId(hospitalCityId);
-		
-	 }
-	 catch (Exception e) {
-System.out.println(e.getMessage());
+
+		return hospitalDetailsRes;
 	}
-	 return hospitalDetailsRes;
-	 
-	}
-	*/
+
+	/*
+	 * @RequestMapping(value = { "/insertHospitalsDetails" }, method =
+	 * RequestMethod.POST) public @ResponseBody HospitalDetails
+	 * insertHospitalsDetails(@RequestBody HospitalDetails hospitalDetails) {
+	 * System.out.println("Comming List "+hospitalDetails.toString());
+	 * HospitalDetails hospitalDetailsRes=new HospitalDetails();
+	 * 
+	 * try { hospitalDetailsRes=hospitalDetailsRepository.save(hospitalDetails);
+	 * System.out.println(hospitalDetailsRes.toString());
+	 * 
+	 * }
+	 * 
+	 * catch (Exception e) { System.out.println(e.getMessage());
+	 * 
+	 * } return hospitalDetailsRes; }
+	 */
+	/*
+	 * @RequestMapping(value = { "/getHospitalDetailsBycityId" }, method =
+	 * RequestMethod.POST) public @ResponseBody HospitalDetails
+	 * getHospitalDetailsBycityId(@RequestParam("hospitalCityId") int
+	 * hospitalCityId)
+	 * 
+	 * { HospitalDetails hospitalDetailsRes=new HospitalDetails(); try {
+	 * hospitalDetailsRes=
+	 * hospitalDetailsRepository.findByHospitalCityId(hospitalCityId);
+	 * 
+	 * } catch (Exception e) { System.out.println(e.getMessage()); } return
+	 * hospitalDetailsRes;
+	 * 
+	 * }
+	 */
 }
-  
