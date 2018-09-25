@@ -39,4 +39,9 @@ public interface MedicalDetailsRepository extends JpaRepository<MedicalDetails, 
 	@Modifying
 	@Query("UPDATE MedicalDetails a SET a.photo =:profilePhoto  WHERE a.medicalId=:medicalId")
 	int updateProfilePic(@Param("medicalId")int medicalId,@Param("profilePhoto")String profilePhoto);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE MedicalDetails a SET a.password =:newPassword  WHERE a.userName=:userName")
+	int updateNewPasswordByUserName(@Param("userName")String userName,@Param("newPassword")String newPassword);
 }

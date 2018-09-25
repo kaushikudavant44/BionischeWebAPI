@@ -239,8 +239,8 @@ public class MedicalApiController {
 		}
 		
 		//send verification code to pharmacy mail
-				@RequestMapping(value = { "/mailVerificationCodeToPharmacy" }, method = RequestMethod.POST)
-				public @ResponseBody Info mailVerificationCodeToPharmacy(@RequestParam("email") String mail,@RequestParam("verificationCode") String verificationCode)
+				@RequestMapping(value = { "/mailVerificationCode" }, method = RequestMethod.POST)
+				public @ResponseBody Info mailVerificationCode(@RequestParam("email") String mail,@RequestParam("verificationCode") String verificationCode)
 				
 				{
 					String res;
@@ -251,6 +251,43 @@ public class MedicalApiController {
 					try {
 						res = sendEMailService.sendMail(subject, body, mail);
 						if(res.equals("Mail Sent Success!"))
+						{
+							info.setMessage("success");
+							info.setError(false);
+						}
+						else {
+							info.setMessage("failed");
+							info.setError(true);
+						}
+						 
+					}
+					catch (Exception e) {
+					e.printStackTrace();
+					}
+			        return info;
+				 
+				}
+				
+				//change medical password
+				@RequestMapping(value = { "/changeMedicalPasswordByuserName" }, method = RequestMethod.POST)
+				public @ResponseBody Info changeMedicalPasswordByuserName(@RequestParam("userName") String userName,@RequestParam("newPassword") String newPassword)
+				
+				{
+					int res;
+					
+					Info info=new Info();
+					try {
+						MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+						messageDigest.update(newPassword.getBytes(),0, newPassword.length());  
+						String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+						if (hashedPass.length() < 32) {
+						   hashedPass = "0" + hashedPass; 
+						}
+						res = medicalDetailsRepository.updateNewPasswordByUserName(userName,hashedPass);
+						 
+					
+						
+						if(res>0)
 						{
 							info.setMessage("success");
 							info.setError(false);
