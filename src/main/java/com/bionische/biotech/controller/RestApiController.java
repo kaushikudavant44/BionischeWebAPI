@@ -1995,4 +1995,22 @@ System.out.println(e.getMessage());
 			        return info;
 				 
 				}
+				
+				@RequestMapping(value = { "/getPatientDetailsByPatientId" }, method = RequestMethod.POST)
+				public @ResponseBody PatientDetails getPatientDetailsByPatientId(@RequestParam("patientId") int patientId)
+				
+				{
+					PatientDetails patientDetailsRes=new PatientDetails();
+				 try {
+					 
+					 
+					 patientDetailsRes=	patientDetailsRepository.findByPatientId(patientId);
+					 
+				 }
+				 catch (Exception e) {
+					 	System.out.println(e.getMessage());
+				}
+				 return patientDetailsRes;
+				 
+				}
 }
