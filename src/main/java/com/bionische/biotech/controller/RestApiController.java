@@ -34,6 +34,7 @@ import com.bionische.biotech.model.GetDoctorProfile;
 import com.bionische.biotech.model.GetDoctorRatingReviewCount;
 import com.bionische.biotech.model.GetLabAppointment;
 import com.bionische.biotech.model.GetLabRatingReview;
+import com.bionische.biotech.model.GetPatientContactDetailsById;
 import com.bionische.biotech.model.GetPatientReviews;
 import com.bionische.biotech.model.GetRatingCount;
 import com.bionische.biotech.model.Info;
@@ -64,6 +65,7 @@ import com.bionische.biotech.repository.GetDoctorListForAppointmentRepository;
 import com.bionische.biotech.repository.GetDoctorProfileRepository;
 import com.bionische.biotech.repository.GetLabAppointmentRrepository;
 import com.bionische.biotech.repository.GetLabRatingReviewRepository;
+import com.bionische.biotech.repository.GetPatientContactDetailsByIdRepository;
 import com.bionische.biotech.repository.GetRatingCountRepository;
 import com.bionische.biotech.repository.LabAppointmentRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
@@ -75,6 +77,7 @@ import com.bionische.biotech.repository.RatingDetailsRepository;
 import com.bionische.biotech.repository.SharingReportWithDocRepository;
 import com.bionische.biotech.repository.SpecializationDetailsRepository;
 import com.bionische.biotech.repository.StateRepository;
+import com.bionische.biotech.service.SendEMailService;
 
  
 
@@ -161,6 +164,13 @@ public class RestApiController {
 	
 	@Autowired
 	PatientAddressRepository patientAddressRepository;
+	
+
+	@Autowired
+	GetPatientContactDetailsByIdRepository getPatientContactDetailsByIdRepository;
+	
+	@Autowired
+	SendEMailService sendEMailService;
 	
 	@RequestMapping(value = { "/insertDoctorDetails" }, method = RequestMethod.POST)
 	public @ResponseBody DoctorDetails insertDoctorDetails(@RequestBody DoctorDetails doctorDetails)
@@ -261,6 +271,12 @@ System.out.println(e.getMessage());
 		
 		if(patientDetailsRes!=null)
 		{
+			GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsById(patientDetailsRes.getPatientId());
+			if(patientDetails.getPatientId()!=0)
+			sendEMailService.sendMail("Patient Details Update Successfully", "Patient Details Update Successfully", getPatientContactDetailsById.getEmail());
+			else {
+				sendEMailService.sendMail("Patient Register Successfully", "Patient Register Successfully", getPatientContactDetailsById.getEmail());
+			}
 			info.setError(false);
 			info.setMessage("Success");
 		}
@@ -480,6 +496,10 @@ System.out.println(e.getMessage());
 		System.out.println(appointmentDetailsRes.toString());
 		if(appointmentDetailsRes!=null)
 		{
+			GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsById(appointmentDetailsRes.getPatientId());
+			 
+				sendEMailService.sendMail("Appointment Notification", "Your Appointment Booked Successfully" , getPatientContactDetailsById.getEmail());
+			
 			info.setError(false);
 			info.setMessage("Appointment Book SuucessFully");
 		}
@@ -785,6 +805,11 @@ System.out.println(e.getMessage());
 			int res=appointmentDetailsRepository.updateStatusAppointment(appId, status); 
 			if(res>0)
 			{
+				GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByDoctorAppointId(appId);
+				 
+				sendEMailService.sendMail("Your Appointment Delete Successfully!!", "Your Appointment Delete Successfully!!" , getPatientContactDetailsById.getEmail());
+			
+				 
 				info.setMessage("Your Appointment Delete Successfully!!");
 				info.setError(false);
 			}
@@ -811,6 +836,10 @@ System.out.println(e.getMessage());
 			int res=appointmentDetailsRepository.cancelDoctorAppointmentByPatient(appId); 
 			if(res>0)
 			{
+				GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByDoctorAppointId(appId);
+				 
+				sendEMailService.sendMail("Your Appointment Cancel Successfully!!", "Your Appointment Cancel Successfully!!" , getPatientContactDetailsById.getEmail());
+			
 				info.setMessage("Your Appointment Delete Successfully!!");
 				info.setError(false);
 			}
@@ -959,6 +988,10 @@ System.out.println(e.getMessage());
 				System.out.println("resssssss:"+res);
 				if(res>0)
 				{
+					GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByDoctorAppointId(appId);
+					 
+					sendEMailService.sendMail("Your Appointment Is edited!!", "Your Appointment edited!!" , getPatientContactDetailsById.getEmail());
+				
 					info.setMessage("Your Appointment Change Successfully!!");
 					info.setError(false);
 				}
@@ -1149,6 +1182,11 @@ System.out.println(e.getMessage());
 						int res=labAppointmentRepository.updateLabAppointmentStatus(appId); 
 						if(res>0)
 						{
+
+							GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByLabAppointId(appId);
+							 
+							sendEMailService.sendMail("Your Appointment Is edited!!", "Your Appointment edited!!" , getPatientContactDetailsById.getEmail());
+						
 							info.setMessage("Your Appointment Delete Successfully!!");
 							info.setError(false);
 						}
@@ -1212,6 +1250,10 @@ System.out.println(e.getMessage());
 						res = patientDetailsRepository.updateNewPassword(patientId,newPassword);
 						if(res>0)
 						{
+							GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsById(patientId);
+							 
+								sendEMailService.sendMail("Your Password is Successfully changed", "Your Password is Successfully changed", getPatientContactDetailsById.getEmail());
+							 
 							info.setMessage("success");
 							info.setError(false);
 						}
@@ -1814,5 +1856,10 @@ System.out.println(e.getMessage());
 					e.printStackTrace();
 					}
 			        return forgetPwdVerificationCode;
+				}
+				@RequestMapping(value = { "/getGetPatientContactDetailsById"}, method = RequestMethod.POST)
+				public @ResponseBody GetPatientContactDetailsById getGetPatientContactDetailsById(@RequestParam("patientId") int patientId) {
+						 
+			        return getPatientContactDetailsByIdRepository.getPatientContactDetailsById(patientId);
 				}
 }
