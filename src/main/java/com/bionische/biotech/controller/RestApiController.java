@@ -1919,4 +1919,16 @@ System.out.println(e.getMessage());
 			        return info;
 				 
 				}
+				
+				@RequestMapping(value = { "/mailForSendOTP"}, method = RequestMethod.POST)
+				public @ResponseBody Info mailForSendOTP(@RequestParam("generatedOTP") int generatedOTP,@RequestParam("mail") String mail) {
+					Info info=new Info();
+					try {
+					sendEMailService.sendMail("Bionische OTP", generatedOTP+"is your One Time Password for verification of user", mail);
+					info.setMessage("Mail Send Successfully");
+					}catch(Exception e) {
+						e.printStackTrace();
+					}
+					return info;
+				}
 }
