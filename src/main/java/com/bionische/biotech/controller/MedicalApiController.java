@@ -20,10 +20,14 @@ import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.PatientLogin;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
+import com.bionische.biotech.service.SendEMailService;
 @RestController
 public class MedicalApiController {
 	@Autowired
 	MedicalDetailsRepository medicalDetailsRepository;
+	
+	@Autowired
+	SendEMailService sendEMailService;
 	
 	@RequestMapping(value = { "/insertMedicalDetails" }, method = RequestMethod.POST)
 	public @ResponseBody MedicalDetails insertMedicalDetails(@RequestBody MedicalDetails medicalDetails)
@@ -233,4 +237,34 @@ public class MedicalApiController {
 	        return info;
 		 
 		}
+		
+		//send verification code to pharmacy mail
+				@RequestMapping(value = { "/mailVerificationCodeToPharmacy" }, method = RequestMethod.POST)
+				public @ResponseBody Info mailVerificationCodeToPharmacy(@RequestParam("email") String mail,@RequestParam("verificationCode") String verificationCode)
+				
+				{
+					String res;
+					String body="your verification code is "+verificationCode;
+					String subject="verification code";
+					
+					Info info=new Info();
+					try {
+						res = sendEMailService.sendMail(subject, body, mail);
+						if(res.equals("Mail Sent Success!"))
+						{
+							info.setMessage("success");
+							info.setError(false);
+						}
+						else {
+							info.setMessage("failed");
+							info.setError(true);
+						}
+						 
+					}
+					catch (Exception e) {
+					e.printStackTrace();
+					}
+			        return info;
+				 
+				}
 }

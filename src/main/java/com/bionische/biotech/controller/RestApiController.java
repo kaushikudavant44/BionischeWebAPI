@@ -42,6 +42,7 @@ import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.MedicalDetails;
 import com.bionische.biotech.model.PatientAddress;
 import com.bionische.biotech.model.PatientDetails;
+import com.bionische.biotech.model.PatientOrderAddresses;
 import com.bionische.biotech.model.PrescriptionDetails;
 import com.bionische.biotech.model.RatingDetails;
 import com.bionische.biotech.model.RatingDetailsList;
@@ -72,6 +73,7 @@ import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
 import com.bionische.biotech.repository.PatientAddressRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
+import com.bionische.biotech.repository.PatientOrderAddressesRepository;
 import com.bionische.biotech.repository.PrescriptionDetailsRepository;
 import com.bionische.biotech.repository.RatingDetailsRepository;
 import com.bionische.biotech.repository.SharingReportWithDocRepository;
@@ -86,6 +88,9 @@ public class RestApiController {
 	
 	@Autowired
 	FreequantlyUsedMedicinesRepository freequantlyUsedMedicinesRepository;
+	
+	@Autowired
+	PatientOrderAddressesRepository patientOrderAddressesRepository;
 	
 	@Autowired
 	ForgetPwdVerificationCodeRepository forgetPwdVerificationCodeRepository;
@@ -175,7 +180,7 @@ public class RestApiController {
 	@RequestMapping(value = { "/insertDoctorDetails" }, method = RequestMethod.POST)
 	public @ResponseBody DoctorDetails insertDoctorDetails(@RequestBody DoctorDetails doctorDetails)
 	{
-		System.out.println("Comming List "+doctorDetails.toString());
+		
 		DoctorDetails doctorDetailsRes=new DoctorDetails();
 		 
 		try {
@@ -1847,6 +1852,7 @@ System.out.println(e.getMessage());
 				@RequestMapping(value = { "/getVerificationCodeByUserName"}, method = RequestMethod.POST)
 				public @ResponseBody ForgetPwdVerificationCode getVerificationCodeByUserName(@RequestParam("userName") String userName, @RequestParam("type") int type) {
 									 
+					System.out.println("userName:"+userName+" "+type);
 					ForgetPwdVerificationCode forgetPwdVerificationCode=new ForgetPwdVerificationCode();
 					try {
 						forgetPwdVerificationCode=forgetPwdVerificationCodeRepository.getCodeDetailsByUserName(userName,type); 
@@ -1861,5 +1867,19 @@ System.out.println(e.getMessage());
 				public @ResponseBody GetPatientContactDetailsById getGetPatientContactDetailsById(@RequestParam("patientId") int patientId) {
 						 
 			        return getPatientContactDetailsByIdRepository.getPatientContactDetailsById(patientId);
+				}
+				
+				@RequestMapping(value = { "/getOrderedAddressOfPatient"}, method = RequestMethod.POST)
+				public @ResponseBody List<PatientOrderAddresses> getOrderedAddressOfPatient(@RequestParam("patientId") int patientId) {
+									 
+					List<PatientOrderAddresses> addressList=new ArrayList<PatientOrderAddresses>();
+					try {
+						addressList=patientOrderAddressesRepository.getOrdredAddressOfpatient(patientId,"new"); 
+						System.out.println("addressList:"+addressList.toString());
+						}
+					catch (Exception e) {
+					e.printStackTrace();
+					}
+			        return addressList;
 				}
 }

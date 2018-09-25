@@ -80,6 +80,9 @@ public class GetDoctorProfile {
 	@Column(name="spec_type")
 	private String specType;
 	
+	@Column(name="int_2")
+	private int int2;
+	
  
 	@Column(name="council_reg_no")
 	private String councilRegNo;
@@ -279,18 +282,25 @@ public class GetDoctorProfile {
 		this.fees = fees;
 	}
 
+	public int getInt2() {
+		return int2;
+	}
+
+	public void setInt2(int int2) {
+		this.int2 = int2;
+	}
+
 	@Override
 	public String toString() {
 		return "GetDoctorProfile [doctorId=" + doctorId + ", fName=" + fName + ", lName=" + lName + ", mName=" + mName
-				+ ", gender=" + gender + ", cityId=" + cityId + ", cityName=" + cityName + ", stateId=" + stateId
-				+ ", countryId=" + countryId + ", hospitalId=" + hospitalId + ", address=" + address
-				+ ", yearOfExperience=" + yearOfExperience + ", aboutMe=" + aboutMe + ", profilePhoto=" + profilePhoto
-				+ ", contactNo=" + contactNo + ", email=" + email + ", qualification=" + qualification + ", college="
-				+ college + ", passingYear=" + passingYear + ", specId=" + specId + ", specType=" + specType
-				+ ", councilRegNo=" + councilRegNo + ", councilName=" + councilName + "]";
+				+ ", gender=" + gender + ", cityId=" + cityId + ", fees=" + fees + ", cityName=" + cityName
+				+ ", stateId=" + stateId + ", countryId=" + countryId + ", hospitalId=" + hospitalId + ", address="
+				+ address + ", yearOfExperience=" + yearOfExperience + ", aboutMe=" + aboutMe + ", profilePhoto="
+				+ profilePhoto + ", contactNo=" + contactNo + ", email=" + email + ", qualification=" + qualification
+				+ ", college=" + college + ", passingYear=" + passingYear + ", specId=" + specId + ", specType="
+				+ specType + ", int2=" + int2 + ", councilRegNo=" + councilRegNo + ", councilName=" + councilName + "]";
 	}
+
 	
- 
-	 
 	
 }
