@@ -1931,4 +1931,68 @@ System.out.println(e.getMessage());
 					}
 					return info;
 				}
+				
+				//change lab password
+				@RequestMapping(value = { "/changeLabPasswordByUserName" }, method = RequestMethod.POST)
+				public @ResponseBody Info changeLabPasswordByUserName(@RequestParam("userName") String userName,@RequestParam("newPassword") String newPassword)
+				
+				{
+					int res;
+					
+					Info info=new Info();
+					try {
+						MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+						messageDigest.update(newPassword.getBytes(),0, newPassword.length());  
+						String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+						if (hashedPass.length() < 32) {
+						   hashedPass = "0" + hashedPass; 
+						}
+						res = labDetailsRepository.updateNewPasswordByUserName(userName,hashedPass);
+						 
+						if(res>0)
+						{
+							info.setMessage("success");
+							info.setError(false);
+						}
+						else {
+							info.setMessage("Failed to change password!");
+							info.setError(true);
+						}
+						 
+					}
+					catch (Exception e) {
+					e.printStackTrace();
+					}
+			        return info;
+				 
+				}
+				
+				//change patient password
+				@RequestMapping(value = { "/deleteVerificationCodeById" }, method = RequestMethod.POST)
+				public @ResponseBody Info deleteVerificationCodeById(@RequestParam("verificationId") int verificationId)
+				
+				{
+					int res;
+					
+					Info info=new Info();
+					try {
+												
+						res = forgetPwdVerificationCodeRepository.deleteVerifivcationCode(verificationId);
+						if(res>0)
+						{
+							info.setMessage("success");
+							info.setError(false);
+						}
+						else {
+							info.setMessage("Failed delete verification code!");
+							info.setError(true);
+						}
+						 
+					}
+					catch (Exception e) {
+					e.printStackTrace();
+					}
+			        return info;
+				 
+				}
 }

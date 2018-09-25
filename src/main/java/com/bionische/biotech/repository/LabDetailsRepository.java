@@ -61,4 +61,8 @@ public interface LabDetailsRepository extends JpaRepository<LabDetails, Integer>
 	@Query("UPDATE LabDetails SET photo=:profilePhoto WHERE labId=:labId")
 	int updateLabProfilePic(@Param("labId")int labId,@Param("profilePhoto")String profilePhoto);
 
+	@Transactional
+	@Modifying
+	@Query("UPDATE LabDetails a SET a.password =:newPassword  WHERE a.userName=:userName")
+	int updateNewPasswordByUserName(@Param("userName")String userName,@Param("newPassword")String newPassword);
 }
