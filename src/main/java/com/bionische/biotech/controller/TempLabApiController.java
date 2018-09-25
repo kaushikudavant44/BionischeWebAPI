@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.model.GetPatientBornReport;
+import com.bionische.biotech.model.GetPatientContactDetailsById;
 import com.bionische.biotech.model.GetPatientLabReportAndBornReports;
 import com.bionische.biotech.model.GetPatientReports;
 import com.bionische.biotech.model.GetPatientUploadedReport;
@@ -27,6 +28,7 @@ import com.bionische.biotech.model.ReportDetails;
 import com.bionische.biotech.model.SharingReportWithDoc;
 import com.bionische.biotech.repository.BabyBornReportsRepository;
 import com.bionische.biotech.repository.GetPatientBornReportRepository;
+import com.bionische.biotech.repository.GetPatientContactDetailsByIdRepository;
 import com.bionische.biotech.repository.GetPatientReportsRepository;
 import com.bionische.biotech.repository.GetPatientUploadedReportsRepository;
 import com.bionische.biotech.repository.LabAppointmentRepository;
@@ -34,6 +36,7 @@ import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.LabTestsRepository;
 import com.bionische.biotech.repository.ReportDetailsRepository;
 import com.bionische.biotech.repository.SharingReportWithDocRepository;
+import com.bionische.biotech.service.SendEMailService;
 
 
 @RestController
@@ -69,6 +72,11 @@ public class TempLabApiController {
 	@Autowired
 	GetPatientUploadedReportsRepository getPatientUploadedReportsRepository;
 	
+	@Autowired
+	GetPatientContactDetailsByIdRepository getPatientContactDetailsByIdRepository;
+	@Autowired
+	SendEMailService sendEMailService;
+	
 	@RequestMapping(value = { "/getAllLabTypes" }, method = RequestMethod.POST)
 	public @ResponseBody List<LabTests> getAllLabTypes() {
 		
@@ -92,6 +100,10 @@ public class TempLabApiController {
 		
 		if(patientReport!=null)
 		{
+			GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsById(patientReport.getPatientId());
+			 
+				sendEMailService.sendMail("Your  Report has been Successfully Uploaded", "Your  Report has been Successfully Uploaded", getPatientContactDetailsById.getEmail());
+		 
 			info.setError(false);
 			info.setMessage("Success");
 		}

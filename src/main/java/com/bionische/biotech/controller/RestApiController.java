@@ -271,12 +271,12 @@ System.out.println(e.getMessage());
 		
 		if(patientDetailsRes!=null)
 		{
-			GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsById(patientDetailsRes.getPatientId());
+			//GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsById(patientDetailsRes.getPatientId());
 			if(patientDetails.getPatientId()!=0)
-			sendEMailService.sendMail("Patient Details Update Successfully", "Patient Details Update Successfully", getPatientContactDetailsById.getEmail());
+			sendEMailService.sendMail("Patient Details Update Successfully", "Patient Details Update Successfully", patientDetailsRes.getEmail());
 			else {
-				sendEMailService.sendMail("Patient Register Successfully", "Patient Register Successfully", getPatientContactDetailsById.getEmail());
-			}
+				sendEMailService.sendMail("Patient Register Successfully", "Patient Register Successfully", patientDetailsRes.getEmail());
+			} 
 			info.setError(false);
 			info.setMessage("Success");
 		}
