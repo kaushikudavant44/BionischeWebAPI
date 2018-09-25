@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.AppointmentTimeList;
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.GetDoctorRatingReviewCount;
 import com.bionische.biotech.model.GetLabForAppointment;
 import com.bionische.biotech.model.GetLabRatingReview;
+import com.bionische.biotech.model.GetPatientContactDetailsById;
 import com.bionische.biotech.model.GetRatingCount;
 import com.bionische.biotech.model.GetReportDetailsForLab;
 import com.bionische.biotech.model.Info;
@@ -26,16 +26,17 @@ import com.bionische.biotech.model.LabAppointment;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.LabTests;
 import com.bionische.biotech.model.LabTestsList;
-import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.repository.AppointmentTimeRepository;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
 import com.bionische.biotech.repository.GetLabForAppointmentRepository;
 import com.bionische.biotech.repository.GetLabRatingReviewRepository;
+import com.bionische.biotech.repository.GetPatientContactDetailsByIdRepository;
 import com.bionische.biotech.repository.GetRatingCountRepository;
 import com.bionische.biotech.repository.GetReportDetailsForLabRepository;
 import com.bionische.biotech.repository.LabAppointmentRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.LabTestsRepository;
+import com.bionische.biotech.service.SendEMailService;
 
 @RestController
 public class LabApiConrtoller {
@@ -66,6 +67,12 @@ public class LabApiConrtoller {
 	
 	@Autowired
 	GetRatingCountRepository getRatingCountRepository;
+	
+	@Autowired
+	SendEMailService sendEMailService;
+	
+	@Autowired
+	GetPatientContactDetailsByIdRepository getPatientContactDetailsByIdRepository;
 	
 	@RequestMapping(value = { "/getAllLabTests" }, method = RequestMethod.GET)
 	public @ResponseBody LabTestsList getAllLabTests()
@@ -312,6 +319,12 @@ public class LabApiConrtoller {
 	
 		if(labAppointmentRes!=null)
 		{
+			GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsById(labAppointmentRes.getPatientId());
+			
+				 
+					sendEMailService.sendMail("Your Lab Appointment has been Successfully booked", "Your Lab Appointment has been Successfully booked", getPatientContactDetailsById.getEmail());
+			 
+			
 			info.setError(false);
 			info.setMessage("Appointment Book Successfully");
 		}
@@ -331,6 +344,10 @@ public class LabApiConrtoller {
 	
 		if(infoo!=0)
 		{
+			GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByLabAppointId(appId);
+			 
+			sendEMailService.sendMail("Your Appointment Is edited!!", "Your Appointment edited!!" , getPatientContactDetailsById.getEmail());
+		
 			info.setError(false);
 			info.setMessage("Appointment edited Successfully");
 		}
@@ -350,6 +367,10 @@ public class LabApiConrtoller {
 	
 		if(infoo!=0)
 		{
+			GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByLabAppointId(appId);
+			 
+			sendEMailService.sendMail("Your Appointment Is Canceled!!", "Your Appointment Canceled!!" , getPatientContactDetailsById.getEmail());
+		
 			info.setError(false);
 			info.setMessage("Appointment canceled Successfully");
 		}
@@ -396,6 +417,10 @@ int res=labAppointmentRepository.updateLabAppointmentStatus(appointId);
 		
 		if(res>0)
 		{
+			GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByLabAppointId(appointId);
+			 
+			sendEMailService.sendMail("Your Appointment Is edited!!", "Your Appointment edited!!" , getPatientContactDetailsById.getEmail());
+		
 			info.setError(false);
 			info.setMessage("success");
 		}

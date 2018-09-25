@@ -255,7 +255,7 @@ System.out.println(e.getMessage());
 			
 			if(patientDetails.getFamilyId()==0)
 			{
-				if(patientDetails.getPatientId()==0) {
+			//	if(patientDetails.getPatientId()==0) {
 					MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
 					messageDigest.update(patientDetails.getPassword().getBytes(),0, patientDetails.getPassword().length());  
 					String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
@@ -263,7 +263,7 @@ System.out.println(e.getMessage());
 					   hashedPass = "0" + hashedPass; 
 					}
 					patientDetails.setPassword(hashedPass);
-					}
+				//	}
 				
 				FamilyDetails familyDetails=new FamilyDetails();
 			 

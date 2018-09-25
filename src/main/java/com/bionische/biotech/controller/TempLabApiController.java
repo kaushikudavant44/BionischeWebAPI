@@ -186,6 +186,8 @@ public class TempLabApiController {
 			try {
 				
 				labDetailsRes=labDetailsRepository.save(labDetails);  
+				sendEMailService.sendMail("Your Lab has been Successfully Registered", "Your Lab has been Successfully Registered", labDetailsRes.getEmail());
+				 
 			}
 			
 			catch (Exception e) {
