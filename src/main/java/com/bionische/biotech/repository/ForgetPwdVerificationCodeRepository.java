@@ -23,5 +23,11 @@ public interface ForgetPwdVerificationCodeRepository extends JpaRepository<Forge
 	@Query("DELETE from  ForgetPwdVerificationCode  where verificationCodeId =:codeId")
 	int deleteVerifivcationCode(@Param("codeId")int codeId);
 
+	
+	@Transactional
+	@Modifying
+	@Query("DELETE from  ForgetPwdVerificationCode  where userName =:userName AND type=:type")
+	int deleteCodeByTypeAndUserName(@Param("userName")String userName,@Param("type")int type);
+
 
 }

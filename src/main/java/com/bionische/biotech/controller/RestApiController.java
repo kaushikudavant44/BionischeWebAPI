@@ -1829,6 +1829,7 @@ System.out.println(e.getMessage());
 					Info info=new Info();
 					ForgetPwdVerificationCode forgetPwdVerificationCodeRes = new ForgetPwdVerificationCode();
 					try {
+						int res = forgetPwdVerificationCodeRepository.deleteCodeByTypeAndUserName(forgetPwdVerificationCode.getUserName(),forgetPwdVerificationCode.getType());
 						forgetPwdVerificationCodeRes=forgetPwdVerificationCodeRepository.save(forgetPwdVerificationCode); 
 						if(forgetPwdVerificationCodeRes!=null)
 						{
