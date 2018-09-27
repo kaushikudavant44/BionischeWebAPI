@@ -20,7 +20,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 @Entity
-@Table(name="doctor_appointment")
+@Table(name="prescription_to_medical")
 @EntityListeners(AuditingEntityListener.class)
 
 public class PrescriptionToMedical {
