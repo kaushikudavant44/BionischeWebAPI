@@ -27,7 +27,12 @@ public interface AppointmentTimeRepository extends JpaRepository<AppointmentTime
 	List<AppointmentTime> getDoctorAppointMentTimeStatus(@Param("doctorId")int doctorId, @Param("date")String date);
 	
 
- 
+	@Query(value="SELECT t.time_id, t.time, t.int_1, t.string1 FROM appointment_time t, lab_details l WHERE t.time_id"
+			+ " NOT IN (SELECT a.time FROM lab_appointments a WHERE a.lab_id=:labId AND a.lab_app_date=:date) AND"
+			+ " t.time_id BETWEEN :fromTime AND :toTime AND l.lab_id=:labId", nativeQuery=true)
+	List<AppointmentTime> getLabAppointMentTimeStatus(@Param("labId")int labId, @Param("date")String date, @Param("fromTime")int fromTime, @Param("toTime")int toTime);
+	
+
 
 
 }
