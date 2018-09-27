@@ -12,7 +12,7 @@ import com.bionische.biotech.model.PrescriptionToMedical;
 
 public interface PrescriptionToMedicalRepository extends JpaRepository<PrescriptionToMedical, Integer>{
 	
-	
+	/*
 	@Query(value=" SELECT p.medical_request_id,p.patient_name,m.medical_name,p.doctor_name,p.hospital_name,p.meet_id,p.date,p.time,p.int_1,p.int_2,d.contact AS string_1,p.string_2,p.medical_id,\r\n" + 
 			"p.del_status,p.status,p.patient_id,p.doctor_id,p.patient_contact,p.pincode,p.city,p.land_mark,p.address,p.delivery_type\r\n" + 
 			"  FROM prescription_to_medical p,doctor_details d,medical_details m WHERE p.medical_id=:medicalId AND p.date=:date AND p.del_status=0 AND p.medical_id=m.medical_id AND p.int_1=0 AND p.doctor_id=d.doctor_id",nativeQuery=true)
@@ -48,6 +48,6 @@ public interface PrescriptionToMedicalRepository extends JpaRepository<Prescript
 	@Query(value="SELECT p.medical_request_id,p.patient_name,p.doctor_name,p.hospital_name,p.meet_id,p.date,p.time,p.int_1,p.int_2,d.contact AS string_1,p.string_2,p.medical_id, "
 			+ "p.del_status,p.status,p.patient_id,p.doctor_id,p.patient_contact,p.pincode,p.city,p.land_mark,p.address,p.delivery_type,m.medical_name FROM medical_details m, "
 			+ "prescription_to_medical p,doctor_details d WHERE p.patient_id=:patientId AND p.medical_id=m.medical_id AND p.status=1 AND p.int_2=1 AND p.doctor_id=d.doctor_id ORDER BY p.medical_request_id DESC LIMIT 10",nativeQuery=true)
-	List<PrescriptionToMedical> getRecentHistoryOfMedicalToPatient(@Param("patientId")int patientId);
+	List<PrescriptionToMedical> getRecentHistoryOfMedicalToPatient(@Param("patientId")int patientId);*/
 
 }

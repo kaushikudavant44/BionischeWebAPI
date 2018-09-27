@@ -273,7 +273,7 @@ public class AdminPanelController {
 	}
 	
 	
-	@RequestMapping(value = { "/getPharmacyRequestDetails" }, method = RequestMethod.POST)
+	/*@RequestMapping(value = { "/getPharmacyRequestDetails" }, method = RequestMethod.POST)
 	public @ResponseBody List<PrescriptionToMedical> getPharmacyRequestDetails(@RequestParam("medicalId") int medicalId, @RequestParam("fromDate") String fromDate,@RequestParam("toDate") String toDate)
 	{
 		
@@ -290,7 +290,7 @@ public class AdminPanelController {
 			System.out.println(e.getMessage());// TODO: handle exception
 		}
 		return prescriptionToMedicalList;
-	}
+	}*/
 	
 	
 	 

@@ -297,7 +297,7 @@ public class ConsultingDetailsController {
 		}
 		
 		//get presc details of medical
-				@RequestMapping(value = { "/getPrescriptionsOfMedical" }, method = RequestMethod.POST)
+			/*	@RequestMapping(value = { "/getPrescriptionsOfMedical" }, method = RequestMethod.POST)
 				public @ResponseBody List<PrescriptionToMedical> getPrescriptionsOfMedical(@RequestParam("medicalId") int medicalId,@RequestParam("date") String date)
 				{
 					List<PrescriptionToMedical> prescriptionToMedicalRes=new ArrayList();
@@ -350,11 +350,11 @@ public class ConsultingDetailsController {
 					
 				
 					return prescriptionToMedicalResFinal;
-				}
+				}*/
 				
 				
 				//get completed presc details of medical
-				@RequestMapping(value = { "/getCompletedPrescOfMedical" }, method = RequestMethod.POST)
+		/*		@RequestMapping(value = { "/getCompletedPrescOfMedical" }, method = RequestMethod.POST)
 				public @ResponseBody List<GetCompletedPrescription> getCompletedPrescOfMedical(@RequestParam("medicalId") int medicalId,@RequestParam("date") String date)
 				{
 					List<PrescriptionToMedical> prescriptionToMedicalRes=new ArrayList();
@@ -410,8 +410,8 @@ public class ConsultingDetailsController {
 				
 					return prescriptionToMedicalResFinal;
 				}
-				
-						
+				*/
+						/*
 						//get presc details of medical
 						@RequestMapping(value = { "/editDeliveredPrescription" }, method = RequestMethod.POST)
 						public @ResponseBody Info editDeliveredPrescription(@RequestParam("patientRequestToMedicalId") int patientRequestToMedicalId)
@@ -437,7 +437,7 @@ public class ConsultingDetailsController {
 						}
 				        return info;
 }
-						
+						*/
 						
 						
 						@RequestMapping(value = { "/submitMedicalRegProcess" }, method = RequestMethod.POST)
@@ -597,7 +597,7 @@ public class ConsultingDetailsController {
 						}
 						
 						//get completed presc details of medical
-						@RequestMapping(value = { "/getHistoryOfMedical" }, method = RequestMethod.POST)
+	/*					@RequestMapping(value = { "/getHistoryOfMedical" }, method = RequestMethod.POST)
 						public List<GetCompletedPrescription> getHistoryOfMedical(@RequestParam("medicalId") int medicalId,@RequestParam("fromDate") String fromDate,@RequestParam("toDate") String toDate)
 						{
 							List<PrescriptionToMedical> prescriptionToMedicalRes=new ArrayList();
@@ -678,8 +678,8 @@ public class ConsultingDetailsController {
 								}
 								else {
 									System.out.println("hello");
-									/*startdate=DateConverter.convertToYMD(startdate);
-									enddate=DateConverter.convertToYMD(enddate);*/
+									startdate=DateConverter.convertToYMD(startdate);
+									enddate=DateConverter.convertToYMD(enddate);
 									consultingList=consultingDetailsRepository.getConsultingDetailsByDateHavePresc(startdate,enddate,patientId);
 									
 								}
@@ -825,7 +825,7 @@ public class ConsultingDetailsController {
 							return prescriptionToMedicalResFinal;
 
 						}
-						
+						*/
 						
 						
 						@RequestMapping(value = { "/getPatientConsultingHistoryToDoctor" }, method = RequestMethod.POST)
