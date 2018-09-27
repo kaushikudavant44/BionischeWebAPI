@@ -2016,8 +2016,8 @@ System.out.println(e.getMessage());
 				}
  
 
-@RequestMapping(value = { "/getPatientDetailsByPatientId" }, method = RequestMethod.POST)
-public @ResponseBody List<AppointmentTime> getPatientDetailsByPatientId(@RequestParam("labId") int labId,@RequestParam("fromTime") int fromTime,@RequestParam("toTime") int toTime,@RequestParam("date") String date)
+@RequestMapping(value = { "/getLabAppointMentTimeStatus" }, method = RequestMethod.POST)
+public @ResponseBody List<AppointmentTime> getLabAppointMentTimeStatus(@RequestParam("labId") int labId,@RequestParam("fromTime") int fromTime,@RequestParam("toTime") int toTime,@RequestParam("date") String date)
 
 {
  
