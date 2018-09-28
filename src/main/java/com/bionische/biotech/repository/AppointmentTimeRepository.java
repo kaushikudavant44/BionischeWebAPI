@@ -33,6 +33,6 @@ public interface AppointmentTimeRepository extends JpaRepository<AppointmentTime
 	List<AppointmentTime> getLabAppointMentTimeStatus(@Param("labId")int labId, @Param("date")String date, @Param("fromTime")int fromTime, @Param("toTime")int toTime);
 	
 
-
+	AppointmentTime findByTimeId(int time);
 
 }

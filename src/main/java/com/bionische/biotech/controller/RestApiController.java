@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.aspectj.apache.bcel.generic.InstructionConstants.Clinit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,7 @@ import com.bionische.biotech.model.GetLabRatingReview;
 import com.bionische.biotech.model.GetPatientContactDetailsById;
 import com.bionische.biotech.model.GetPatientReviews;
 import com.bionische.biotech.model.GetRatingCount;
+import com.bionische.biotech.model.HospitalDetails;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.MedicalDetails;
@@ -68,6 +70,7 @@ import com.bionische.biotech.repository.GetLabAppointmentRrepository;
 import com.bionische.biotech.repository.GetLabRatingReviewRepository;
 import com.bionische.biotech.repository.GetPatientContactDetailsByIdRepository;
 import com.bionische.biotech.repository.GetRatingCountRepository;
+import com.bionische.biotech.repository.HospitalDetailsRepository;
 import com.bionische.biotech.repository.LabAppointmentRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
@@ -80,6 +83,7 @@ import com.bionische.biotech.repository.SharingReportWithDocRepository;
 import com.bionische.biotech.repository.SpecializationDetailsRepository;
 import com.bionische.biotech.repository.StateRepository;
 import com.bionische.biotech.service.SendEMailService;
+import com.bionische.biotech.service.SendTextMessageService;
 
  
 
@@ -176,6 +180,12 @@ public class RestApiController {
 	
 	@Autowired
 	SendEMailService sendEMailService;
+	
+	@Autowired
+	SendTextMessageService sendTextMessageService;
+	
+	@Autowired
+	HospitalDetailsRepository hospitalDetailsRepository;
 	
 	@RequestMapping(value = { "/insertDoctorDetails" }, method = RequestMethod.POST)
 	public @ResponseBody DoctorDetails insertDoctorDetails(@RequestBody DoctorDetails doctorDetails)
@@ -502,9 +512,28 @@ System.out.println(e.getMessage());
 		if(appointmentDetailsRes!=null)
 		{
 			GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsById(appointmentDetailsRes.getPatientId());
-			 
+			AppointmentTime appointmentTime=appointmentTimeRepository.findByTimeId(appointmentDetailsRes.getTime());
+			DoctorDetails doctorDetails=doctorDetailsRepository.findByDoctorId(appointmentDetailsRes.getDoctorId());
+			HospitalDetails hospitalDetails=hospitalDetailsRepository.findByHospitalId(doctorDetails.getHospitalId());
+			try {
+				String message;
+				if(appointmentDetailsRes.getInt1()==1) {
+				 message=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+", you have an e-consult with doctor "+doctorDetails.getfName()+" "+doctorDetails.getmName()+" "+doctorDetails.getlName()+" on DATE "+appointmentDetailsRes.getDate()+" and TIME "+appointmentTime.getTime()+". It will open this valuable time slot for others waiting in line to visit your doctor.";
+				}else {
+   				 message=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+", you have an appointment at "+hospitalDetails.getHospitalName()+" on date "+appointmentDetailsRes.getDate()+" "+appointmentTime.getTime()+" with Dr."+doctorDetails.getfName()+" "+doctorDetails.getmName()+" "+doctorDetails.getlName()+" to reach on time at address "+hospitalDetails.getAddress()+" "+hospitalDetails.getContactNo();
+				}
+				
+				sendTextMessageService.sendTextSms("BIONIC", message, getPatientContactDetailsById.getContactNo());
+				
+				
 				sendEMailService.sendMail("Appointment Notification", "Your Appointment Booked Successfully" , getPatientContactDetailsById.getEmail());
 			
+				
+			}catch(Exception e) {
+				e.getMessage();
+			}				
+				
+				
 			info.setError(false);
 			info.setMessage("Appointment Book SuucessFully");
 		}
@@ -972,6 +1001,7 @@ System.out.println(e.getMessage());
 		public @ResponseBody List<Country> getAllCountry() {
 			
 			 List<Country> countryList=countryRepository.findAll();
+			  
 			
 			 System.out.println("countryList:"+countryList.toString());
 			return countryList;
