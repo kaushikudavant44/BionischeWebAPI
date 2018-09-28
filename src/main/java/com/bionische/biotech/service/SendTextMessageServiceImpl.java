@@ -15,12 +15,13 @@ import org.springframework.stereotype.Service;
 public class SendTextMessageServiceImpl implements SendTextMessageService{
 
 	@Override
-	public String sendTextSms(String subject, String message, String mobileNumber) {
+	public String sendTextSms(String message, String mobileNumber) {
 		// TODO Auto-generated method stub
 		String sResult = null;
 		try 
 		{
 		// Construct data
+		String subject="BIONIC";
 		String phonenumbers=mobileNumber;
 		String data="user=" + URLEncoder.encode("Bhavinbharatia", "UTF-8");
 		data +="&password=" + URLEncoder.encode("Blueblue30!", "UTF-8");

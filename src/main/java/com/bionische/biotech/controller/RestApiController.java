@@ -523,7 +523,7 @@ System.out.println(e.getMessage());
    				 message=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+", you have an appointment at "+hospitalDetails.getHospitalName()+" on date "+appointmentDetailsRes.getDate()+" "+appointmentTime.getTime()+" with Dr."+doctorDetails.getfName()+" "+doctorDetails.getmName()+" "+doctorDetails.getlName()+" to reach on time at address "+hospitalDetails.getAddress()+" "+hospitalDetails.getContactNo();
 				}
 				
-				sendTextMessageService.sendTextSms("BIONIC", message, getPatientContactDetailsById.getContactNo());
+				sendTextMessageService.sendTextSms(message, getPatientContactDetailsById.getContactNo());
 				
 				
 				sendEMailService.sendMail("Appointment Notification", "Your Appointment Booked Successfully" , getPatientContactDetailsById.getEmail());
