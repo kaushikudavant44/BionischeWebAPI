@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.aspectj.apache.bcel.generic.InstructionConstants.Clinit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +29,7 @@ import com.bionische.biotech.model.FamilyDetails;
 import com.bionische.biotech.model.ForgetPwdVerificationCode;
 import com.bionische.biotech.model.FreequantlyUsedMedicines;
 import com.bionische.biotech.model.GetAppointmentDetails;
+import com.bionische.biotech.model.GetDoctorDetails;
 import com.bionische.biotech.model.GetDoctorListForAppointment;
 import com.bionische.biotech.model.GetDoctorProfile;
 import com.bionische.biotech.model.GetDoctorRatingReviewCount;
@@ -64,6 +64,7 @@ import com.bionische.biotech.repository.ForgetPwdVerificationCodeRepository;
 import com.bionische.biotech.repository.FreequantlyUsedMedicinesRepository;
 import com.bionische.biotech.repository.GetAppointmentDetailsRepository;
 import com.bionische.biotech.repository.GetDoctorDetailsInformationRepository;
+import com.bionische.biotech.repository.GetDoctorDetailsRepository;
 import com.bionische.biotech.repository.GetDoctorListForAppointmentRepository;
 import com.bionische.biotech.repository.GetDoctorProfileRepository;
 import com.bionische.biotech.repository.GetLabAppointmentRrepository;
@@ -186,6 +187,11 @@ public class RestApiController {
 	
 	@Autowired
 	HospitalDetailsRepository hospitalDetailsRepository;
+	
+	@Autowired
+	GetDoctorDetailsRepository getDoctorDetailsRepository;
+	
+	String MESSAGE;
 	
 	@RequestMapping(value = { "/insertDoctorDetails" }, method = RequestMethod.POST)
 	public @ResponseBody DoctorDetails insertDoctorDetails(@RequestBody DoctorDetails doctorDetails)
@@ -516,17 +522,17 @@ System.out.println(e.getMessage());
 			DoctorDetails doctorDetails=doctorDetailsRepository.findByDoctorId(appointmentDetailsRes.getDoctorId());
 			HospitalDetails hospitalDetails=hospitalDetailsRepository.findByHospitalId(doctorDetails.getHospitalId());
 			try {
-				String message;
+				
 				if(appointmentDetailsRes.getInt1()==1) {
-				 message=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+", you have an e-consult with doctor "+doctorDetails.getfName()+" "+doctorDetails.getmName()+" "+doctorDetails.getlName()+" on DATE "+appointmentDetailsRes.getDate()+" and TIME "+appointmentTime.getTime()+". It will open this valuable time slot for others waiting in line to visit your doctor.";
+					MESSAGE=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+", you have an e-consult with doctor "+doctorDetails.getfName()+" "+doctorDetails.getmName()+" "+doctorDetails.getlName()+" on DATE "+appointmentDetailsRes.getDate()+" and TIME "+appointmentTime.getTime()+". It will open this valuable time slot for others waiting in line to visit your doctor.";
 				}else {
-   				 message=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+", you have an appointment at "+hospitalDetails.getHospitalName()+" on date "+appointmentDetailsRes.getDate()+" "+appointmentTime.getTime()+" with Dr."+doctorDetails.getfName()+" "+doctorDetails.getmName()+" "+doctorDetails.getlName()+" to reach on time at address "+hospitalDetails.getAddress()+" "+hospitalDetails.getContactNo();
+					MESSAGE=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+", you have an appointment at "+hospitalDetails.getHospitalName()+" on date "+appointmentDetailsRes.getDate()+" "+appointmentTime.getTime()+" with Dr."+doctorDetails.getfName()+" "+doctorDetails.getmName()+" "+doctorDetails.getlName()+" to reach on time at address "+hospitalDetails.getAddress()+" "+hospitalDetails.getContactNo();
 				}
 				
-				sendTextMessageService.sendTextSms(message, getPatientContactDetailsById.getContactNo());
+				sendTextMessageService.sendTextSms(MESSAGE, getPatientContactDetailsById.getContactNo());
 				
 				
-				sendEMailService.sendMail("Appointment Notification", "Your Appointment Booked Successfully" , getPatientContactDetailsById.getEmail());
+				sendEMailService.sendMail("Appointment Notification", MESSAGE , getPatientContactDetailsById.getEmail());
 			
 				
 			}catch(Exception e) {
@@ -535,7 +541,7 @@ System.out.println(e.getMessage());
 				
 				
 			info.setError(false);
-			info.setMessage("Appointment Book SuucessFully");
+			info.setMessage(MESSAGE);
 		}
 		else {
 			info.setError(true);
@@ -839,9 +845,15 @@ System.out.println(e.getMessage());
 			int res=appointmentDetailsRepository.updateStatusAppointment(appId, status); 
 			if(res>0)
 			{
+				
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+				Date date = new Date();
+				System.out.println(formatter.format(date));
 				GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByDoctorAppointId(appId);
-				 
-				sendEMailService.sendMail("Your Appointment Delete Successfully!!", "Your Appointment Delete Successfully!!" , getPatientContactDetailsById.getEmail());
+				 MESSAGE=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+", your doctor consult appointment cancel because of some issue reschedule your appointment https://www.bionische.com/showBookDoctorAppointment?appPatientId=1&currency=&doctorCity=1&countryId=1&stateId=1&CityId=1&specId=1&appDate="+formatter.format(date)+"&consultType=1&submit=Submit";
+				sendTextMessageService.sendTextSms(MESSAGE, getPatientContactDetailsById.getContactNo());
+				
+				sendEMailService.sendMail("APPOINTMENT CANCEL", MESSAGE , getPatientContactDetailsById.getEmail());
 			
 				 
 				info.setMessage("Your Appointment Delete Successfully!!");
@@ -870,11 +882,15 @@ System.out.println(e.getMessage());
 			int res=appointmentDetailsRepository.cancelDoctorAppointmentByPatient(appId); 
 			if(res>0)
 			{
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+				Date date = new Date();
+				System.out.println(formatter.format(date));
 				GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByDoctorAppointId(appId);
-				 
-				sendEMailService.sendMail("Your Appointment Cancel Successfully!!", "Your Appointment Cancel Successfully!!" , getPatientContactDetailsById.getEmail());
+				MESSAGE=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+", your doctor consult appointment cancel successfully. For reschedule your appointment click on link https://www.bionische.com/showBookDoctorAppointment?appPatientId=1&currency=&doctorCity=1&countryId=1&stateId=1&CityId=1&specId=1&appDate="+formatter.format(date)+"&consultType=1&submit=Submit";
+				sendTextMessageService.sendTextSms(MESSAGE, getPatientContactDetailsById.getContactNo());
+				sendEMailService.sendMail("BIONISCHE APPOINTMENT NOTIFICATION", MESSAGE , getPatientContactDetailsById.getEmail());
 			
-				info.setMessage("Your Appointment Delete Successfully!!");
+				info.setMessage(MESSAGE);
 				info.setError(false);
 			}
 			else {
@@ -1024,8 +1040,14 @@ System.out.println(e.getMessage());
 				if(res>0)
 				{
 					GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByDoctorAppointId(appId);
-					 
-					sendEMailService.sendMail("Your Appointment Is edited!!", "Your Appointment edited!!" , getPatientContactDetailsById.getEmail());
+					GetDoctorDetails getDoctorDetails=getDoctorDetailsRepository.findByAppointmentId(appId);
+					
+					AppointmentTime appointmentTime=appointmentTimeRepository.findByTimeId(timeId);
+					//DoctorDetails doctorDetails=doctorDetailsRepository.findByDoctorId(appointmentDetailsRes.getDoctorId());
+					HospitalDetails hospitalDetails=hospitalDetailsRepository.findByHospitalId(getDoctorDetails.getHospitalId());
+					MESSAGE="CONFIRMED Appointment ID: "+appId+" for date "+date+" at "+appointmentTime.getTime()+" with Dr. "+getDoctorDetails.getDoctorfName()+" "+getDoctorDetails.getDoctormName()+" "+getDoctorDetails.getDoctorlName()+". "+hospitalDetails.getHospitalName()+", "+hospitalDetails.getAddress()+", Ph: "+hospitalDetails.getContactNo();
+					sendTextMessageService.sendTextSms(MESSAGE, getPatientContactDetailsById.getContactNo());
+					sendEMailService.sendMail("Your Appointment Is edited!!",MESSAGE , getPatientContactDetailsById.getEmail());
 				
 					info.setMessage("Your Appointment Change Successfully!!");
 					info.setError(false);
