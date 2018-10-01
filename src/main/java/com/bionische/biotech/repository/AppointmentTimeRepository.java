@@ -34,5 +34,9 @@ public interface AppointmentTimeRepository extends JpaRepository<AppointmentTime
 	
 
 	AppointmentTime findByTimeId(int time);
+	
+	@Query(value="select t.* from  appointment_time t where t.time_id between :fromTime AND :toTime AND t.time_id NOT IN(:unavailableTimeList)", nativeQuery=true)
+	List<AppointmentTime> getDoctorAppointMentTime(@Param("fromTime")int fromTime, @Param("toTime")int toTime, @Param("unavailableTimeList")List<String> unavailableTimeList);
+	
 
 }

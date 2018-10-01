@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -788,35 +789,7 @@ System.out.println(e.getMessage());
 					return prescriptionDetailsList;
 				}
 				
-				@RequestMapping(value = { "/getAllAppointTime" }, method = RequestMethod.POST)
-				public @ResponseBody AppointmentTimeList getAllAppointTime(@RequestParam("doctorId") int doctorId,@RequestParam("date") String date) {
-				
-					AppointmentTimeList appointmentTimeList=new AppointmentTimeList();
-					System.out.println("before "+date);
-					
-					
-					List<AppointmentTime> appointmentTime=new ArrayList<>();
-					List<AppointmentTime> allAppointmentTime=new ArrayList<>();
-					try {
-												
-					DocAvailableTime docAvailableTime = docAvailableTimeRepository.getAvailableTimeDBYDoctorId(doctorId, date);
-					
-					appointmentTime=	appointmentTimeRepository.getAllAppointmentTime(doctorId,date);
-					appointmentTimeList.setAppointmentTimeList(appointmentTime);
-					 
-					
-					allAppointmentTime=	appointmentTimeRepository.getDoctorAppointMentTime(docAvailableTime.getFromTime(), docAvailableTime.getToTime());
-				   System.out.println("allAppointmentTime:"+allAppointmentTime.toString());
-					
-					
-					appointmentTimeList.setAllAppointmentTimeList(allAppointmentTime);
-					
-					}catch (Exception e) {
-					System.out.println(e.getMessage());
-					}
-					return appointmentTimeList;
-				}
-				
+			 
 	@RequestMapping(value = { "/getAppmtDetailsByPatientIdAndDate"}, method = RequestMethod.POST)
 				public @ResponseBody List<GetAppointmentDetails> getAppmtDetailsByPatientIdAndDate(@RequestParam("patientId") int patientId,@RequestParam("fromDate") String fromDate,@RequestParam("toDate") String toDate) {
 					System.out.println("patientId "+fromDate+toDate);
@@ -1537,48 +1510,7 @@ System.out.println(e.getMessage());
 					return docAvailableTimeList;
 				}
 				
-				@RequestMapping(value = { "/insertAvailableDocTimeDetails"}, method = RequestMethod.POST)
-				public  Info insertAvailableDocTimeDetails(@RequestBody DocAvailableTime docAvailableTime) {
-					System.out.println("insertAvailableDocTimeDetails "+docAvailableTime.toString());
-					
-					int res=0;
-					Info info=new Info();
-					try {
-						//int fromTime=docAvailableTime.getFromTime();
-						//int toTime=docAvailableTime.getToTime();
-						
-						DocAvailableTime docAvailableTime1 =new DocAvailableTime();
-						
-						docAvailableTime1 = docAvailableTimeRepository.getAvailableTimeDBYDoctorId(docAvailableTime.getDoctorId(), docAvailableTime.getDate());
-						System.out.println("cdsc"+docAvailableTime1);
-						if(docAvailableTime1!=null)
-						{
-							 res=docAvailableTimeRepository.updateAvailableTime(docAvailableTime1.getDocAvailableId(),docAvailableTime1.getDate(), docAvailableTime.getFromTime(),docAvailableTime.getToTime());	
-							
-						}
-						else
-						{
-							docAvailableTimeRepository.save(docAvailableTime);	
-							res=1;
-						}
-					
-						if(res>0)
-						{
-							info.setMessage("Your Appointment Delete Successfully!!");
-							info.setError(false);
-						}
-						else {
-							info.setMessage("Your Appointment Delete Failed!!");
-							info.setError(true);
-						}
-						 
-					}
-					catch (Exception e) {
-					e.printStackTrace();
-					}
-			        return info;
-				}
-				
+			 
 				@RequestMapping(value = { "/getAllAppointmentTimeList" }, method = RequestMethod.GET)
 				public @ResponseBody List<AppointmentTime> getAllAppointmentTimeList() {
 					
@@ -2081,4 +2013,76 @@ public @ResponseBody List<AppointmentTime> getLabAppointMentTimeStatus(@RequestP
  
 }
 				
+@RequestMapping(value = { "/insertAvailableDocTimeDetails"}, method = RequestMethod.POST)
+public  Info insertAvailableDocTimeDetails(@RequestBody DocAvailableTime docAvailableTime) {
+	System.out.println("insertAvailableDocTimeDetails "+docAvailableTime.toString());
+	
+	int res=0;
+	Info info=new Info();
+	try {
+		//int fromTime=docAvailableTime.getFromTime();
+		//int toTime=docAvailableTime.getToTime();
+		
+		DocAvailableTime docAvailableTime1 =new DocAvailableTime();
+		
+		docAvailableTime1 = docAvailableTimeRepository.getAvailableTimeDBYDoctorId(docAvailableTime.getDoctorId(), docAvailableTime.getDate());
+		System.out.println("cdsc"+docAvailableTime1);
+		if(docAvailableTime1!=null)
+		{
+			docAvailableTime.setDocAvailableId(docAvailableTime1.getDocAvailableId());
+			// res=docAvailableTimeRepository.updateAvailableTime(docAvailableTime1.getDocAvailableId(),docAvailableTime1.getDate(), docAvailableTime.getFromTime(),docAvailableTime.getToTime());	
+			
+		}
+		 
+			docAvailableTimeRepository.save(docAvailableTime);	
+			res=1;
+		 
+	
+		if(res>0)
+		{
+			info.setMessage("Your Appointment Time Availability status update Successfully!!");
+			info.setError(false);
+		}
+		else {
+			info.setMessage("Your Appointment Time Availability status update  Failed!!");
+			info.setError(true);
+		}
+		 
+	}
+	catch (Exception e) {
+	e.printStackTrace();
+	}
+    return info;
+}
+
+
+	@RequestMapping(value = { "/getAllAppointTime" }, method = RequestMethod.POST)
+public @ResponseBody AppointmentTimeList getAllAppointTime(@RequestParam("doctorId") int doctorId,@RequestParam("date") String date) {
+
+	AppointmentTimeList appointmentTimeList=new AppointmentTimeList();
+	System.out.println("before "+date);
+	
+	
+	List<AppointmentTime> appointmentTime=new ArrayList<>();
+	List<AppointmentTime> allAppointmentTime=new ArrayList<>();
+	try {
+								
+	DocAvailableTime docAvailableTime = docAvailableTimeRepository.getAvailableTimeDBYDoctorId(doctorId, date);
+	
+	appointmentTime=	appointmentTimeRepository.getAllAppointmentTime(doctorId,date);
+	appointmentTimeList.setAppointmentTimeList(appointmentTime);
+	 List<String> unavailableTimeList = Arrays.asList(docAvailableTime.getUnavailableTime().split(","));
+	allAppointmentTime=	appointmentTimeRepository.getDoctorAppointMentTime(docAvailableTime.getFromTime(), docAvailableTime.getToTime(), unavailableTimeList);
+   System.out.println("allAppointmentTime:"+allAppointmentTime.toString());
+	
+	
+	appointmentTimeList.setAllAppointmentTimeList(allAppointmentTime);
+	
+	}catch (Exception e) {
+	System.out.println(e.getMessage());
+	}
+	return appointmentTimeList;
+}
+
+	
 }

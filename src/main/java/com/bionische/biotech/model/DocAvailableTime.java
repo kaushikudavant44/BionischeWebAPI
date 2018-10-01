@@ -30,6 +30,10 @@ public class DocAvailableTime {
 	
 	@Column(name="del_status")
 	private int delStatus;
+	
+	@Column(name="unavailable_time")
+	private String unavailableTime;
+
 
 	public int getDocAvailableId() {
 		return docAvailableId;
@@ -79,12 +83,22 @@ public class DocAvailableTime {
 		this.delStatus = delStatus;
 	}
 
+	public String getUnavailableTime() {
+		return unavailableTime;
+	}
+
+	public void setUnavailableTime(String unavailableTime) {
+		this.unavailableTime = unavailableTime;
+	}
+
 	@Override
 	public String toString() {
 		return "DocAvailableTime [docAvailableId=" + docAvailableId + ", doctorId=" + doctorId + ", date=" + date
-				+ ", fromTime=" + fromTime + ", toTime=" + toTime + ", delStatus=" + delStatus + "]";
+				+ ", fromTime=" + fromTime + ", toTime=" + toTime + ", delStatus=" + delStatus + ", unavailableTime="
+				+ unavailableTime + "]";
 	}
-	
+
+ 
 	
 
 }
