@@ -53,6 +53,7 @@ import com.bionische.biotech.model.SharingReportWithDoc;
 import com.bionische.biotech.model.SpecializationDetails;
 import com.bionische.biotech.model.SpecializationDetailsList;
 import com.bionische.biotech.model.State;
+import com.bionische.biotech.model.TermsAndConditions;
 import com.bionische.biotech.repository.AppointmentDetailsRepository;
 import com.bionische.biotech.repository.AppointmentTimeRepository;
 import com.bionische.biotech.repository.CityRepository;
@@ -84,6 +85,7 @@ import com.bionische.biotech.repository.RatingDetailsRepository;
 import com.bionische.biotech.repository.SharingReportWithDocRepository;
 import com.bionische.biotech.repository.SpecializationDetailsRepository;
 import com.bionische.biotech.repository.StateRepository;
+import com.bionische.biotech.repository.TermsAndConditionsRepository;
 import com.bionische.biotech.service.SendEMailService;
 import com.bionische.biotech.service.SendTextMessageService;
 
@@ -191,6 +193,9 @@ public class RestApiController {
 	
 	@Autowired
 	GetDoctorDetailsRepository getDoctorDetailsRepository;
+	
+	@Autowired
+	TermsAndConditionsRepository termsAndConditionsRepository;
 	
 	String MESSAGE;
 	
@@ -2085,4 +2090,33 @@ public @ResponseBody AppointmentTimeList getAllAppointTime(@RequestParam("doctor
 }
 
 	
+	@RequestMapping(value = { "/messageForSendOTP"}, method = RequestMethod.POST)
+	public @ResponseBody Info messageForSendOTP(@RequestParam("generatedOTP") int generatedOTP,@RequestParam("contactNo") String contactNo) {
+		Info info=new Info();
+		MESSAGE=generatedOTP+" is your One Time Password for verification of user mobile number";
+		try { 
+		
+		sendTextMessageService.sendTextSms(MESSAGE , contactNo);
+		info.setMessage("Message Send Successfully");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return info;
+	}
+	
+	@RequestMapping(value = { "/getTermsAndConditionByUserType"}, method = RequestMethod.POST)
+	public @ResponseBody List<TermsAndConditions> getTermsAndConditionByUserType(@RequestParam("userType") int userType) {
+		
+		List<TermsAndConditions> termsAndConditionsList=new ArrayList<>();
+		
+		try {
+			termsAndConditionsList=termsAndConditionsRepository.findByUserTypeAndDelStatus(userType, 0);
+			System.out.println(termsAndConditionsList.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return termsAndConditionsList;
+	}
+	
+
 }
