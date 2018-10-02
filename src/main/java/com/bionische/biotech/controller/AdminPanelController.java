@@ -511,22 +511,22 @@ public class AdminPanelController {
 	}
 	
 	@RequestMapping(value = { "/getTermsAndConditionUserType"}, method = RequestMethod.POST)
-	public @ResponseBody TermsAndConditions getTermsAndConditionUserType(@RequestParam("userType") int userType)
+	public @ResponseBody List<TermsAndConditions> getTermsAndConditionUserType(@RequestParam("userType") int userType)
 	{
 		
 		System.out.println("userType "+userType);
-		TermsAndConditions termsAndConditions=new TermsAndConditions();
+		List<TermsAndConditions> termsAndConditionsList=new ArrayList<>();
 	 
 		try {
 			
-			termsAndConditions=termsAndConditionsRepository.findByUserTypeAndDelStatus(userType, 0);
+			termsAndConditionsList=termsAndConditionsRepository.findByUserTypeAndDelStatus(userType, 0);
 		 
-		  System.out.println("termsAndConditions "+termsAndConditions.toString());
+		  System.out.println("termsAndConditions "+termsAndConditionsList.toString());
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());// TODO: handle exception
 		}
-		return termsAndConditions;
+		return termsAndConditionsList;
 		
 	}
 	
