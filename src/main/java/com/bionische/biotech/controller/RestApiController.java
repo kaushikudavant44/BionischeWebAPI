@@ -45,6 +45,7 @@ import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.MedicalDetails;
 import com.bionische.biotech.model.PatientAddress;
 import com.bionische.biotech.model.PatientDetails;
+import com.bionische.biotech.model.PatientMemberRelation;
 import com.bionische.biotech.model.PatientOrderAddresses;
 import com.bionische.biotech.model.PrescriptionDetails;
 import com.bionische.biotech.model.RatingDetails;
@@ -79,6 +80,7 @@ import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
 import com.bionische.biotech.repository.PatientAddressRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
+import com.bionische.biotech.repository.PatientMemberRelationRepository;
 import com.bionische.biotech.repository.PatientOrderAddressesRepository;
 import com.bionische.biotech.repository.PrescriptionDetailsRepository;
 import com.bionische.biotech.repository.RatingDetailsRepository;
@@ -177,7 +179,6 @@ public class RestApiController {
 	
 	@Autowired
 	PatientAddressRepository patientAddressRepository;
-	
 
 	@Autowired
 	GetPatientContactDetailsByIdRepository getPatientContactDetailsByIdRepository;
@@ -196,6 +197,9 @@ public class RestApiController {
 	
 	@Autowired
 	TermsAndConditionsRepository termsAndConditionsRepository;
+	
+	@Autowired
+	PatientMemberRelationRepository patientMemberRelationRepository;
 	
 	String MESSAGE;
 	
@@ -2116,6 +2120,20 @@ public @ResponseBody AppointmentTimeList getAllAppointTime(@RequestParam("doctor
 			e.printStackTrace();
 		}
 		return termsAndConditionsList;
+	}
+	
+	@RequestMapping(value = { "/getAllRelations"}, method = RequestMethod.GET)
+	public @ResponseBody List<PatientMemberRelation> getAllRelations() {
+		
+		List<PatientMemberRelation> allRelations=new ArrayList<>();
+		
+		try {
+			allRelations=patientMemberRelationRepository.getAllRelations();
+			System.out.println(allRelations.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return allRelations;
 	}
 	
 
