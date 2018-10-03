@@ -171,6 +171,21 @@ public class LabApiConrtoller {
 				}
 		        return getLabRatingReviewList;
 			}
+			
+			//amruta Lab Rating 
+			@RequestMapping(value = { "/getLabRatingByLabId"}, method = RequestMethod.POST)
+			public @ResponseBody GetRatingCount getLabRatingByLabId(@RequestParam("labId") int labId) {
+				
+				GetRatingCount getRatingCount= new GetRatingCount();
+				try {
+					getRatingCount=getRatingCountRepository.getLabRating(labId);
+					System.out.println("getRatingCount:"+getRatingCount.toString());
+				}
+				catch (Exception e) {
+				e.printStackTrace();
+				}
+		        return getRatingCount;
+			}
 	
 	//Ganesh
 		//Lab Rating Review

@@ -15,4 +15,7 @@ public interface GetRatingCountRepository extends JpaRepository<GetRatingCount, 
 
 	@Query(value="SELECT COUNT(rating_review_id) as count,rating FROM lab_rating_review WHERE lab_id=:labId GROUP BY rating ASC ",nativeQuery=true)
 	List<GetRatingCount> getLabRatingCount(@Param("labId")int labId);
+	
+	@Query(value="SELECT COUNT(rating_review_id) as count,(SUM(rating)*5)/(count(rating_review_id)*5) as rating from lab_rating_review  where lab_id=:labId" ,nativeQuery=true)
+	GetRatingCount getLabRating(@Param("labId")int labId);
 }
