@@ -250,7 +250,7 @@ public class MedicalApiController {
 				
 				{
 					String res;
-					String body="your verification code is "+verificationCode;
+					String body="Hey,\nAs per your request we send you verification code for reset password :\n\n"+verificationCode+"\n\nabove code is valid for 5/10 minutes , after resetting your password ,you can login to your account.\n\nsincerely,\nThe Bionische Team.";
 					String subject="verification code";
 					
 					Info info=new Info();

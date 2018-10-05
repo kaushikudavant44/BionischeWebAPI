@@ -1250,9 +1250,8 @@ System.out.println(e.getMessage());
 			        return info;
 				}	
 		
-			//
 				@RequestMapping(value = { "/submitSharingReportWithDoc" }, method = RequestMethod.POST)
-				public @ResponseBody SharingReportWithDoc submitSharingReportWithDoc(@RequestBody SharingReportWithDoc sharingReportWithDoc)
+				public @ResponseBody Info submitSharingReportWithDoc(@RequestBody SharingReportWithDoc sharingReportWithDoc)
 					
 				{
 					System.out.println("Comming List "+sharingReportWithDoc.toString());
@@ -1260,19 +1259,40 @@ System.out.println(e.getMessage());
 					
 					sharingReportWithDocRes=sharingReportWithDocRepository.getSharingInfo(sharingReportWithDoc.getPatientId(),sharingReportWithDoc.getDoctorId());
 					 
-					try {
+					Info info=new Info(); 
+							
+							try {
 						
 						if(sharingReportWithDocRes==null)
 						{
 						
 						sharingReportWithDocRes=sharingReportWithDocRepository.save(sharingReportWithDoc); 
-					System.out.println(sharingReportWithDocRes.toString());
+						
+						 if(sharingReportWithDocRes!=null)
+							{
+								
+								info.setError(false);
+								info.setMessage("success");
+							}
+							else {
+								info.setError(true);
+								info.setMessage("failed");
+							}
 						}
 						else
 						{
 						String reportId=","+sharingReportWithDoc.getReportId();	
 					    int result=sharingReportWithDocRepository.updateReport(reportId,sharingReportWithDoc.getPatientId(),sharingReportWithDoc.getDoctorId());	
+					    if(result>0)
+						{
 							
+							info.setError(false);
+							info.setMessage("success");
+						}
+						else {
+							info.setError(true);
+							info.setMessage("failed");
+						}
 						}
 						
 					 
@@ -1283,7 +1303,7 @@ System.out.println(e.getMessage());
 						 
 					}
 				
-					return sharingReportWithDocRes;
+					return info;
 				}
 			
 				//change patient password
