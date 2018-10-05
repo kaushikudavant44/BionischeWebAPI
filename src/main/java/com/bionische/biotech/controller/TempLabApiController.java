@@ -36,6 +36,7 @@ import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.LabTestsRepository;
 import com.bionische.biotech.repository.ReportDetailsRepository;
 import com.bionische.biotech.repository.SharingReportWithDocRepository;
+import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.SendEMailService;
 
 
@@ -76,6 +77,9 @@ public class TempLabApiController {
 	GetPatientContactDetailsByIdRepository getPatientContactDetailsByIdRepository;
 	@Autowired
 	SendEMailService sendEMailService;
+	
+	@Autowired
+	CreateDirectoryService createDirectoryService;
 	
 	@RequestMapping(value = { "/getAllLabTypes" }, method = RequestMethod.POST)
 	public @ResponseBody List<LabTests> getAllLabTypes() {
@@ -186,6 +190,8 @@ public class TempLabApiController {
 			try {
 				
 				labDetailsRes=labDetailsRepository.save(labDetails);  
+				if(labDetails.getLabId()!=0)
+					createDirectoryService.createNewDirectorForLab(labDetailsRes.getLabId()+"");
 				sendEMailService.sendMail("Your Lab has been Successfully Registered", "Your Lab has been Successfully Registered", labDetailsRes.getEmail());
 				 
 			}

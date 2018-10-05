@@ -20,6 +20,7 @@ import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.PatientLogin;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
+import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.SendEMailService;
 @RestController
 public class MedicalApiController {
@@ -28,6 +29,9 @@ public class MedicalApiController {
 	
 	@Autowired
 	SendEMailService sendEMailService;
+	
+	@Autowired
+	CreateDirectoryService createDirectoryService;
 	
 	@RequestMapping(value = { "/insertMedicalDetails" }, method = RequestMethod.POST)
 	public @ResponseBody MedicalDetails insertMedicalDetails(@RequestBody MedicalDetails medicalDetails)
@@ -52,6 +56,8 @@ public class MedicalApiController {
 		
 		try {
 			medicalDetailsRes=medicalDetailsRepository.save(medicalDetails); 
+			if(medicalDetails.getMedicalId()!=0)
+				createDirectoryService.createNewDirectorForPharmacy(medicalDetailsRes.getMedicalId()+"");
 			medicalDetailsRes.setPassword("");
 		System.out.println(medicalDetailsRes.toString());
 		 
