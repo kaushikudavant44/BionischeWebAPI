@@ -2130,7 +2130,7 @@ public @ResponseBody AppointmentTimeList getAllAppointTime(@RequestParam("doctor
 		}
 		return termsAndConditionsList;
 	}
-	
+	 
 	@RequestMapping(value = { "/getAllRelations"}, method = RequestMethod.GET)
 	public @ResponseBody List<PatientMemberRelation> getAllRelations() {
 		
