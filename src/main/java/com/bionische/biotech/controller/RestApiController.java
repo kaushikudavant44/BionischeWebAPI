@@ -2210,5 +2210,196 @@ System.out.println(e.getMessage());
 		 
 		}
 	
+		//username validation
+		@RequestMapping(value = { "/verifyPatientContactNumber" }, method = RequestMethod.POST)
+		public @ResponseBody Info verifyPatientContactNumber(@RequestParam("contactNo") String contactNo)
+		
+		{
+			
+			Info info=new Info();
+			PatientDetails patientDetails=new PatientDetails();
+		 try {
+			 patientDetails=patientDetailsRepository.getContactNumbers(contactNo);
+			
+			 if(patientDetails!=null)
+				{
+					
+					info.setError(false);
+					info.setMessage("Success");
+				}
+				else {
+					info.setError(true);
+					info.setMessage("failed");
+				}
+			
+			 
+			 
+			 
+		 }
+		 catch (Exception e) {
+	System.out.println(e.getMessage());
+		}
+		 return info;
+		 
+		}
+		
+		//username validation
+			@RequestMapping(value = { "/verifyPatientEmail" }, method = RequestMethod.POST)
+			public @ResponseBody Info verifyPatientEmail(@RequestParam("email") String email)
+			
+			{
+				
+				Info info=new Info();
+				PatientDetails patientDetails=new PatientDetails();
+			 try {
+				 patientDetails=patientDetailsRepository.getPatientEmail(email);
+				
+				 if(patientDetails!=null)
+					{
+						
+						info.setError(false);
+						info.setMessage("Success");
+					}
+					else {
+						info.setError(true);
+						info.setMessage("failed");
+					}
+			 
+			 }
+			 catch (Exception e) {
+		System.out.println(e.getMessage());
+			}
+			 return info;
+			 
+			}
+		
+			
+			//username validation
+			@RequestMapping(value = { "/verifyLabContactNumber" }, method = RequestMethod.POST)
+			public @ResponseBody Info verifyLabContactNumber(@RequestParam("contactNo") String contactNo)
+			
+			{
+				
+				Info info=new Info();
+				LabDetails labDetails=new LabDetails();
+			 try {
+				 labDetails=labDetailsRepository.getContactNumbers(contactNo);
+				
+				 if(labDetails!=null)
+					{
+						
+						info.setError(false);
+						info.setMessage("Success");
+					}
+					else {
+						info.setError(true);
+						info.setMessage("failed");
+					}
+				
+				 
+				 
+				 
+			 }
+			 catch (Exception e) {
+		System.out.println(e.getMessage());
+			}
+			 return info;
+			 
+			}
+			
+			//username validation
+				@RequestMapping(value = { "/verifyLabEmail" }, method = RequestMethod.POST)
+				public @ResponseBody Info verifyLabEmail(@RequestParam("email") String email)
+				
+				{
+					
+					Info info=new Info();
+					LabDetails labDetails=new LabDetails();
+				 try {
+					 labDetails=labDetailsRepository.getLabEmail(email);
+					
+					 if(labDetails!=null)
+						{
+							
+							info.setError(false);
+							info.setMessage("Success");
+						}
+						else {
+							info.setError(true);
+							info.setMessage("failed");
+						}
+				 
+				 }
+				 catch (Exception e) {
+			System.out.println(e.getMessage());
+				}
+				 return info;
+				 
+				}
+		
+				//username validation
+				@RequestMapping(value = { "/verifyPharmacyContactNumber" }, method = RequestMethod.POST)
+				public @ResponseBody Info verifyPharmacyContactNumber(@RequestParam("contactNo") String contactNo)
+				
+				{
+					
+					Info info=new Info();
+				MedicalDetails medicalDetails=new MedicalDetails();
+				 try {
+					 medicalDetails=medicalDetailsRepository.getContactNumbers(contactNo);
+					
+					 if(medicalDetails!=null)
+						{
+							
+							info.setError(false);
+							info.setMessage("Success");
+						}
+						else {
+							info.setError(true);
+							info.setMessage("failed");
+						}
+					
+					 
+					 
+					 
+				 }
+				 catch (Exception e) {
+			System.out.println(e.getMessage());
+				}
+				 return info;
+				 
+				}
+				
+				//username validation
+					@RequestMapping(value = { "/verifyPharmacyEmail" }, method = RequestMethod.POST)
+					public @ResponseBody Info verifyPharmacyEmail(@RequestParam("email") String email)
+					
+					{
+						
+						Info info=new Info();
+						MedicalDetails medicalDetails=new MedicalDetails();
+					 try {
+						 medicalDetails=medicalDetailsRepository.getPharmacyEmail(email);
+						
+						 if(medicalDetails!=null)
+							{
+								
+								info.setError(false);
+								info.setMessage("Success");
+							}
+							else {
+								info.setError(true);
+								info.setMessage("failed");
+							}
+					 
+					 }
+					 catch (Exception e) {
+				System.out.println(e.getMessage());
+					}
+					 return info;
+					 
+					}
+		
+		
 
 }

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.LabDetails;
+import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.SpecializationDetails;
 
 
@@ -65,4 +66,11 @@ public interface LabDetailsRepository extends JpaRepository<LabDetails, Integer>
 	@Modifying
 	@Query("UPDATE LabDetails a SET a.password =:newPassword  WHERE a.userName=:userName")
 	int updateNewPasswordByUserName(@Param("userName")String userName,@Param("newPassword")String newPassword);
+	
+	@Query(value=" SELECT * from lab_details where contact=:contactNo AND del_status=0",nativeQuery=true)
+	LabDetails getContactNumbers(@Param("contactNo")String contactNo);
+	
+	@Query(value=" SELECT * from lab_details where email=:email AND del_status=0",nativeQuery=true)
+	LabDetails getLabEmail(@Param("email")String email);
+	
 }

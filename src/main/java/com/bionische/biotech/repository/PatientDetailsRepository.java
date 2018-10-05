@@ -56,7 +56,11 @@ public interface PatientDetailsRepository extends JpaRepository<PatientDetails, 
 			" FROM patient_details p,city c WHERE p.patient_id=:patientId AND p.del_status=0 AND p.city_id=c.city_id",nativeQuery=true)
 	PatientDetails getPatientDetailsBYId(@Param("patientId")int patientId);
  
+	@Query(value=" SELECT * from patient_details where contact=:contactNo AND del_status=0",nativeQuery=true)
+	PatientDetails getContactNumbers(@Param("contactNo")String contactNo);
 	
+	@Query(value=" SELECT * from patient_details where email=:email AND del_status=0",nativeQuery=true)
+	PatientDetails getPatientEmail(@Param("email")String email);
 	
 	
 }

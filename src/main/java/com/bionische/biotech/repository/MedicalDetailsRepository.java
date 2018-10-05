@@ -44,4 +44,11 @@ public interface MedicalDetailsRepository extends JpaRepository<MedicalDetails, 
 	@Modifying
 	@Query("UPDATE MedicalDetails a SET a.password =:newPassword  WHERE a.userName=:userName")
 	int updateNewPasswordByUserName(@Param("userName")String userName,@Param("newPassword")String newPassword);
+	
+	
+	@Query(value=" SELECT * from medical_details where contact=:contactNo AND del_status=0",nativeQuery=true)
+	MedicalDetails getContactNumbers(@Param("contactNo")String contactNo);
+	
+	@Query(value=" SELECT * from medical_details where email=:email AND del_status=0",nativeQuery=true)
+	MedicalDetails getPharmacyEmail(@Param("email")String email);
 }
