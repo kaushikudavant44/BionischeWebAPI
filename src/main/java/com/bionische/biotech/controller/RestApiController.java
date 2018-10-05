@@ -2144,6 +2144,71 @@ public @ResponseBody AppointmentTimeList getAllAppointTime(@RequestParam("doctor
 		}
 		return allRelations;
 	}
+	//username validation
+	@RequestMapping(value = { "/mobileValidationOfDoctor" }, method = RequestMethod.POST)
+	public @ResponseBody Info verifyContactNumber(@RequestParam("contactNo") String contactNo)
+	
+	{
+		System.out.println("ssss"+contactNo);
+		Info info=new Info();
+	DoctorDetails doctorDetails=new DoctorDetails();
+	 try {
+		 doctorDetails=	doctorDetailsRepository.getContactNumbers(contactNo);
+		
+		 if(doctorDetails!=null)
+			{
+				
+				info.setError(false);
+				info.setMessage("Success");
+			}
+			else {
+				info.setError(true);
+				info.setMessage("failed");
+			}
+		
+		 
+		 
+		 
+	 }
+	 catch (Exception e) {
+System.out.println(e.getMessage());
+	}
+	 return info;
+	 
+	}
+	
+	//username validation
+		@RequestMapping(value = { "/verifyDoctorEmail" }, method = RequestMethod.POST)
+		public @ResponseBody Info verifyDoctorEmail(@RequestParam("email") String email)
+		
+		{
+			
+			Info info=new Info();
+		DoctorDetails doctorDetails=new DoctorDetails();
+		 try {
+			 doctorDetails=	doctorDetailsRepository.getDoctorEmail(email);
+			
+			 if(doctorDetails!=null)
+				{
+					
+					info.setError(false);
+					info.setMessage("Success");
+				}
+				else {
+					info.setError(true);
+					info.setMessage("failed");
+				}
+			
+			 
+			 
+			 
+		 }
+		 catch (Exception e) {
+	System.out.println(e.getMessage());
+		}
+		 return info;
+		 
+		}
 	
 
 }
