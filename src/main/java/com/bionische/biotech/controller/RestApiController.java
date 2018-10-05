@@ -88,6 +88,7 @@ import com.bionische.biotech.repository.SharingReportWithDocRepository;
 import com.bionische.biotech.repository.SpecializationDetailsRepository;
 import com.bionische.biotech.repository.StateRepository;
 import com.bionische.biotech.repository.TermsAndConditionsRepository;
+import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.SendEMailService;
 import com.bionische.biotech.service.SendTextMessageService;
 
@@ -201,6 +202,8 @@ public class RestApiController {
 	@Autowired
 	PatientMemberRelationRepository patientMemberRelationRepository;
 	
+	@Autowired
+	CreateDirectoryService createDirectoryService;
 	String MESSAGE;
 	
 	@RequestMapping(value = { "/insertDoctorDetails" }, method = RequestMethod.POST)
@@ -211,6 +214,7 @@ public class RestApiController {
 		 
 		try {
 			if(doctorDetails.getDoctorId()==0) {
+				 
 				MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
 				messageDigest.update(doctorDetails.getPassword().getBytes(),0, doctorDetails.getPassword().length());  
 				String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
@@ -220,6 +224,10 @@ public class RestApiController {
 				doctorDetails.setPassword(hashedPass);
 				}
 			doctorDetailsRes=doctorDetailsRepository.save(doctorDetails); 
+			if(doctorDetails.getDoctorId()!=0)
+			{
+				createDirectoryService.createNewDirectorForDoctor(doctorDetailsRes.getDoctorId()+"");
+			}
 			doctorDetailsRes.setPassword("");
 		System.out.println(doctorDetailsRes.toString());
 		 
@@ -297,7 +305,8 @@ System.out.println(e.getMessage());
 				patientDetails.setFamilyId(familyDetailsRes.getFamilyId());
 			}
 			patientDetailsRes=patientDetailsRepository.save(patientDetails); 
-		
+		if(patientDetails.getPatientId()!=0)
+			createDirectoryService.createNewDirectorForPatient(patientDetailsRes.getPatientId()+"");
 		System.out.println(patientDetailsRes.toString());
 		
 		if(patientDetailsRes!=null)
