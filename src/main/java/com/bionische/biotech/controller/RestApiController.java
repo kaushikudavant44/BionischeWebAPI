@@ -2419,7 +2419,21 @@ System.out.println(e.getMessage());
 					 return info;
 					 
 					}
-		
+					//amruta Lab Rating 
+					@RequestMapping(value = { "/getDoctorRatingByDoctorId"}, method = RequestMethod.POST)
+					public @ResponseBody GetRatingCount getDoctorRatingByDoctorId(@RequestParam("doctorId") int doctorId) {
+						
+						GetRatingCount getRatingCount= new GetRatingCount();
+						try {
+							getRatingCount=getRatingCountRepository.getDoctorRating(doctorId);
+							System.out.println("getRatingCount:"+getRatingCount.toString());
+						}
+						catch (Exception e) {
+						e.printStackTrace();
+						}
+				        return getRatingCount;
+					}
+			
 		
 
 }
