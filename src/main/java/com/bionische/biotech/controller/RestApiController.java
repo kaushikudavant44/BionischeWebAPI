@@ -26,6 +26,7 @@ import com.bionische.biotech.model.Country;
 import com.bionische.biotech.model.DocAvailableTime;
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.DoctorDetailsInformation;
+import com.bionische.biotech.model.DoctorNotification;
 import com.bionische.biotech.model.FamilyDetails;
 import com.bionische.biotech.model.ForgetPwdVerificationCode;
 import com.bionische.biotech.model.FreequantlyUsedMedicines;
@@ -61,6 +62,7 @@ import com.bionische.biotech.repository.CityRepository;
 import com.bionische.biotech.repository.CountryRepository;
 import com.bionische.biotech.repository.DocAvailableTimeRepository;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
+import com.bionische.biotech.repository.DoctorNotificationRepository;
 import com.bionische.biotech.repository.DoctorPatientMeetingRepository;
 import com.bionische.biotech.repository.FamilyDetailsRepository;
 import com.bionische.biotech.repository.ForgetPwdVerificationCodeRepository;
@@ -204,6 +206,10 @@ public class RestApiController {
 	
 	@Autowired
 	CreateDirectoryService createDirectoryService;
+	
+	@Autowired
+	DoctorNotificationRepository doctorNotificationRepository;
+	
 	String MESSAGE;
 	
 	@RequestMapping(value = { "/insertDoctorDetails" }, method = RequestMethod.POST)
@@ -439,6 +445,15 @@ System.out.println(e.getMessage());
 		{
 			info.setError(false);
 			info.setMessage("success");
+			DoctorNotification doctorNotification=new DoctorNotification();
+			doctorNotification.setNotification("Review :  "+ratingDetails.getReview()+" and Rating : "+ratingDetails.getRating());
+			doctorNotification.setDoctorId(ratingDetails.getDoctorId());
+			doctorNotification.setFcmNo(" ");
+			doctorNotification.setStatus(0);
+			doctorNotification.setString1("Patient submit Rating and Review");
+			doctorNotification.setInt1(0);
+			doctorNotificationRepository.save(doctorNotification);
+			
 		}
 		else {
 			info.setError(true);
@@ -541,13 +556,22 @@ System.out.println(e.getMessage());
 			DoctorDetails doctorDetails=doctorDetailsRepository.findByDoctorId(appointmentDetailsRes.getDoctorId());
 			HospitalDetails hospitalDetails=hospitalDetailsRepository.findByHospitalId(doctorDetails.getHospitalId());
 			try {
-				
+				DoctorNotification doctorNotification=new DoctorNotification();
 				if(appointmentDetailsRes.getInt1()==1) {
 					MESSAGE=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+", you have an e-consult with doctor "+doctorDetails.getfName()+" "+doctorDetails.getmName()+" "+doctorDetails.getlName()+" on DATE "+appointmentDetailsRes.getDate()+" and TIME "+appointmentTime.getTime()+". It will open this valuable time slot for others waiting in line to visit your doctor.";
+					doctorNotification.setNotification(getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+" is booked e-consult appointment on DATE "+appointmentDetailsRes.getDate()+" and TIME "+appointmentTime.getTime());
+					
 				}else {
 					MESSAGE=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+", you have an appointment at "+hospitalDetails.getHospitalName()+" on date "+appointmentDetailsRes.getDate()+" "+appointmentTime.getTime()+" with Dr."+doctorDetails.getfName()+" "+doctorDetails.getmName()+" "+doctorDetails.getlName()+" to reach on time at address "+hospitalDetails.getAddress()+" "+hospitalDetails.getContactNo();
+					doctorNotification.setNotification(getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+" is booked appointment on DATE "+appointmentDetailsRes.getDate()+" and TIME "+appointmentTime.getTime());
+
 				}
-				
+				doctorNotification.setDoctorId(appointmentDetailsRes.getDoctorId());
+				doctorNotification.setFcmNo(" ");
+				doctorNotification.setStatus(0);
+				doctorNotification.setString1("Appointment Booked");
+				doctorNotification.setInt1(appointmentDetails.getPatientId());
+				doctorNotificationRepository.save(doctorNotification);
 				sendTextMessageService.sendTextSms(MESSAGE, getPatientContactDetailsById.getContactNo());
 				
 				
@@ -881,6 +905,15 @@ System.out.println(e.getMessage());
 				sendTextMessageService.sendTextSms(MESSAGE, getPatientContactDetailsById.getContactNo());
 				sendEMailService.sendMail("BIONISCHE APPOINTMENT NOTIFICATION", MESSAGE , getPatientContactDetailsById.getEmail());
 			
+				DoctorNotification doctorNotification=new DoctorNotification();
+				doctorNotification.setNotification(getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+", Canceled consult appointment.");
+				doctorNotification.setDoctorId(doctorDetailsRepository.getDoctorId(appId));
+				doctorNotification.setFcmNo(" ");
+				doctorNotification.setStatus(0);
+				doctorNotification.setString1("Appointment Canceled");
+				doctorNotification.setInt1(getPatientContactDetailsById.getPatientId());
+				doctorNotificationRepository.save(doctorNotification);
+				
 				info.setMessage(MESSAGE);
 				info.setError(false);
 			}
@@ -1040,6 +1073,7 @@ System.out.println(e.getMessage());
 					sendTextMessageService.sendTextSms(MESSAGE, getPatientContactDetailsById.getContactNo());
 					sendEMailService.sendMail("Your Appointment Is edited!!",MESSAGE , getPatientContactDetailsById.getEmail());
 				
+					
 					info.setMessage("Your Appointment Change Successfully!!");
 					info.setError(false);
 				}
@@ -1285,7 +1319,14 @@ System.out.println(e.getMessage());
 					    int result=sharingReportWithDocRepository.updateReport(reportId,sharingReportWithDoc.getPatientId(),sharingReportWithDoc.getDoctorId());	
 					    if(result>0)
 						{
-							
+					    	DoctorNotification doctorNotification=new DoctorNotification();
+							doctorNotification.setNotification("Pateint  id "+sharingReportWithDocRes.getPatientId()+" Shared His/her Reports.");
+							doctorNotification.setDoctorId(sharingReportWithDocRes.getDoctorId());
+							doctorNotification.setFcmNo(" ");
+							doctorNotification.setStatus(0);
+							doctorNotification.setString1("Patient Shre Report");
+							doctorNotification.setInt1(sharingReportWithDocRes.getPatientId());
+							doctorNotificationRepository.save(doctorNotification);
 							info.setError(false);
 							info.setMessage("success");
 						}
@@ -2433,7 +2474,19 @@ System.out.println(e.getMessage());
 						}
 				        return getRatingCount;
 					}
-			
+					@RequestMapping(value = { "/getDoctorNotification"}, method = RequestMethod.POST)
+					public @ResponseBody List<DoctorNotification> getDoctorNotification(@RequestParam("doctorId") int doctorId) {
+						
+						
+				        return  doctorNotificationRepository.findFirst20ByDoctorIdOrderByNotificationIdDesc(doctorId);
+					}
+					@RequestMapping(value = { "/getAllDoctorNotification"}, method = RequestMethod.POST)
+					public @ResponseBody List<DoctorNotification> getAllDoctorNotification(@RequestParam("doctorId") int doctorId) {
+						
+						
+				        return  doctorNotificationRepository.findFirst100ByDoctorIdOrderByNotificationIdDesc(doctorId);
+					}
+					
 		
 
 }

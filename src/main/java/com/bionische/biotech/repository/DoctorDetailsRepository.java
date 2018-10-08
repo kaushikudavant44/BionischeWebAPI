@@ -61,5 +61,8 @@ public interface DoctorDetailsRepository extends JpaRepository<DoctorDetails, Lo
 	@Query(value="SELECT * FROM doctor_details WHERE email=:email AND del_status=0;",nativeQuery=true)
 	DoctorDetails getDoctorEmail(@Param("email") String email);
 	
+	@Query(value=" SELECT doctor_id from doctor_appointment where appoint_id=:appointId",nativeQuery=true)
+	int getDoctorId( @Param("appointId")int appointId);
+	
 	
 }
