@@ -2487,6 +2487,12 @@ System.out.println(e.getMessage());
 				        return  doctorNotificationRepository.findFirst100ByDoctorIdOrderByNotificationIdDesc(doctorId);
 					}
 					
-		
+					@RequestMapping(value = { "/changeDoctorNotificationStatus"}, method = RequestMethod.POST)
+					public @ResponseBody int changeDoctorNotificationStatus(@RequestParam("notificationId") int notificationId) {
+						
+						
+				        return  doctorNotificationRepository.updateNotificationStatus(notificationId,1);
+					}
+					
 
 }
