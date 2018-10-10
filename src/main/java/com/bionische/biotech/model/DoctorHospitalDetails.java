@@ -29,7 +29,7 @@ public class DoctorHospitalDetails {
 	private int int1;
 	
 	@Column(name="string1")
-	private int string1;
+	private String string1;
 
 	public int getId() {
 		return id;
@@ -71,11 +71,11 @@ public class DoctorHospitalDetails {
 		this.int1 = int1;
 	}
 
-	public int getString1() {
+	public String getString1() {
 		return string1;
 	}
 
-	public void setString1(int string1) {
+	public void setString1(String string1) {
 		this.string1 = string1;
 	}
 
@@ -84,6 +84,7 @@ public class DoctorHospitalDetails {
 		return "DoctorHospitalDetails [id=" + id + ", doctorId=" + doctorId + ", hospitalId=" + hospitalId
 				+ ", delStatus=" + delStatus + ", int1=" + int1 + ", string1=" + string1 + "]";
 	}
+
 	
 	
 }

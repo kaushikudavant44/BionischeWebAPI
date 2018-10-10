@@ -16,7 +16,9 @@ public interface HospitalDetailsRepository extends JpaRepository<HospitalDetails
 
 	HospitalDetails save(HospitalDetails hospitalDetails);
 	
-    HospitalDetails findByHospitalId(int hospitalId);
+    
+	
+	HospitalDetails findByHospitalId(int hospitalId);
 
 	
 	List<HospitalDetails> findAll();                                  
