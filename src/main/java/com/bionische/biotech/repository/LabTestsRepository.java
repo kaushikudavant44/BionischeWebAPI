@@ -12,6 +12,9 @@ import com.bionische.biotech.model.LabTests;
 public interface LabTestsRepository extends JpaRepository<LabTests, Integer>{
 	
 	List<LabTests> findByDelStatus(int delStatus);
+	
+	@Query(value=" SELECT * from lab_tests where lab_test_id=:testId AND del_status=0",nativeQuery=true)
+	LabTests getTestDetailsByTestId(@Param("testId")int testId);
 
 	@Query(value=" SELECT * from lab_tests where lab_test_id IN(:testIdList) AND del_status=0",nativeQuery=true)
 	List<LabTests> getTestDetails(@Param("testIdList")List<String> testIdList);

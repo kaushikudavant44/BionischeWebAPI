@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.AppointmentTimeList;
 import com.bionische.biotech.model.DoctorDetails;
+import com.bionische.biotech.model.DoctorNotification;
 import com.bionische.biotech.model.GetDoctorRatingReviewCount;
 import com.bionische.biotech.model.GetLabForAppointment;
 import com.bionische.biotech.model.GetLabRatingReview;
@@ -24,6 +25,7 @@ import com.bionische.biotech.model.GetReportDetailsForLab;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabAppointment;
 import com.bionische.biotech.model.LabDetails;
+import com.bionische.biotech.model.LabNotification;
 import com.bionische.biotech.model.LabTests;
 import com.bionische.biotech.model.LabTestsList;
 import com.bionische.biotech.repository.AppointmentTimeRepository;
@@ -35,6 +37,7 @@ import com.bionische.biotech.repository.GetRatingCountRepository;
 import com.bionische.biotech.repository.GetReportDetailsForLabRepository;
 import com.bionische.biotech.repository.LabAppointmentRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
+import com.bionische.biotech.repository.LabNotificationRepository;
 import com.bionische.biotech.repository.LabTestsRepository;
 import com.bionische.biotech.service.SendEMailService;
 
@@ -67,6 +70,9 @@ public class LabApiConrtoller {
 	
 	@Autowired
 	GetRatingCountRepository getRatingCountRepository;
+	
+	@Autowired
+	LabNotificationRepository labNotificationRepository;
 	
 	@Autowired
 	SendEMailService sendEMailService;
@@ -330,16 +336,24 @@ public class LabApiConrtoller {
 	public @ResponseBody Info insertLabAppointment(@RequestBody LabAppointment  labAppointment)
 	{
 		Info info=new Info();
+		try {
 		LabAppointment labAppointmentRes=labAppointmentRepository.save(labAppointment);
 	
 		if(labAppointmentRes!=null)
 		{
 			GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsById(labAppointmentRes.getPatientId());
+			sendEMailService.sendMail("Your Lab Appointment has been Successfully booked", "Your Lab Appointment has been Successfully booked", getPatientContactDetailsById.getEmail());
+			LabNotification labNotification=new LabNotification();
+			AppointmentTime appointmentTime=appointmentTimeRepository.findByTimeId(labAppointmentRes.getTimeId());
 			
-				 
-					sendEMailService.sendMail("Your Lab Appointment has been Successfully booked", "Your Lab Appointment has been Successfully booked", getPatientContactDetailsById.getEmail());
-			 
+			LabTests labTests=labTestsRepository.getTestDetailsByTestId(labAppointmentRes.getLabTestId());
 			
+			labNotification.setLabId(labAppointmentRes.getLabId());
+			labNotification.setNotification(getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+" has booked appointment for "+labTests.getLabTestName()+" on DATE "+labAppointmentRes.getLabAppDate()+" and TIME "+appointmentTime.getTime());					
+			labNotification.setStatus(0);
+			labNotification.setString1("Appointment Booked");
+			labNotification.setInt1(labAppointmentRes.getPatientId());
+			labNotificationRepository.save(labNotification);
 			info.setError(false);
 			info.setMessage("Appointment Book Successfully");
 		}
@@ -347,6 +361,14 @@ public class LabApiConrtoller {
 			info.setError(true);
 			info.setMessage("Problem to Book Appointment!!");
 		}
+}
+		
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+			info.setError(true);
+			info.setMessage("Problem in server to Book Appointment");
+		}
+	
 		return info;
 	}
 	
@@ -644,4 +666,24 @@ public @ResponseBody LabTestsList getAllLabTestsOfPatient(@RequestParam("patient
 	return labTestsList;
 }
 
+@RequestMapping(value = { "/getLabNotification"}, method = RequestMethod.POST)
+public @ResponseBody List<LabNotification> getLabNotification(@RequestParam("labId") int labId) {
+	
+	
+    return  labNotificationRepository.findFirst20ByLabIdOrderByNotificationIdDesc(labId);
+}
+
+@RequestMapping(value = { "/changeLabNotificationStatus"}, method = RequestMethod.POST)
+public @ResponseBody int changeLabNotificationStatus(@RequestParam("notificationId") int notificationId) {
+	
+	
+    return  labNotificationRepository.updateLabNotificationStatus(notificationId,1);
+}
+
+@RequestMapping(value = { "/getAllLabNotification"}, method = RequestMethod.POST)
+public @ResponseBody List<LabNotification> getAllLabNotification(@RequestParam("labId") int labId) {
+	
+	
+    return  labNotificationRepository.findFirst100ByLabIdOrderByNotificationIdDesc(labId);
+}
 }

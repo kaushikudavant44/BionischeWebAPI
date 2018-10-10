@@ -42,7 +42,10 @@ import com.bionische.biotech.model.GetPatientReviews;
 import com.bionische.biotech.model.GetRatingCount;
 import com.bionische.biotech.model.HospitalDetails;
 import com.bionische.biotech.model.Info;
+import com.bionische.biotech.model.LabAppointment;
 import com.bionische.biotech.model.LabDetails;
+import com.bionische.biotech.model.LabNotification;
+import com.bionische.biotech.model.LabTests;
 import com.bionische.biotech.model.MedicalDetails;
 import com.bionische.biotech.model.PatientAddress;
 import com.bionische.biotech.model.PatientDetails;
@@ -79,6 +82,8 @@ import com.bionische.biotech.repository.GetRatingCountRepository;
 import com.bionische.biotech.repository.HospitalDetailsRepository;
 import com.bionische.biotech.repository.LabAppointmentRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
+import com.bionische.biotech.repository.LabNotificationRepository;
+import com.bionische.biotech.repository.LabTestsRepository;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
 import com.bionische.biotech.repository.PatientAddressRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
@@ -209,6 +214,12 @@ public class RestApiController {
 	
 	@Autowired
 	DoctorNotificationRepository doctorNotificationRepository;
+	
+	@Autowired
+	LabTestsRepository labTestsRepository;
+	
+	@Autowired
+	LabNotificationRepository labNotificationRepository;
 	
 	String MESSAGE;
 	
@@ -1264,11 +1275,22 @@ System.out.println(e.getMessage());
 						int res=labAppointmentRepository.updateLabAppointmentStatus(appId); 
 						if(res>0)
 						{
-
-							GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByLabAppointId(appId);
-							 
+							GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByLabAppointId(appId);							 
 							sendEMailService.sendMail("Your Appointment Is edited!!", "Your Appointment edited!!" , getPatientContactDetailsById.getEmail());
-						
+							
+							LabAppointment labAppointment = labAppointmentRepository.appointmentDetailsOfLabByAppId(appId);
+							LabNotification labNotification=new LabNotification();
+							LabTests labTests=labTestsRepository.getTestDetailsByTestId(labAppointment.getLabTestId());
+							AppointmentTime appointmentTime=appointmentTimeRepository.findByTimeId(labAppointment.getTimeId());
+												
+							labNotification.setLabId(labAppointment.getLabId());
+							labNotification.setNotification(getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+" has cancelled appointment of "+labTests.getLabTestName()+" on DATE "+labAppointment.getLabAppDate()+" and TIME "+appointmentTime.getTime());					
+							labNotification.setStatus(0);
+							labNotification.setString1("Appointment Cancelled");
+							labNotification.setInt1(labAppointment.getPatientId());
+							labNotificationRepository.save(labNotification);
+							
+							
 							info.setMessage("Your Appointment Delete Successfully!!");
 							info.setError(false);
 						}
