@@ -39,4 +39,6 @@ public interface AppointmentTimeRepository extends JpaRepository<AppointmentTime
 	List<AppointmentTime> getDoctorAppointMentTime(@Param("fromTime")int fromTime, @Param("toTime")int toTime, @Param("unavailableTimeList")List<String> unavailableTimeList);
 	
 
+	
+	
 }

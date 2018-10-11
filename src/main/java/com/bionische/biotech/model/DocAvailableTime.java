@@ -21,19 +21,16 @@ public class DocAvailableTime {
 	
 	@Column(name="date")
 	private String date;
-	
-	@Column(name="from_time")
-	private int fromTime;
-	
-	@Column(name="to_time")
-	private int toTime;
+ 
 	
 	@Column(name="del_status")
 	private int delStatus;
 	
-	@Column(name="unavailable_time")
-	private String unavailableTime;
-
+	@Column(name="hospital_id")
+	private int hospitalId;
+	
+	@Column(name="available_time")
+	private String availableTime;
 
 	public int getDocAvailableId() {
 		return docAvailableId;
@@ -59,22 +56,6 @@ public class DocAvailableTime {
 		this.date = date;
 	}
 
-	public int getFromTime() {
-		return fromTime;
-	}
-
-	public void setFromTime(int fromTime) {
-		this.fromTime = fromTime;
-	}
-
-	public int getToTime() {
-		return toTime;
-	}
-
-	public void setToTime(int toTime) {
-		this.toTime = toTime;
-	}
-
 	public int getDelStatus() {
 		return delStatus;
 	}
@@ -83,22 +64,33 @@ public class DocAvailableTime {
 		this.delStatus = delStatus;
 	}
 
-	public String getUnavailableTime() {
-		return unavailableTime;
+	public int getHospitalId() {
+		return hospitalId;
 	}
 
-	public void setUnavailableTime(String unavailableTime) {
-		this.unavailableTime = unavailableTime;
+	public void setHospitalId(int hospitalId) {
+		this.hospitalId = hospitalId;
+	}
+
+	public String getAvailableTime() {
+		return availableTime;
+	}
+
+	public void setAvailableTime(String availableTime) {
+		this.availableTime = availableTime;
 	}
 
 	@Override
 	public String toString() {
 		return "DocAvailableTime [docAvailableId=" + docAvailableId + ", doctorId=" + doctorId + ", date=" + date
-				+ ", fromTime=" + fromTime + ", toTime=" + toTime + ", delStatus=" + delStatus + ", unavailableTime="
-				+ unavailableTime + "]";
+				+ ", delStatus=" + delStatus + ", hospitalId=" + hospitalId + ", availableTime=" + availableTime + "]";
 	}
 
  
+	 
+
+ 
+	 
 	
 
 }

@@ -16,7 +16,7 @@ public interface DocAvailableTimeRepository extends JpaRepository<DocAvailableTi
 	DocAvailableTime  save(DocAvailableTime docAvailableTime);
 	
 
-@Query(value=" SELECT * from doc_available_time where doctor_id=:doctorId AND date=:date AND del_status=0",nativeQuery=true)
+/*@Query(value=" SELECT * from doc_available_time where doctor_id=:doctorId AND date=:date AND del_status=0",nativeQuery=true)
 DocAvailableTime getAvailableTimeDBYDoctorId(@Param("doctorId")int doctorId, @Param("date")String date);
 
 @Query(value=" SELECT * from doc_available_time where doctor_id=:doctorId AND date>=:date ",nativeQuery=true)
@@ -26,5 +26,15 @@ List<DocAvailableTime> getAllTimeBYDoctorId(@Param("doctorId")int doctorId,@Para
 @Modifying
 @Query("UPDATE DocAvailableTime d SET d.date=:date,d.fromTime=:fromTime,d.toTime=:toTime  WHERE d.docAvailableId=:docAvailableId")
 int updateAvailableTime(@Param("docAvailableId")int docAvailableId, @Param("date")String date, @Param("fromTime")int fromTime, @Param("toTime")int toTime);
+*/
+	@Query(value=" SELECT * from doc_available_time where doctor_id=:doctorId AND date>=:date ",nativeQuery=true)
+	List<DocAvailableTime> getAllTimeBYDoctorId(@Param("doctorId")int doctorId,@Param("date")String date);
+	
+	
+	List<DocAvailableTime> findByDoctorIdAndDate(int doctorId,String date);
 
+	@Query(value=" SELECT * from doc_available_time where doctor_id=:doctorId AND date=:date AND del_status=0 AND hospital_id=:hospitalId",nativeQuery=true)
+	DocAvailableTime getAvailableTimeByDoctorIdAndHospitalId(@Param("doctorId")int doctorId,@Param("date")String date, @Param("hospitalId")int hospitalId);
+	
+	
 }
