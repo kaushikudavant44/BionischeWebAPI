@@ -50,6 +50,7 @@ import com.bionische.biotech.model.MedicalDetails;
 import com.bionische.biotech.model.PatientAddress;
 import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.PatientMemberRelation;
+import com.bionische.biotech.model.PatientNotification;
 import com.bionische.biotech.model.PatientOrderAddresses;
 import com.bionische.biotech.model.PrescriptionDetails;
 import com.bionische.biotech.model.RatingDetails;
@@ -88,6 +89,7 @@ import com.bionische.biotech.repository.MedicalDetailsRepository;
 import com.bionische.biotech.repository.PatientAddressRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.PatientMemberRelationRepository;
+import com.bionische.biotech.repository.PatientNotificationRepository;
 import com.bionische.biotech.repository.PatientOrderAddressesRepository;
 import com.bionische.biotech.repository.PrescriptionDetailsRepository;
 import com.bionische.biotech.repository.RatingDetailsRepository;
@@ -220,6 +222,9 @@ public class RestApiController {
 	
 	@Autowired
 	LabNotificationRepository labNotificationRepository;
+	
+	@Autowired
+	PatientNotificationRepository patientNotificationRepository;
 	
 	String MESSAGE;
 	
@@ -871,16 +876,24 @@ System.out.println(e.getMessage());
 			int res=appointmentDetailsRepository.updateStatusAppointment(appId, status); 
 			if(res>0)
 			{
-				
+				PatientNotification patientNotification = new PatientNotification();
+				GetAppointmentDetails getAppointmentDetails = getAppointmentDetailsRepository.getAppmtDetailsByAppointId(appId);
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 				Date date = new Date();
-				System.out.println(formatter.format(date));
+				
 				GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByDoctorAppointId(appId);
 				 MESSAGE=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+", your doctor consult appointment cancel because of some issue reschedule your appointment https://www.bionische.com/showBookDoctorAppointment?appPatientId=1&currency=&doctorCity=1&countryId=1&stateId=1&CityId=1&specId=1&appDate="+formatter.format(date)+"&consultType=1&submit=Submit";
 				sendTextMessageService.sendTextSms(MESSAGE, getPatientContactDetailsById.getContactNo());
 				
 				sendEMailService.sendMail("APPOINTMENT CANCEL", MESSAGE , getPatientContactDetailsById.getEmail());
 			
+				patientNotification.setPatientId(getPatientContactDetailsById.getPatientId());
+				patientNotification.setNotification("Your Appointment has been cancelled by Dr."+getAppointmentDetails.getDoctorName()+" on DATE "+getAppointmentDetails.getDate()+" and TIME "+getAppointmentDetails.getTime());					
+				patientNotification.setStatus(0);
+				patientNotification.setString1("Appointment Confirmed");
+				patientNotification.setString2("doctor");
+				patientNotification.setInt1(getAppointmentDetails.getDoctorId());
+				patientNotificationRepository.save(patientNotification);
 				 
 				info.setMessage("Your Appointment Delete Successfully!!");
 				info.setError(false);
@@ -1074,16 +1087,25 @@ System.out.println(e.getMessage());
 				System.out.println("resssssss:"+res);
 				if(res>0)
 				{
+					PatientNotification patientNotification = new PatientNotification();
 					GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByDoctorAppointId(appId);
 					GetDoctorDetails getDoctorDetails=getDoctorDetailsRepository.findByAppointmentId(appId);
+					GetAppointmentDetails getAppointmentDetails = getAppointmentDetailsRepository.getAppmtDetailsByAppointId(appId);
 					
 					AppointmentTime appointmentTime=appointmentTimeRepository.findByTimeId(timeId);
 					//DoctorDetails doctorDetails=doctorDetailsRepository.findByDoctorId(appointmentDetailsRes.getDoctorId());
 					HospitalDetails hospitalDetails=hospitalDetailsRepository.findByHospitalId(getDoctorDetails.getHospitalId());
 					MESSAGE="CONFIRMED Appointment ID: "+appId+" for date "+date+" at "+appointmentTime.getTime()+" with Dr. "+getDoctorDetails.getDoctorfName()+" "+getDoctorDetails.getDoctormName()+" "+getDoctorDetails.getDoctorlName()+". "+hospitalDetails.getHospitalName()+", "+hospitalDetails.getAddress()+", Ph: "+hospitalDetails.getContactNo();
 					sendTextMessageService.sendTextSms(MESSAGE, getPatientContactDetailsById.getContactNo());
-					sendEMailService.sendMail("Your Appointment Is edited!!",MESSAGE , getPatientContactDetailsById.getEmail());
-				
+					sendEMailService.sendMail("Your Appointment Is edited!!",MESSAGE , getPatientContactDetailsById.getEmail());			
+
+					patientNotification.setPatientId(getPatientContactDetailsById.getPatientId());
+					patientNotification.setNotification("Your Appointment has been confirmed by Dr."+getAppointmentDetails.getDoctorName()+" on DATE "+getAppointmentDetails.getDate()+" and TIME "+getAppointmentDetails.getTime());					
+					patientNotification.setStatus(0);
+					patientNotification.setString1("Appointment Confirmed");
+					patientNotification.setString2("doctor");
+					patientNotification.setInt1(getAppointmentDetails.getDoctorId());
+					patientNotificationRepository.save(patientNotification);
 					
 					info.setMessage("Your Appointment Change Successfully!!");
 					info.setError(false);
@@ -2475,5 +2497,23 @@ System.out.println(e.getMessage());
 				        return  doctorNotificationRepository.updateNotificationStatus(notificationId,1);
 					}
 					
+					@RequestMapping(value = { "/getPatientNotification"}, method = RequestMethod.POST)
+					public @ResponseBody List<PatientNotification> getPatientNotification(@RequestParam("patientId") int patientId) {
+						
+						
+					    return  patientNotificationRepository.findFirst20ByPatientIdOrderByNotificationIdDesc(patientId);
+					}
 
+					@RequestMapping(value = { "/changePatientNotificationStatus"}, method = RequestMethod.POST)
+					public @ResponseBody int changePatientNotificationStatus(@RequestParam("notificationId") int notificationId) {
+						
+						
+					    return  patientNotificationRepository.updateNotificationStatus(notificationId,1);
+					}
+					
+					@RequestMapping(value = { "/getAllPatientNotification"}, method = RequestMethod.POST)
+					public @ResponseBody List<PatientNotification> getAllPatientNotification(@RequestParam("patientId") int patientId) {
+											
+					    return  patientNotificationRepository.findFirst100ByPatientIdOrderByNotificationIdDesc(patientId);
+					}
 }

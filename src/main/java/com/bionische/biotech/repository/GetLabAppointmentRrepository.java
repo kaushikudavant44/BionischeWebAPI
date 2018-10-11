@@ -43,5 +43,11 @@ public interface GetLabAppointmentRrepository extends JpaRepository<GetLabAppoin
 			"a.patient_id IN (SELECT p.patient_id FROM patient_details p WHERE p.family_id=:familyId) AND a.lab_id=l.lab_id AND a.lab_test_id=a.lab_test_id GROUP BY a.lab_app_id",nativeQuery=true)
 	List<GetLabAppointment> getLabAppointmentForRating(@Param("familyId")int familyId,@Param("date")String date);
 	
+	@Query(value="SELECT a.lab_app_id, a.patient_id, t.time,t.time_id,a.int_1, a.lab_app_date, l.address, a.lab_test_id, tt.lab_test_name, a.patient_name, a.lab_id,\r\n" + 
+			" a.patient_contact, a.patient_email, l.lab_name, a.del_status FROM lab_tests tt, lab_appointments a, lab_details l,\r\n" + 
+			"  appointment_time t WHERE a.lab_app_id=:appId AND a.lab_id=l.lab_id  AND \r\n" + 
+			"  tt.lab_test_id=a.lab_test_id AND  t.time_id=a.time ",nativeQuery=true)
+	GetLabAppointment getLabAppointmentDetails(@Param("appId")int appId);
+	
 	
 }
