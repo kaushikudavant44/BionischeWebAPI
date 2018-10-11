@@ -5,7 +5,6 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +23,7 @@ import com.bionische.biotech.model.AppointmentTimeList;
 import com.bionische.biotech.model.City;
 import com.bionische.biotech.model.Country;
 import com.bionische.biotech.model.DocAvailableTime;
+import com.bionische.biotech.model.DoctorCertificateDetails;
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.DoctorDetailsInformation;
 import com.bionische.biotech.model.DoctorNotification;
@@ -65,6 +65,7 @@ import com.bionische.biotech.repository.AppointmentTimeRepository;
 import com.bionische.biotech.repository.CityRepository;
 import com.bionische.biotech.repository.CountryRepository;
 import com.bionische.biotech.repository.DocAvailableTimeRepository;
+import com.bionische.biotech.repository.DoctorCertificateDetailsRepository;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
 import com.bionische.biotech.repository.DoctorNotificationRepository;
 import com.bionische.biotech.repository.DoctorPatientMeetingRepository;
@@ -225,6 +226,9 @@ public class RestApiController {
 	
 	@Autowired
 	PatientNotificationRepository patientNotificationRepository;
+	
+	@Autowired
+	DoctorCertificateDetailsRepository doctorCertificateDetailsRepository;
 	
 	String MESSAGE;
 	
@@ -2149,12 +2153,12 @@ public @ResponseBody AppointmentTimeList getAllAppointTime(@RequestParam("doctor
 	List<AppointmentTime> allAppointmentTime=new ArrayList<>();
 	try {
 								
-	DocAvailableTime docAvailableTime = docAvailableTimeRepository.getAvailableTimeDBYDoctorId(doctorId, date);
+	//DocAvailableTime docAvailableTime = docAvailableTimeRepository.getAvailableTimeDBYDoctorId(doctorId, date);
 	
 	appointmentTime=	appointmentTimeRepository.getAllAppointmentTime(doctorId,date);
 	appointmentTimeList.setAppointmentTimeList(appointmentTime);
-	 List<String> unavailableTimeList = Arrays.asList(docAvailableTime.getUnavailableTime().split(","));
-	allAppointmentTime=	appointmentTimeRepository.getDoctorAppointMentTime(docAvailableTime.getFromTime(), docAvailableTime.getToTime(), unavailableTimeList);
+//	 List<String> unavailableTimeList = Arrays.asList(docAvailableTime.getUnavailableTime().split(","));
+//	allAppointmentTime=	appointmentTimeRepository.getDoctorAppointMentTime(docAvailableTime.getFromTime(), docAvailableTime.getToTime(), unavailableTimeList);
    System.out.println("allAppointmentTime:"+allAppointmentTime.toString());
 	
 	
@@ -2516,4 +2520,22 @@ System.out.println(e.getMessage());
 											
 					    return  patientNotificationRepository.findFirst100ByPatientIdOrderByNotificationIdDesc(patientId);
 					}
+					
+					@RequestMapping(value = { "/insertDoctorCertificateDetails"}, method = RequestMethod.POST)
+					public @ResponseBody Info insertDoctorCertificateDetails(@RequestBody DoctorCertificateDetails doctorCertificateDetails) {
+						Info info=new Info();			
+						try {
+					      doctorCertificateDetailsRepository.save(doctorCertificateDetails);
+					      info.setError(false);
+					      info.setMessage("success");
+											}
+											catch (Exception e) {
+												System.out.println(e.getMessage());
+												 info.setError(true);
+											      info.setMessage("Failed");
+											}
+						return info;
+					}
+					
+					
 }

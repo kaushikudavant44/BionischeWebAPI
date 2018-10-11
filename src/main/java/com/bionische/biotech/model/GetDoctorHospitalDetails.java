@@ -21,7 +21,7 @@ public class GetDoctorHospitalDetails {
 	private int hospitalId;
 	
 	@Column(name="hospital_name")
-	private int hospitalName;
+	private String hospitalName;
 	
 	@Column(name="del_status")
 	private int delStatus;
@@ -50,11 +50,13 @@ public class GetDoctorHospitalDetails {
 		this.hospitalId = hospitalId;
 	}
 
-	public int getHospitalName() {
+	 
+
+	public String getHospitalName() {
 		return hospitalName;
 	}
 
-	public void setHospitalName(int hospitalName) {
+	public void setHospitalName(String hospitalName) {
 		this.hospitalName = hospitalName;
 	}
 
