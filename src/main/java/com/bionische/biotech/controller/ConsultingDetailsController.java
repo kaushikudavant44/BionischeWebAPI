@@ -656,45 +656,7 @@ public class ConsultingDetailsController {
 
 						}
 					
-						//having prescription
-						@RequestMapping(value = { "/getConsultingByDoctorIdAndDatePresc" }, method = RequestMethod.POST)
-						public @ResponseBody List getConsultingByDoctorIdAndDatePresc(@RequestParam("doctorId") int doctorId,@RequestParam("patientId") int patientId,@RequestParam("startdate") String startdate,@RequestParam("enddate") String enddate)
 						
-						{
-							System.out.println("patientId:"+patientId);
-							System.out.println("doctorId:"+doctorId);
-							System.out.println("startdate:"+startdate);
-							System.out.println("enddate:"+enddate);
-							
-							
-						List<ConsultingDetails> consultingList =new ArrayList<ConsultingDetails>();
-							Info info=new Info();
-							try {
-								
-								if(doctorId!=0)
-								{
-									 consultingList=consultingDetailsRepository.getConsultingDetailsByDoctorHavePresc(doctorId,patientId);
-									
-								}
-								else {
-									System.out.println("hello");
-									startdate=DateConverter.convertToYMD(startdate);
-									enddate=DateConverter.convertToYMD(enddate);
-									consultingList=consultingDetailsRepository.getConsultingDetailsByDateHavePresc(startdate,enddate,patientId);
-									
-								}
-								
-								System.out.println("Consulting List "+consultingList.toString());
-								
-							}
-							catch (Exception e) {
-								// TODO: handle exception
-								System.out.println(e.getMessage());
-								
-							}
-						
-							return consultingList;         
-						}
 						
 						
 						
@@ -852,6 +814,45 @@ public class ConsultingDetailsController {
 							}
 						
 							return consultingList;
+						}
+						
+						//having prescription
+						@RequestMapping(value = { "/getConsultingByDoctorIdAndDatePresc" }, method = RequestMethod.POST)
+						public @ResponseBody List getConsultingByDoctorIdAndDatePresc(@RequestParam("doctorId") int doctorId,@RequestParam("patientId") int patientId,@RequestParam("startdate") String startdate,@RequestParam("enddate") String enddate)
+						
+						{
+							System.out.println("patientId:"+patientId);
+							System.out.println("doctorId:"+doctorId);
+							System.out.println("startdate:"+startdate);
+							System.out.println("enddate:"+enddate);
+							
+							
+						List<ConsultingDetails> consultingList =new ArrayList<ConsultingDetails>();
+							Info info=new Info();
+							try {
+								
+								if(doctorId!=0)
+								{
+									 consultingList=consultingDetailsRepository.getConsultingDetailsByDoctorHavePresc(doctorId,patientId);
+									
+								}
+								else {
+									System.out.println("hello");
+									
+									consultingList=consultingDetailsRepository.getConsultingDetailsByDateHavePresc(startdate,enddate,patientId);
+									
+								}
+								
+								System.out.println("Consulting List "+consultingList.toString());
+								
+							}
+							catch (Exception e) {
+								// TODO: handle exception
+								System.out.println(e.getMessage());
+								
+							}
+						
+							return consultingList;         
 						}
 						
 						

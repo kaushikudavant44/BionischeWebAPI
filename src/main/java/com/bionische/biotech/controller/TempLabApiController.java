@@ -24,6 +24,7 @@ import com.bionische.biotech.model.GetPatientUploadedReport;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.LabTests;
+import com.bionische.biotech.model.PatientNotification;
 import com.bionische.biotech.model.ReportDetails;
 import com.bionische.biotech.model.SharingReportWithDoc;
 import com.bionische.biotech.repository.BabyBornReportsRepository;
@@ -34,6 +35,7 @@ import com.bionische.biotech.repository.GetPatientUploadedReportsRepository;
 import com.bionische.biotech.repository.LabAppointmentRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.LabTestsRepository;
+import com.bionische.biotech.repository.PatientNotificationRepository;
 import com.bionische.biotech.repository.ReportDetailsRepository;
 import com.bionische.biotech.repository.SharingReportWithDocRepository;
 import com.bionische.biotech.service.CreateDirectoryService;
@@ -81,6 +83,12 @@ public class TempLabApiController {
 	@Autowired
 	CreateDirectoryService createDirectoryService;
 	
+	@Autowired
+	LabTestsRepository labTestsRepository;
+	
+	@Autowired
+	PatientNotificationRepository patientNotificationRepository;
+	
 	@RequestMapping(value = { "/getAllLabTypes" }, method = RequestMethod.POST)
 	public @ResponseBody List<LabTests> getAllLabTypes() {
 		
@@ -104,10 +112,20 @@ public class TempLabApiController {
 		
 		if(patientReport!=null)
 		{
+			LabDetails LabDetails = labDetailsRepository.findByLabId(patientReport.getLabId());
+			LabTests LabTests = labTestsRepository.getTestDetailsByTestId(patientReport.getLabTestId());
+			PatientNotification patientNotification = new PatientNotification();
 			GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsById(patientReport.getPatientId());
 			 
 				sendEMailService.sendMail("Your  Report has been Successfully Uploaded", "Your  Report has been Successfully Uploaded", getPatientContactDetailsById.getEmail());
-		 
+			
+				patientNotification.setPatientId(getPatientContactDetailsById.getPatientId());
+				patientNotification.setNotification(LabDetails.getLabName()+" has sent your "+LabTests.getLabTestName()+" report on DATE "+patientReport.getReportDate()+" and TIME "+patientReport.getReportTime());					
+				patientNotification.setStatus(0);
+				patientNotification.setString1("Lab Report");
+				patientNotification.setString2("lab");
+				patientNotification.setInt1(patientReport.getLabId());
+				patientNotificationRepository.save(patientNotification);
 			info.setError(false);
 			info.setMessage("Success");
 		}

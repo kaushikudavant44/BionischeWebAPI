@@ -894,7 +894,7 @@ System.out.println(e.getMessage());
 				patientNotification.setPatientId(getPatientContactDetailsById.getPatientId());
 				patientNotification.setNotification("Your Appointment has been cancelled by Dr."+getAppointmentDetails.getDoctorName()+" on DATE "+getAppointmentDetails.getDate()+" and TIME "+getAppointmentDetails.getTime());					
 				patientNotification.setStatus(0);
-				patientNotification.setString1("Appointment Confirmed");
+				patientNotification.setString1("Appointment Status");
 				patientNotification.setString2("doctor");
 				patientNotification.setInt1(getAppointmentDetails.getDoctorId());
 				patientNotificationRepository.save(patientNotification);
