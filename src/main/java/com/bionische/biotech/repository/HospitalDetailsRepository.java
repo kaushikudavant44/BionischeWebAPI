@@ -20,6 +20,7 @@ public interface HospitalDetailsRepository extends JpaRepository<HospitalDetails
 	
 	HospitalDetails findByHospitalId(int hospitalId);
 
+	HospitalDetails findByHospitalIdAndDelstatus(int hospitalId,int delstatus);
 	
 	List<HospitalDetails> findAll();                                  
 	

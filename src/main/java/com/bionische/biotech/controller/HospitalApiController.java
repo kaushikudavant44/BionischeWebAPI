@@ -37,7 +37,7 @@ public class HospitalApiController {
 		
 
 		try {
-			getHospitalDetails = hospitalDetailsRepository.findByHospitalId(hospitalId);
+			getHospitalDetails = hospitalDetailsRepository.findByHospitalIdAndDelstatus(hospitalId,0);
 			System.out.println(getHospitalDetails.toString());
 
 		}

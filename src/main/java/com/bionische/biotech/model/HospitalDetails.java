@@ -55,7 +55,15 @@ public class HospitalDetails {
 	
 	@Column(name="longitude")
 	private float longitude;
-
+	
+	/**
+	 *	This type is use for predict clinic or hospital
+	 *  clinic =0
+	 *  hospital=1 
+	 */
+	@Column(name="type")
+	private int type;
+	
 	public int getHospitalId() {
 		return hospitalId;
 	}
@@ -176,6 +184,16 @@ public class HospitalDetails {
 	public void setLongitude(float longitude) {
 		this.longitude = longitude;
 	}
+	
+	
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
 
 	@Override
 	public String toString() {
@@ -183,7 +201,7 @@ public class HospitalDetails {
 				+ ", stateId=" + stateId + ", countryId=" + countryId + ", address=" + address + ", contactNo="
 				+ contactNo + ", email=" + email + ", int1=" + int1 + ", int2=" + int2 + ", string1=" + string1
 				+ ", string2=" + string2 + ", delstatus=" + delstatus + ", latitude=" + latitude + ", longitude="
-				+ longitude + "]";
+				+ longitude + ", type=" + type + "]";
 	}
 
 }
