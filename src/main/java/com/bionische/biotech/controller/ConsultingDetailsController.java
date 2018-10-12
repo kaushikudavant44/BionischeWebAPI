@@ -138,6 +138,32 @@ public class ConsultingDetailsController {
 	}
 	
 	
+	@RequestMapping(value = { "/getConsultingByDoctorId" }, method = RequestMethod.POST)
+	public @ResponseBody List getConsultingByDoctorId(@RequestParam("doctorId") int doctorId)
+	
+	{
+		System.out.println("doctorId:"+doctorId);
+		
+
+	List<ConsultingDetails> consultingList =new ArrayList<ConsultingDetails>();
+		Info info=new Info();
+		try {
+			
+			
+				
+				consultingList=consultingDetailsRepository.getConsultingDetailsByDoctorId(doctorId);
+				System.out.println("Consulting List "+consultingList.toString());
+
+			}
+		catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+			
+		}
+	
+		return consultingList;
+	}
+	
 	
 	
 	@RequestMapping(value = { "/getPrescriptionByMeetingId" }, method = RequestMethod.POST)

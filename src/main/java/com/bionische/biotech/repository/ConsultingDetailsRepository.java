@@ -40,6 +40,13 @@ public interface ConsultingDetailsRepository extends JpaRepository<ConsultingDet
     List<ConsultingDetails> getConsultingDetailsByDateANDdoctorId(@Param("startdate")String startdate,@Param("enddate") String enddate, @Param("doctorId")int doctorId);
 
 	
+	@Query(value="SELECT m.meet_id,m.doctor_id,m.patient_id,CONCAT(p.f_name,' ',p.l_name) AS patient_name,h.hospital_name,p.f_name,\r\n" + 
+			"m.time,m.date,m.patient_problem,m.note, m.discussion FROM patient_details p,hospital_details h, doctor_details d,\r\n" + 
+			"doctor_patient_meeting m WHERE  m.doctor_id=:doctorId AND m.patient_id=p.patient_id AND m.patient_id=p.patient_id AND h.hospital_id=d.hospital_id GROUP BY m.meet_id ORDER BY m.meet_id DESC LIMIT 20",nativeQuery=true)
+	
+    List<ConsultingDetails> getConsultingDetailsByDoctorId(@Param("doctorId")int doctorId);
+	
+	
 	@Query(value="SELECT m.meet_id, m.doctor_id, m.patient_id,CONCAT(p.f_name,' ',p.l_name) AS patient_name, h.hospital_name, p.f_name, m.time, m.date, m.patient_problem,m.note, m.discussion FROM patient_details p,hospital_details h, doctor_details d,doctor_patient_meeting m WHERE  m.patient_id=:patientId AND m.doctor_id=:doctorId AND h.hospital_id=d.hospital_id GROUP BY m.meet_id",nativeQuery=true)
 	List<ConsultingDetails> getConsultingHistoryDetailsByDoctorAndPatientId(@Param("patientId")int patientId,@Param("doctorId")int doctorId);
 	
