@@ -55,5 +55,10 @@ public interface ConsultingDetailsRepository extends JpaRepository<ConsultingDet
 			"doctor_patient_meeting m WHERE m.int_1=0 AND m.date<:date AND m.doctor_id=d.doctor_id AND h.hospital_id=d.hospital_id AND m.patient_id=p.patient_id AND m.patient_id IN (SELECT p.patient_id FROM patient_details p WHERE p.family_id=:familyId)",nativeQuery=true)
 	List<ConsultingDetails> getConsultingDetailsByRatingStatus(@Param("familyId")int familyId,@Param("date")String date);
 
+	@Query(value="SELECT m.meet_id,d.doctor_id,m.patient_id,CONCAT(p.f_name,' ',p.l_name) AS patient_name, h.hospital_name,\r\n" + 
+			"CONCAT(d.f_name,' ',d.l_name) AS f_name,m.time,c.date_time AS DATE,m.patient_problem,m.note, m.discussion FROM hospital_details h, doctor_details d,\r\n" + 
+			"doctor_patient_meeting m,patient_details p,patient_cart c WHERE c.patient_id=:patientId AND c.meet_id=m.meet_id AND m.doctor_id=d.doctor_id AND h.hospital_id=d.hospital_id\r\n" + 
+			" AND m.patient_id=p.patient_id ORDER BY c.date_time DESC",nativeQuery=true)
+	List<ConsultingDetails> getCartProductDetails(@Param("patientId")int patientId);
 }
   
