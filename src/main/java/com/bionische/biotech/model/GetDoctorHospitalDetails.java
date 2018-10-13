@@ -25,6 +25,9 @@ public class GetDoctorHospitalDetails {
 	
 	@Column(name="del_status")
 	private int delStatus;
+	
+	@Column(name="type")
+	private int hospitalType;
 
 	public int getId() {
 		return id;
@@ -68,11 +71,22 @@ public class GetDoctorHospitalDetails {
 		this.delStatus = delStatus;
 	}
 
+	public int getHospitalType() {
+		return hospitalType;
+	}
+
+	public void setHospitalType(int hospitalType) {
+		this.hospitalType = hospitalType;
+	}
+
 	@Override
 	public String toString() {
 		return "GetDoctorHospitalDetails [id=" + id + ", doctorId=" + doctorId + ", hospitalId=" + hospitalId
-				+ ", hospitalName=" + hospitalName + ", delStatus=" + delStatus + "]";
+				+ ", hospitalName=" + hospitalName + ", delStatus=" + delStatus + ", hospitalType=" + hospitalType
+				+ "]";
 	}
+
+	 
 	
 	
 }

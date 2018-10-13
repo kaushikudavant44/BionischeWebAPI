@@ -31,6 +31,9 @@ public class DocAvailableTime {
 	
 	@Column(name="available_time")
 	private String availableTime;
+	
+	@Column(name="no_of_patient")
+	private int noOfPatient;
 
 	public int getDocAvailableId() {
 		return docAvailableId;
@@ -80,12 +83,22 @@ public class DocAvailableTime {
 		this.availableTime = availableTime;
 	}
 
+	public int getNoOfPatient() {
+		return noOfPatient;
+	}
+
+	public void setNoOfPatient(int noOfPatient) {
+		this.noOfPatient = noOfPatient;
+	}
+
 	@Override
 	public String toString() {
 		return "DocAvailableTime [docAvailableId=" + docAvailableId + ", doctorId=" + doctorId + ", date=" + date
-				+ ", delStatus=" + delStatus + ", hospitalId=" + hospitalId + ", availableTime=" + availableTime + "]";
+				+ ", delStatus=" + delStatus + ", hospitalId=" + hospitalId + ", availableTime=" + availableTime
+				+ ", noOfPatient=" + noOfPatient + "]";
 	}
 
+	 
  
 	 
 
