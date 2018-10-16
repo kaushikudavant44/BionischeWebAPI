@@ -138,4 +138,23 @@ public class HospitalApiController {
 
 		return doctorHospitalDetailsRes;
 	}
+	
+	@RequestMapping(value = { "/getAllHospitalByType" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetHospitalDetails> getAllHospitalByType(@RequestParam("type") int type) {
+		
+		List<GetHospitalDetails> getHospitalDetailsList = new ArrayList<GetHospitalDetails>();
+
+		try {
+			getHospitalDetailsList = getHospitalDetailsRepository.findHospitalByType(type);
+			System.out.println(getHospitalDetailsList.toString());
+
+		}
+
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+
+		}
+
+		return getHospitalDetailsList;
+	}
 }
