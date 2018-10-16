@@ -31,6 +31,9 @@ int updateAvailableTime(@Param("docAvailableId")int docAvailableId, @Param("date
 	List<DocAvailableTime> getAllTimeBYDoctorId(@Param("doctorId")int doctorId,@Param("date")String date);
 	
 	
+	@Query(value=" SELECT d.doc_available_time_id, d.doctor_id,d.del_status,d.hospital_id,d.available_time,d.no_of_patient,h.hospital_name as date from doc_available_time d, hospital_details h where doctor_id=:doctorId AND date=:date and h.hospital_id=d.hospital_id",nativeQuery=true)
+	List<DocAvailableTime> getAvailableTimeByDoctorIdAndDate(@Param("doctorId")int doctorId,@Param("date")String date);
+	
 	List<DocAvailableTime> findByDoctorIdAndDate(int doctorId,String date);
 
 	@Query(value=" SELECT * from doc_available_time where doctor_id=:doctorId AND date=:date AND del_status=0 AND hospital_id=:hospitalId",nativeQuery=true)

@@ -47,7 +47,8 @@ public class DoctorAvailableTimeApiController {
 		List<DocAvailableTime> docAvailableTimeList=new ArrayList<DocAvailableTime>();
 		try {
 			appointmentTimeList=appointmentTimeRepository.findAll();
-			docAvailableTimeList=docAvailableTimeRepository.findByDoctorIdAndDate(doctorId,date);
+			docAvailableTimeList=docAvailableTimeRepository.getAvailableTimeByDoctorIdAndDate(doctorId,date);
+			
 			for(int i=0;i<docAvailableTimeList.size();i++) {
 			List<String> availableTimeList = Arrays.asList(docAvailableTimeList.get(i).getAvailableTime().split(","));
 			for(int j=0;j<appointmentTimeList.size();j++)
@@ -56,6 +57,7 @@ public class DoctorAvailableTimeApiController {
 				if(appointmentTimeList.get(j).getTimeId()==Integer.parseInt(availableTimeList.get(k)))
 				{
 					appointmentTimeList.get(j).setInt1(docAvailableTimeList.get(i).getHospitalId());
+					appointmentTimeList.get(j).setString1(docAvailableTimeList.get(i).getDate());
 				 
 				}
 			}
