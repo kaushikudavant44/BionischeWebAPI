@@ -22,8 +22,7 @@ public class PrescriptionOrderDetails {
 	@Column(name="prescription_id")
 	private int prescriptionId;
 	
-	@Column(name="quantity")
-	private int quantity;
+ 
 	
 	@Column(name="price")
 	private float price;
@@ -58,13 +57,7 @@ public class PrescriptionOrderDetails {
 		this.prescriptionId = prescriptionId;
 	}
 
-	public int getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
+ 
 
 	public float getPrice() {
 		return price;
@@ -93,8 +86,9 @@ public class PrescriptionOrderDetails {
 	@Override
 	public String toString() {
 		return "PrescriptionOrderDetails [prescriptionOrderDetailsId=" + prescriptionOrderDetailsId + ", requestId="
-				+ requestId + ", prescriptionId=" + prescriptionId + ", quantity=" + quantity + ", price=" + price
-				+ ", status=" + status + ", delStatus=" + delStatus + "]";
+				+ requestId + ", prescriptionId=" + prescriptionId + ", price=" + price + ", status=" + status
+				+ ", delStatus=" + delStatus + "]";
 	}
 
+	 
 }

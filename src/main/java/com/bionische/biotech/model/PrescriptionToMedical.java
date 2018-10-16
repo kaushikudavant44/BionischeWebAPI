@@ -28,7 +28,7 @@ public class PrescriptionToMedical {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="medical_request_id")
-	private int patientRequestToMedicalId;
+	private int requestToMedicalId;
 	
 	@Column(name="meet_id")
 	private int meetId;
@@ -55,6 +55,9 @@ public class PrescriptionToMedical {
 	
 	@Column(name="delivery_type")
 	private int deliveryType;
+	
+	@Column(name="total_amt")
+	private float totalAmt;
 	
 	@Column(name="pincode")
 	private int pincode;
@@ -89,6 +92,20 @@ public class PrescriptionToMedical {
 	@Column(name="email")
 	private String email;
 
+	
+	
+	public Date getOrderDate() {
+		return orderDate;
+	}
+
+ 
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+ 
+
 	public String getEmail() {
 		return email;
 	}
@@ -96,13 +113,14 @@ public class PrescriptionToMedical {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+ 
 
-	public int getPatientRequestToMedicalId() {
-		return patientRequestToMedicalId;
+	public int getRequestToMedicalId() {
+		return requestToMedicalId;
 	}
 
-	public void setPatientRequestToMedicalId(int patientRequestToMedicalId) {
-		this.patientRequestToMedicalId = patientRequestToMedicalId;
+	public void setRequestToMedicalId(int requestToMedicalId) {
+		this.requestToMedicalId = requestToMedicalId;
 	}
 
 	public int getMeetId() {
@@ -225,15 +243,31 @@ public class PrescriptionToMedical {
 		this.address = address;
 	}
 
+
+
+	public float getTotalAmt() {
+		return totalAmt;
+	}
+
+
+
+	public void setTotalAmt(float totalAmt) {
+		this.totalAmt = totalAmt;
+	}
+
+
+
 	@Override
 	public String toString() {
-		return "PrescriptionToMedical [patientRequestToMedicalId=" + patientRequestToMedicalId + ", meetId=" + meetId
-				+ ", orderDate=" + orderDate + ", lastModifiedDate=" + lastModifiedDate + ", medicalId=" + medicalId
-				+ ", patientId=" + patientId + ", doctorId=" + doctorId + ", deliveryType=" + deliveryType
+		return "PrescriptionToMedical [requestToMedicalId=" + requestToMedicalId + ", meetId=" + meetId + ", orderDate="
+				+ orderDate + ", lastModifiedDate=" + lastModifiedDate + ", medicalId=" + medicalId + ", patientId="
+				+ patientId + ", doctorId=" + doctorId + ", deliveryType=" + deliveryType + ", totalAmt=" + totalAmt
 				+ ", pincode=" + pincode + ", patientContact=" + patientContact + ", paymentStatus=" + paymentStatus
 				+ ", int1=" + int1 + ", int2=" + int2 + ", string1=" + string1 + ", string2=" + string2 + ", delStatus="
-				+ delStatus + ", status=" + status + ", address=" + address + "]";
+				+ delStatus + ", status=" + status + ", address=" + address + ", email=" + email + "]";
 	}
+
+	 
 	
 	
 	

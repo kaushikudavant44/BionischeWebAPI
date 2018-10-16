@@ -12,6 +12,10 @@ import com.bionische.biotech.model.PrescriptionToMedical;
 
 public interface PrescriptionToMedicalRepository extends JpaRepository<PrescriptionToMedical, Integer>{
 	
+	
+	
+	PrescriptionToMedical save(PrescriptionToMedical prescriptionToMedical); 
+	
 	/*
 	@Query(value=" SELECT p.medical_request_id,p.patient_name,m.medical_name,p.doctor_name,p.hospital_name,p.meet_id,p.date,p.time,p.int_1,p.int_2,d.contact AS string_1,p.string_2,p.medical_id,\r\n" + 
 			"p.del_status,p.status,p.patient_id,p.doctor_id,p.patient_contact,p.pincode,p.city,p.land_mark,p.address,p.delivery_type\r\n" + 
