@@ -57,8 +57,15 @@ public class GetDoctorListForAppointment {
 	@Column(name="spec_id")
 	private int specId;
 	
-	@Column(name="hospital_id")
-	private int hospitalId;
+	@Column(name="spec_type")
+	private String specType;
+	
+
+	@Column(name="fees")
+	private float fees;
+	
+/*	@Column(name="hospital_id")
+	private int hospitalId;*/
 	
  
 	@Column(name="council_reg_no")
@@ -68,12 +75,6 @@ public class GetDoctorListForAppointment {
 	private String councilName;
 	
 	private float rating;
-	
-	@Column(name="hospital_name")
-	private String hospitalName;
-	
-	@Column(name="hospital_address")
-	private String hospitalAddress;
 
 	public int getDoctorId() {
 		return doctorId;
@@ -195,14 +196,7 @@ public class GetDoctorListForAppointment {
 		this.specId = specId;
 	}
 
-	public int getHospitalId() {
-		return hospitalId;
-	}
-
-	public void setHospitalId(int hospitalId) {
-		this.hospitalId = hospitalId;
-	}
-
+	 
 	public String getCouncilRegNo() {
 		return councilRegNo;
 	}
@@ -227,20 +221,20 @@ public class GetDoctorListForAppointment {
 		this.rating = rating;
 	}
 
-	public String getHospitalName() {
-		return hospitalName;
+	public String getSpecType() {
+		return specType;
 	}
 
-	public void setHospitalName(String hospitalName) {
-		this.hospitalName = hospitalName;
+	public void setSpecType(String specType) {
+		this.specType = specType;
 	}
 
-	public String getHospitalAddress() {
-		return hospitalAddress;
+	public float getFees() {
+		return fees;
 	}
 
-	public void setHospitalAddress(String hospitalAddress) {
-		this.hospitalAddress = hospitalAddress;
+	public void setFees(float fees) {
+		this.fees = fees;
 	}
 
 	@Override
@@ -249,11 +243,22 @@ public class GetDoctorListForAppointment {
 				+ ", mName=" + mName + ", cityId=" + cityId + ", address=" + address + ", yearOfExperience="
 				+ yearOfExperience + ", aboutMe=" + aboutMe + ", profilePhoto=" + profilePhoto + ", contactNo="
 				+ contactNo + ", email=" + email + ", qualification=" + qualification + ", college=" + college
-				+ ", passingYear=" + passingYear + ", specId=" + specId + ", hospitalId=" + hospitalId
-				+ ", councilRegNo=" + councilRegNo + ", councilName=" + councilName + ", rating=" + rating
-				+ ", hospitalName=" + hospitalName + ", hospitalAddress=" + hospitalAddress + "]";
+				+ ", passingYear=" + passingYear + ", specId=" + specId + ", specType=" + specType + ", fees=" + fees
+				+ ", councilRegNo=" + councilRegNo + ", councilName=" + councilName + ", rating=" + rating + "]";
 	}
+
+	 
+
+	 
 	
+/*	@Column(name="hospital_name")
+	private String hospitalName;
+	
+	@Column(name="hospital_address")
+	private String hospitalAddress;*/
+
+	 
+	 
 	
 	
 	

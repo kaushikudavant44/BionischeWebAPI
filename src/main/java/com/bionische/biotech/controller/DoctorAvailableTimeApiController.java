@@ -94,46 +94,29 @@ public class DoctorAvailableTimeApiController {
 	return info;
 }
 	
-	/*@RequestMapping(value = { "/insertAvailableDocTimeDetails"}, method = RequestMethod.POST)
-	public  Info insertAvailableDocTimeDetails(@RequestBody DocAvailableTime docAvailableTime) {
-		System.out.println("insertAvailableDocTimeDetails "+docAvailableTime.toString());
+
+@RequestMapping(value = { "/getClinicAvailabledTimeForAppointment"}, method = RequestMethod.POST)
+public  List<AppointmentTime> getClinicAvailabledTimeForAppointment(@RequestParam("doctorId") int doctorId, @RequestParam("date") String date,@RequestParam("hospitalId") int hospitalId) {
+	System.out.println("date "+date+"  doctorId  "+doctorId);
+	
+	List<AppointmentTime> appointmentTimeList=new ArrayList<AppointmentTime>();
+	 
+	try {
+		 
+		DocAvailableTime docAvailableTime=docAvailableTimeRepository.findByDoctorIdAndDateAndHospitalId(doctorId,date,hospitalId);
 		
-		int res=0;
-		Info info=new Info();
-		try {
-			//int fromTime=docAvailableTime.getFromTime();
-			//int toTime=docAvailableTime.getToTime();
-			
-			DocAvailableTime docAvailableTime1 =new DocAvailableTime();
-			
-			docAvailableTime1 = docAvailableTimeRepository.getAvailableTimeDBYDoctorId(docAvailableTime.getDoctorId(), docAvailableTime.getDate());
-			System.out.println("cdsc"+docAvailableTime1);
-			if(docAvailableTime1!=null)
-			{
-				docAvailableTime.setDocAvailableId(docAvailableTime1.getDocAvailableId());
-				// res=docAvailableTimeRepository.updateAvailableTime(docAvailableTime1.getDocAvailableId(),docAvailableTime1.getDate(), docAvailableTime.getFromTime(),docAvailableTime.getToTime());	
-				
-			}
-			 
-				docAvailableTimeRepository.save(docAvailableTime);	
-				res=1;
-			 
+		 
+		List<String> availableTimeList = Arrays.asList(docAvailableTime.getAvailableTime().split(","));
+		 
+		appointmentTimeList=appointmentTimeRepository.getClinicAvailabledAppointTime(doctorId, hospitalId, date, availableTimeList, docAvailableTime.getNoOfPatient());
+	
 		
-			if(res>0)
-			{
-				info.setMessage("Your Appointment Time Availability status update Successfully!!");
-				info.setError(false);
-			}
-			else {
-				info.setMessage("Your Appointment Time Availability status update  Failed!!");
-				info.setError(true);
-			}
-			 
-		}
-		catch (Exception e) {
-		e.printStackTrace();
-		}
-	    return info;
-	}*/
+	}catch (Exception e) {
+		System.out.println(e.getMessage());// TODO: handle exception
+	}
+	
+	
+	return appointmentTimeList;
+}
 
 }

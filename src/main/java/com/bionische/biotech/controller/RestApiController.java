@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +36,7 @@ import com.bionische.biotech.model.GetDoctorDetails;
 import com.bionische.biotech.model.GetDoctorListForAppointment;
 import com.bionische.biotech.model.GetDoctorProfile;
 import com.bionische.biotech.model.GetDoctorRatingReviewCount;
+import com.bionische.biotech.model.GetHospitalClinicByDoctorIdAndAvailDate;
 import com.bionische.biotech.model.GetLabAppointment;
 import com.bionische.biotech.model.GetLabRatingReview;
 import com.bionische.biotech.model.GetPatientContactDetailsById;
@@ -77,6 +79,7 @@ import com.bionische.biotech.repository.GetDoctorDetailsInformationRepository;
 import com.bionische.biotech.repository.GetDoctorDetailsRepository;
 import com.bionische.biotech.repository.GetDoctorListForAppointmentRepository;
 import com.bionische.biotech.repository.GetDoctorProfileRepository;
+import com.bionische.biotech.repository.GetHospitalClinicByDoctorIdAndAvailDateRepository;
 import com.bionische.biotech.repository.GetLabAppointmentRrepository;
 import com.bionische.biotech.repository.GetLabRatingReviewRepository;
 import com.bionische.biotech.repository.GetPatientContactDetailsByIdRepository;
@@ -230,6 +233,8 @@ public class RestApiController {
 	@Autowired
 	DoctorCertificateDetailsRepository doctorCertificateDetailsRepository;
 	
+	@Autowired
+	GetHospitalClinicByDoctorIdAndAvailDateRepository getHospitalClinicByDoctorIdAndAvailDateRepository;
 	String MESSAGE;
 	
 	@RequestMapping(value = { "/insertDoctorDetails" }, method = RequestMethod.POST)
@@ -574,7 +579,7 @@ System.out.println(e.getMessage());
 			GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsById(appointmentDetailsRes.getPatientId());
 			AppointmentTime appointmentTime=appointmentTimeRepository.findByTimeId(appointmentDetailsRes.getTime());
 			DoctorDetails doctorDetails=doctorDetailsRepository.findByDoctorId(appointmentDetailsRes.getDoctorId());
-			HospitalDetails hospitalDetails=hospitalDetailsRepository.findByHospitalId(doctorDetails.getHospitalId());
+			HospitalDetails hospitalDetails=hospitalDetailsRepository.findByHospitalId(Integer.parseInt(appointmentDetails.getHospitalId()));
 			try {
 				DoctorNotification doctorNotification=new DoctorNotification();
 				if(appointmentDetailsRes.getInt1()==1) {
@@ -774,11 +779,11 @@ System.out.println(e.getMessage());
 		
 		
 		@RequestMapping(value = { "/getDoctorsBySpecialistId" }, method = RequestMethod.POST)
-		public @ResponseBody List<GetDoctorListForAppointment> getDoctorsBySpecialistId(@RequestParam("cityId") int cityId,@RequestParam("specId") int specId) {
+		public @ResponseBody List<GetDoctorListForAppointment> getDoctorsBySpecialistId(@RequestParam("cityId") int cityId,@RequestParam("specId") int specId ,@RequestParam("date") String date) {
 			System.out.println("cccity "+cityId);
 			List<GetDoctorListForAppointment> getDoctorListForAppointmentLsit=new ArrayList<GetDoctorListForAppointment>();
 			try {
-				getDoctorListForAppointmentLsit=getDoctorListForAppointmentRepository.getDoctorListForAppointment(specId,cityId);
+				getDoctorListForAppointmentLsit=getDoctorListForAppointmentRepository.getDoctorListForAppointment(specId,cityId, date);
 			}
 			catch (Exception e) {
 			e.printStackTrace();
@@ -2538,4 +2543,34 @@ System.out.println(e.getMessage());
 					}
 					
 					
+					
+					@RequestMapping(value = { "/getHospitalClinicByDoctorIdAndAvailDate"}, method = RequestMethod.POST)
+					public @ResponseBody List<GetHospitalClinicByDoctorIdAndAvailDate> getHospitalClinicByDoctorIdAndAvailDate(@RequestParam("doctorId") int doctorId, @RequestParam("date")String date) {
+											
+						
+						List<GetHospitalClinicByDoctorIdAndAvailDate> getHospitalClinicByDoctorIdAndAvailDateList=getHospitalClinicByDoctorIdAndAvailDateRepository.getHospitalClinicByDoctorIdAndAvailDate(doctorId,date);
+						
+						for(int i=0;i<getHospitalClinicByDoctorIdAndAvailDateList.size();i++) {
+							List<String> availableTimeList = Arrays.asList(getHospitalClinicByDoctorIdAndAvailDateList.get(i).getAvailableTime().split(","));
+							 
+							for(int j=0;j<availableTimeList.size();j++)
+							{
+								List<AppointmentTime> appointmentTimeList= appointmentTimeRepository.getDoctorAppointMentTime(availableTimeList.get(j), availableTimeList.get(availableTimeList.size()-1));
+							
+								for(int k=0;k<appointmentTimeList.size();k++) {
+									if(appointmentTimeList.get(k).getTimeId()==Integer.parseInt(availableTimeList.get(j)))
+								getHospitalClinicByDoctorIdAndAvailDateList.get(i).setFromTime(appointmentTimeList.get(k).getTime());
+									else if(appointmentTimeList.get(k).getTimeId()==Integer.parseInt(availableTimeList.get(availableTimeList.size()-1)))
+								getHospitalClinicByDoctorIdAndAvailDateList.get(i).setToTime(appointmentTimeList.get(k).getTime());
+								}
+									j=j+availableTimeList.size();
+								 
+								 
+							
+							
+							}
+						}
+						
+					    return  getHospitalClinicByDoctorIdAndAvailDateList;
+					}
 }
