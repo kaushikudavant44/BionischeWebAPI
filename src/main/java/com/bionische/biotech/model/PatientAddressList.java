@@ -19,8 +19,29 @@ public class PatientAddressList {
 	@Column(name="pincode")
 	private int pincode;
 	
-	@Column(name="address")
-	private String address;
+	@Column(name="full_name")
+    private String fullName;
+	
+	@Column(name="locality")
+	private String locality;
+	
+	@Column(name="house")
+	private String house;
+	
+	@Column(name="street")
+	private String street;
+	
+	@Column(name="country")
+	private String country;
+	
+	@Column(name="state")
+	private String state;
+	
+	@Column(name="city")
+	private String city;
+	
+	@Column(name="contact_no")
+	private String contactNo;
 	
 	@Column(name="patient_id")
 	private int patientId;
@@ -41,12 +62,68 @@ public class PatientAddressList {
 		this.pincode = pincode;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getFullName() {
+		return fullName;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getLocality() {
+		return locality;
+	}
+
+	public void setLocality(String locality) {
+		this.locality = locality;
+	}
+
+	public String getHouse() {
+		return house;
+	}
+
+	public void setHouse(String house) {
+		this.house = house;
+	}
+
+	public String getStreet() {
+		return street;
+	}
+
+	public void setStreet(String street) {
+		this.street = street;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getContactNo() {
+		return contactNo;
+	}
+
+	public void setContactNo(String contactNo) {
+		this.contactNo = contactNo;
 	}
 
 	public int getPatientId() {
@@ -60,8 +137,11 @@ public class PatientAddressList {
 	@Override
 	public String toString() {
 		return "PatientAddressList [patientAddressListId=" + patientAddressListId + ", pincode=" + pincode
-				+ ", address=" + address + ", patientId=" + patientId + "]";
+				+ ", fullName=" + fullName + ", locality=" + locality + ", house=" + house + ", street=" + street
+				+ ", country=" + country + ", state=" + state + ", city=" + city + ", contactNo=" + contactNo
+				+ ", patientId=" + patientId + "]";
 	}
+
 	
 	
 

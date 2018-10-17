@@ -3,6 +3,7 @@ package com.bionische.biotech.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.bionische.biotech.model.PrescriptionDetails;
 import com.bionische.biotech.model.PrescriptionOrderDetails;
@@ -11,6 +12,7 @@ import com.bionische.biotech.repository.PrescriptionDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionOrderDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionToMedicalRepository;
 
+@Service
 public class PrescriptionOrderServiceImpl implements PrescriptionOrderService{
 
 	
@@ -40,6 +42,7 @@ public class PrescriptionOrderServiceImpl implements PrescriptionOrderService{
 		prescriptionOrderDetails.setRequestId(prescriptionToMedicalRes.getRequestToMedicalId());
 		prescriptionOrderDetails.setStatus(0);
 		prescriptionOrderDetails.setPrice(00);
+		prescriptionOrderDetails.setQuantity(0);
 		
 		PrescriptionOrderDetails prescriptionOrderDetailsRes=prescriptionOrderDetailsRepository.save(prescriptionOrderDetails);
 		
