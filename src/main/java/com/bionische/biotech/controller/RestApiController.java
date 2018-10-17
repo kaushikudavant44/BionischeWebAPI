@@ -42,6 +42,7 @@ import com.bionische.biotech.model.GetLabRatingReview;
 import com.bionische.biotech.model.GetPatientContactDetailsById;
 import com.bionische.biotech.model.GetPatientReviews;
 import com.bionische.biotech.model.GetRatingCount;
+import com.bionische.biotech.model.GetUsersCount;
 import com.bionische.biotech.model.HospitalDetails;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabAppointment;
@@ -84,6 +85,7 @@ import com.bionische.biotech.repository.GetLabAppointmentRrepository;
 import com.bionische.biotech.repository.GetLabRatingReviewRepository;
 import com.bionische.biotech.repository.GetPatientContactDetailsByIdRepository;
 import com.bionische.biotech.repository.GetRatingCountRepository;
+import com.bionische.biotech.repository.GetUsersCountRepository;
 import com.bionische.biotech.repository.HospitalDetailsRepository;
 import com.bionische.biotech.repository.LabAppointmentRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
@@ -235,6 +237,10 @@ public class RestApiController {
 	
 	@Autowired
 	GetHospitalClinicByDoctorIdAndAvailDateRepository getHospitalClinicByDoctorIdAndAvailDateRepository;
+	
+	@Autowired
+	GetUsersCountRepository getUsersCountRepository;
+	
 	String MESSAGE;
 	
 	@RequestMapping(value = { "/insertDoctorDetails" }, method = RequestMethod.POST)
@@ -2572,5 +2578,11 @@ System.out.println(e.getMessage());
 						}
 						
 					    return  getHospitalClinicByDoctorIdAndAvailDateList;
+					}
+					
+					//Ganesh
+					@RequestMapping(value = { "/getUserCounts"}, method = RequestMethod.GET)
+					public @ResponseBody GetUsersCount getUserCounts() {
+						return getUsersCountRepository.getUserCounts();
 					}
 }
