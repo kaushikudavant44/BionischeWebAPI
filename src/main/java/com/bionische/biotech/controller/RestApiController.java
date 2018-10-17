@@ -54,7 +54,6 @@ import com.bionische.biotech.model.PatientAddress;
 import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.PatientMemberRelation;
 import com.bionische.biotech.model.PatientNotification;
-import com.bionische.biotech.model.PatientOrderAddresses;
 import com.bionische.biotech.model.PrescriptionDetails;
 import com.bionische.biotech.model.RatingDetails;
 import com.bionische.biotech.model.RatingDetailsList;
@@ -96,7 +95,6 @@ import com.bionische.biotech.repository.PatientAddressRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.PatientMemberRelationRepository;
 import com.bionische.biotech.repository.PatientNotificationRepository;
-import com.bionische.biotech.repository.PatientOrderAddressesRepository;
 import com.bionische.biotech.repository.PrescriptionDetailsRepository;
 import com.bionische.biotech.repository.RatingDetailsRepository;
 import com.bionische.biotech.repository.SharingReportWithDocRepository;
@@ -114,9 +112,6 @@ public class RestApiController {
 	
 	@Autowired
 	FreequantlyUsedMedicinesRepository freequantlyUsedMedicinesRepository;
-	
-	@Autowired
-	PatientOrderAddressesRepository patientOrderAddressesRepository;
 	
 	@Autowired
 	ForgetPwdVerificationCodeRepository forgetPwdVerificationCodeRepository;
@@ -1992,19 +1987,6 @@ System.out.println(e.getMessage());
 			        return getPatientContactDetailsByIdRepository.getPatientContactDetailsById(patientId);
 				}
 				
-				@RequestMapping(value = { "/getOrderedAddressOfPatient"}, method = RequestMethod.POST)
-				public @ResponseBody List<PatientOrderAddresses> getOrderedAddressOfPatient(@RequestParam("patientId") int patientId) {
-									 
-					List<PatientOrderAddresses> addressList=new ArrayList<PatientOrderAddresses>();
-					try {
-						addressList=patientOrderAddressesRepository.getOrdredAddressOfpatient(patientId,"new"); 
-						System.out.println("addressList:"+addressList.toString());
-						}
-					catch (Exception e) {
-					e.printStackTrace();
-					}
-			        return addressList;
-				}
 				
 				//change patient password
 				@RequestMapping(value = { "/changeDoctorPasswordByUserName" }, method = RequestMethod.POST)
