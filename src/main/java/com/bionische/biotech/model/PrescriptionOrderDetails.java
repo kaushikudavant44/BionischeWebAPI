@@ -13,7 +13,7 @@ public class PrescriptionOrderDetails {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="medical_request_id")
+	@Column(name="prescription_order_details_id")
 	private int prescriptionOrderDetailsId;
 	
 	@Column(name="request_id")
@@ -21,8 +21,7 @@ public class PrescriptionOrderDetails {
 	
 	@Column(name="prescription_id")
 	private int prescriptionId;
-	
-
+		
 	@Column(name="quantity")
 	private int quantity;
 	
@@ -99,6 +98,10 @@ public class PrescriptionOrderDetails {
 				+ requestId + ", prescriptionId=" + prescriptionId + ", quantity=" + quantity + ", price=" + price
 				+ ", status=" + status + ", delStatus=" + delStatus + "]";
 	}
+
+	 
+
+	 
 
 	
 	 
