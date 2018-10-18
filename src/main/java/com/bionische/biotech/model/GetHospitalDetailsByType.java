@@ -6,19 +6,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 @Entity
-public class GetHospitalDetails {
+public class GetHospitalDetailsByType {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	int id;
-	
-	@Column(name="doctor_id")
-	int doctorId;
-	
 	@Column(name="hospital_id")
 	int hospitalId;
-	
 	
 	@Column(name="hospital_name")
 	private String hospitalName;
@@ -46,64 +39,6 @@ public class GetHospitalDetails {
 	
 	@Column(name="type")
 	private String type;
-
-	public int getCityId() {
-		return cityId;
-	}
-
-	public void setCityId(int cityId) {
-		this.cityId = cityId;
-	}
-
-	public int getStateId() {
-		return stateId;
-	}
-
-	public void setStateId(int stateId) {
-		this.stateId = stateId;
-	}
-
-	public String getCityName() {
-		return cityName;
-	}
-
-	public void setCityName(String cityName) {
-		this.cityName = cityName;
-	}
-
-	public String getStateName() {
-		return stateName;
-	}
-
-	public void setStateName(String stateName) {
-		this.stateName = stateName;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public int getDoctorId() {
-		return doctorId;
-	}
-
-	public void setDoctorId(int doctorId) {
-		this.doctorId = doctorId;
-	}
 
 	public int getHospitalId() {
 		return hospitalId;
@@ -145,18 +80,53 @@ public class GetHospitalDetails {
 		this.email = email;
 	}
 
-	@Override
-	public String toString() {
-		return "GetHospitalDetails [id=" + id + ", doctorId=" + doctorId + ", hospitalId=" + hospitalId
-				+ ", hospitalName=" + hospitalName + ", address=" + address + ", contactNo=" + contactNo + ", email="
-				+ email + ", cityId=" + cityId + ", stateId=" + stateId + ", cityName=" + cityName + ", stateName="
-				+ stateName + ", type=" + type + "]";
+	public int getCityId() {
+		return cityId;
 	}
 
-	
+	public void setCityId(int cityId) {
+		this.cityId = cityId;
+	}
 
-	
+	public int getStateId() {
+		return stateId;
+	}
 
+	public void setStateId(int stateId) {
+		this.stateId = stateId;
+	}
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+
+	public String getStateName() {
+		return stateName;
+	}
+
+	public void setStateName(String stateName) {
+		this.stateName = stateName;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	@Override
+	public String toString() {
+		return "GetHospitalDetailsByType [hospitalId=" + hospitalId + ", hospitalName=" + hospitalName + ", address="
+				+ address + ", contactNo=" + contactNo + ", email=" + email + ", cityId=" + cityId + ", stateId="
+				+ stateId + ", cityName=" + cityName + ", stateName=" + stateName + ", type=" + type + "]";
+	}
+	
 	
 	
 }

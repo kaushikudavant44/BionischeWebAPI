@@ -3,8 +3,10 @@ package com.bionische.biotech.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.HospitalDetails;
@@ -29,4 +31,8 @@ public interface HospitalDetailsRepository extends JpaRepository<HospitalDetails
 	List<HospitalDetails> findByCityId(int cityId);
 
 	
+	@Transactional
+	@Modifying
+	@Query("UPDATE HospitalDetails  SET delstatus =:delstatus WHERE hospitalId=:hospitalId")
+	int deleteClinic(@Param("hospitalId")int hospitalId, @Param("delstatus")int delstatus);
 }   

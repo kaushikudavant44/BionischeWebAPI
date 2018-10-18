@@ -11,12 +11,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.adminpanel3d.model.Info;
 import com.bionische.biotech.model.DoctorHospitalDetails;
 import com.bionische.biotech.model.GetHospitalDetails;
+import com.bionische.biotech.model.GetHospitalDetailsByType;
 import com.bionische.biotech.model.HospitalDetails;
 import com.bionische.biotech.repository.DoctorHospitalDetailsRepository;
+import com.bionische.biotech.repository.GetHospitalDetailsByTypeRepository;
 import com.bionische.biotech.repository.GetHospitalDetailsRepository;
 import com.bionische.biotech.repository.HospitalDetailsRepository;
+import com.sun.java.swing.plaf.windows.resources.windows;
 
 @RestController
 public class HospitalApiController {
@@ -29,6 +33,8 @@ public class HospitalApiController {
 	@Autowired
 	GetHospitalDetailsRepository getHospitalDetailsRepository;
 	
+	@Autowired
+	GetHospitalDetailsByTypeRepository getHospitalDetailsByTypeRepository;
 	
 	@RequestMapping(value = { "/getHospitalById" }, method = RequestMethod.POST)
 	public @ResponseBody HospitalDetails getHospitalById(@RequestParam("hospitalId") int hospitalId) {
@@ -157,4 +163,75 @@ public class HospitalApiController {
 
 		return getHospitalDetailsList;
 	}
+	
+	
+	
+	@RequestMapping(value = { "/getHospitalByType" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetHospitalDetailsByType> getHospitalByType(@RequestParam("type") int type) {
+		
+		List<GetHospitalDetailsByType> getHospitalDetailsByTypeList = new ArrayList<GetHospitalDetailsByType>();
+
+		try {
+			getHospitalDetailsByTypeList = getHospitalDetailsByTypeRepository.findHospitalByType(type);
+			System.out.println(getHospitalDetailsByTypeList.toString());
+
+		}
+
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+
+		}
+
+		return getHospitalDetailsByTypeList;
+	}
+	
+	@RequestMapping(value = { "/deleteClinicById" }, method = RequestMethod.POST)
+	public @ResponseBody Info deleteClinicById(@RequestParam("hospitalId") int hospitalId) {
+		
+		Info info = new Info();
+
+		
+		try {
+			int delStatus = hospitalDetailsRepository.deleteClinic(hospitalId,1);
+			if(delStatus!=0) {
+				info.setMessage("Clinic Delete Successfully");
+				
+			}
+
+		}
+
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+
+		}
+
+		return info;
+	}
+	
+	@RequestMapping(value = { "/deleteDoctorHospitalById" }, method = RequestMethod.POST)
+	public @ResponseBody Info deleteClinicById(@RequestParam("hospitalId") int hospitalId,@RequestParam("doctorId") int doctorId) {
+		
+		Info info = new Info();
+
+		
+		try {
+			
+			int delStatus = doctorHospitalDetailsRepository.deleteDoctorHospital(hospitalId,doctorId,1);
+			if(delStatus!=0) {
+				info.setMessage("Hospital Delete Successfully");
+				
+			}
+
+		}
+
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+
+		}
+
+		return info;
+	}
+	
+	
+	
 }
