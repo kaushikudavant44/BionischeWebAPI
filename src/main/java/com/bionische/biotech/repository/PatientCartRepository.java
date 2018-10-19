@@ -22,6 +22,9 @@ public interface PatientCartRepository extends JpaRepository<PatientCart, Intege
 	@Query(value=" SELECT count(cart_id) from patient_cart where patient_id=:patientId",nativeQuery=true)
 	int getPatientCartCount(@Param("patientId")int patientId);
 	
+	@Query(value=" SELECT * from patient_cart where patient_id=:patientId AND meet_id=:meetId",nativeQuery=true)
+	PatientCart getCartProductByMeetId(@Param("patientId")int patientId,@Param("meetId")int meetId);
+	
 	@Transactional
 	@Modifying
 	@Query("DELETE from PatientCart WHERE cartId=:cartId")

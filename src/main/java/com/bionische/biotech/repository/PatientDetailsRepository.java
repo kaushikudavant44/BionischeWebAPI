@@ -31,7 +31,9 @@ public interface PatientDetailsRepository extends JpaRepository<PatientDetails, 
 	@Query(value=" SELECT * from patient_details where blood_group=:bloodGroup ANd del_status=0 AND city_id in (select city_id from city where city_name=:cityName)",nativeQuery=true)
 	List<PatientDetails> getPatientDetailsListByCityIdAndBloodGroup(@Param("cityName")String cityName,@Param("bloodGroup")String bloodGroup);
  
-
+	@Query(value=" SELECT * FROM patient_details WHERE family_id IN (SELECT family_id FROM patient_details WHERE patient_id=:patientId)",nativeQuery=true)
+	List<PatientDetails> getPatientDetailsListByFamilydAndPatientId(@Param("patientId")int patientId);
+	
 	PatientDetails findByUserNameAndPassword(String userName, String password);
 
 

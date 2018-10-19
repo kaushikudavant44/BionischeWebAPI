@@ -61,32 +61,7 @@ public class DoctorPatientMeetingApiConrtoller {
 		return doctorPatientMeetingService.insertDoctorPatientMeeting(doctorPatientMeeting);
 	}
 	
-	@RequestMapping(value = { "/addToCart" }, method = RequestMethod.POST)
-	public @ResponseBody Info addToCart(@RequestBody PatientCart PatientCart)
-	{ 
-		Info info=new Info();
-		PatientCart patientCart = new PatientCart();
-		
-		try {
-			
-			patientCart=patientCartRepository.save(patientCart);
-			
-			if(patientCart!=null)
-			{
-				info.setError(false);
-				info.setMessage("success");
-				
-			}
-			else {
-				info.setError(true);
-				info.setMessage("failed");				
-			}
-			
-		}catch (Exception e) {
-			System.out.println(e.getMessage());
-					}		
-		return info;
-	}
+	
 	
 	@RequestMapping(value = { "/getAllCartProductsOfPatient"}, method = RequestMethod.POST)
 	public @ResponseBody List<GetCartProducts> getAllCartProductsOfPatient(@RequestParam("familyId") int familyId) {
@@ -109,23 +84,44 @@ public class DoctorPatientMeetingApiConrtoller {
 	}
 	
 	@RequestMapping(value = { "/getPatientCartCount"}, method = RequestMethod.POST)
-	public @ResponseBody int getPatientCartCount(@RequestParam("patientId") int patientId) {
+	public @ResponseBody int getPatientCartCount(@RequestParam("familyId") int familyId) {
 		
+		List<PatientDetails> patientDetailsList = patientDetailsRepository.findByFamilyIdAndDelStatus(familyId,0);
 		
-	    return  patientCartRepository.getPatientCartCount(patientId);
+		int count =0;
+		for(PatientDetails list:patientDetailsList)
+		{  			
+			count = count + patientCartRepository.getPatientCartCount(list.getPatientId());
+		}
+		
+	    return  count;
 	}
 	
 	@RequestMapping(value = { "/addToCartAndGetCartCount"}, method = RequestMethod.POST)
 	public @ResponseBody int addToCartAndGetCartCount(@RequestBody PatientCart patientCart) {
 		
+		System.out.println("comig:"+patientCart.toString());
 		 int count=0;
 		 try {
-		 PatientCart patientCartRes =patientCartRepository.save(patientCart);
-			
-		 if(patientCartRes!=null)
-		 {
-			 count = patientCartRepository.getPatientCartCount(patientCart.getPatientId());
-		 }
+			  PatientCart patientCartVerify = null;
+			  PatientCart patientCartRes = null;
+			  patientCartVerify = patientCartRepository.getCartProductByMeetId(patientCart.getPatientId(), patientCart.getMeetId());
+			 
+			 if(patientCartVerify==null)
+			 {
+				 List<PatientDetails> patientDetailsList = patientDetailsRepository.getPatientDetailsListByFamilydAndPatientId(patientCart.getPatientId());
+				
+		      patientCartRes =patientCartRepository.save(patientCart);
+		      for(PatientDetails list:patientDetailsList)
+				{  			
+					count = count + patientCartRepository.getPatientCartCount(list.getPatientId());
+				}
+			 }
+			 else
+			 {
+				 count = -1;
+			 }
+		 
 		 
 			}catch (Exception e) {
 				System.out.println(e.getMessage());
