@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
- 
+import com.bionische.biotech.patientpasthistory.model.Info;
 import com.bionische.biotech.patientpasthistory.model.MenstrualObstetricHistory;
 import com.bionische.biotech.patientpasthistory.model.PatientAllPersonalHistory;
 import com.bionische.biotech.patientpasthistory.model.PatientFamilyHistory;
 import com.bionische.biotech.patientpasthistory.model.PatientHistoryChiefComplaints;
-import com.bionische.biotech.patientpasthistory.model.PatientHistoryIllnessList;
+ 
 import com.bionische.biotech.patientpasthistory.model.PatientPastHistory;
 import com.bionische.biotech.patientpasthistory.model.PatientPastHistoryIIlness;
 import com.bionische.biotech.patientpasthistory.model.PatientPersonalHistory;
@@ -220,7 +220,7 @@ public class PatientPersonalHistoryApiController {
 			PatientPastHistoryIIlness patientPastHistoryIIlness=new PatientPastHistoryIIlness();
 			PatientPsychologicalHistory patientPsychologicalHistory=new PatientPsychologicalHistory();
 			PatientTreatementHistory patientTreatementHistory=new PatientTreatementHistory();
-			
+			Info info=new Info();
 			
 		try {
 			 
@@ -271,10 +271,179 @@ public class PatientPersonalHistoryApiController {
 		return patientAllPersonalHistory;
 	}
 	
+	/*@RequestMapping(value = { "/updatePatientPersonalDetails" }, method = RequestMethod.POST)
+	public @ResponseBody Info updatePatientPersonalDetails(@RequestParam("patientId") int patientId)
+	{
+		
+		
+		
+		 Info info =new Info();
+	 try {
+		 
+		
+		
+		 //PatientPersonalHistory patientPersonalHistory = patientPersonalHistoryRepository.updateAll(patientId);
+		 
+		if(patientPersonalHistory!=null)
+			{
+				info.setError(false);
+				info.setMessage("Insert successfully");
+			
+			}else {
+				info.setError(true);
+				info.setMessage("Failed to insert");
+				}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	
+		
+		
+	return info;
+	}
+	
+	*/
+	
+
+	@RequestMapping(value = { "/updatePatientPersonalDetails" }, method = RequestMethod.POST)
+	public @ResponseBody Info updatePatientPersonalDetails(@RequestBody PatientAllPersonalHistory patientAllPersonalHistory)
+	{
+		
+		Info info =new Info();
+		System.out.println("Comming List "+patientAllPersonalHistory.toString());
+		 
+		PatientPersonalHistory patientPersonalHistory=new PatientPersonalHistory();
+		MenstrualObstetricHistory menstrualObstetricHistory=new MenstrualObstetricHistory();
+		PatientFamilyHistory patientFamilyHistory=new PatientFamilyHistory();
+		PatientHistoryChiefComplaints patientHistoryChiefComplaints=new PatientHistoryChiefComplaints();
+		PatientPastHistory patientPastHistory=new PatientPastHistory();
+	//	PatientPastHistoryIIlness patientPastHistoryIIlness=new PatientPastHistoryIIlness();
+		PatientPsychologicalHistory patientPsychologicalHistory=new PatientPsychologicalHistory();
+		PatientTreatementHistory patientTreatementHistory=new PatientTreatementHistory();
+		 
+		
+		
+		
+		patientPersonalHistory=patientAllPersonalHistory.getPatientPersonalHistory();
+		menstrualObstetricHistory=patientAllPersonalHistory.getMenstrualObstetricHistory();
+		patientFamilyHistory=patientAllPersonalHistory.getPatientFamilyHistory();
+		patientHistoryChiefComplaints=patientAllPersonalHistory.getPatientHistoryChiefComplaints();
+		patientPastHistory=patientAllPersonalHistory.getPatientPastHistory();
+		//patientPastHistoryIIlness=patientAllPersonalHistory.getPatientPastHistoryIIlness();
+		patientPsychologicalHistory=patientAllPersonalHistory.getPatientPsychologicalHistory();
+		patientTreatementHistory=patientAllPersonalHistory.getPatientTreatementHistoryp();
+		
 	 
-	
-	
-	
+		
+	 try {
+		 
+		 PatientPersonalHistory patientPersonalHistoryRes=patientPersonalHistoryRepository.findByPatientId(patientPersonalHistory.getPatientId());
+		 if(patientPersonalHistoryRes!=null)
+		 {
+			 patientPersonalHistory.setPersonalHistoryId(patientPersonalHistoryRes.getPersonalHistoryId());
+		 }
+		 
+		 patientPersonalHistoryRepository.save(patientPersonalHistory);
+		 
+		 
+		 
+		 
+		 
+		 MenstrualObstetricHistory menstrualObstetricHistoryRes=menstrualObstetricHistoryRepository.findByPatientId(menstrualObstetricHistory.getPatientId());
+		 if(menstrualObstetricHistoryRes!=null)
+		 {
+			 menstrualObstetricHistory.setMenstrualObstetricHistoryId(menstrualObstetricHistoryRes.getMenstrualObstetricHistoryId());
+		 }
+		 
+		 menstrualObstetricHistoryRepository.save(menstrualObstetricHistory);
+		 
+		 
+		 
+		 
+		 PatientFamilyHistory patientFamilyHistoryRes=patientFamilyHistoryRepository.findByPatientId(patientFamilyHistory.getPatientId());
+		 if(menstrualObstetricHistoryRes!=null)
+		 {
+			 patientFamilyHistory.setFamilyHistoryId(patientFamilyHistoryRes.getFamilyHistoryId());
+		 }
+		 
+		 patientFamilyHistoryRepository.save(patientFamilyHistory);
+		 
+		 
+		 
+
+		 PatientHistoryChiefComplaints patientHistoryChiefComplaintsRes=patientHistoryChiefComplaintsRepository.findByPatientId(patientFamilyHistory.getPatientId());
+		 if(menstrualObstetricHistoryRes!=null)
+		 {
+			 patientHistoryChiefComplaints.setChiefcomplaintsId(patientHistoryChiefComplaintsRes.getChiefcomplaintsId());
+		 }
+		 
+		 patientHistoryChiefComplaintsRepository.save(patientHistoryChiefComplaints);
+		 
+		 
+		 
+		 PatientPastHistory patientPastHistoryRes=patientPastHistoryRepository.findByPatientId(patientPastHistory.getPatientId());
+		 if(menstrualObstetricHistoryRes!=null)
+		 {
+			 patientPastHistory.setPatientPastHistoryId(patientPastHistoryRes.getPatientPastHistoryId());
+		 }
+		 
+		 patientPastHistoryRepository.save(patientPastHistory);
+		 
+		 
+		 
+		PatientPsychologicalHistory patientPsychologicalHistoryRes=patientPsychologicalHistoryRepository.findByPatientId(patientPsychologicalHistory.getPatientId());
+		 if(menstrualObstetricHistoryRes!=null)
+		 {
+			 patientPsychologicalHistory.setPsychologicaLHistoryId(patientPsychologicalHistoryRes.getPsychologicaLHistoryId());
+		 }
+		 
+		 patientPsychologicalHistoryRepository.save(patientPsychologicalHistory);
+		 
+		 
+		 
+		 PatientTreatementHistory patientTreatementHistoryRes=patientTreatementHistoryRepository.findByPatientId(patientTreatementHistory.getpatientId());
+		 if(menstrualObstetricHistoryRes!=null)
+		 {
+			 patientTreatementHistory.settreatementHistoryId(patientTreatementHistoryRes.gettreatementhistoryId());
+		 }
+		 
+		 patientTreatementHistoryRepository.save(patientTreatementHistory);
+		 
+		  
+		 
+		  /*
+			List<String> patientIdList=new ArrayList<>();
+		 	if(patientPastHistory!=null)
+		 	{
+				
+		 		
+		 		patientIdList= Arrays.asList(patientPastHistory.getPastHistoryIllnessId().split(","));
+		 		
+		 		System.out.println("patientIdList   "+patientIdList.toString());
+		 		
+		 		patientPastHistory.setPatientPastHistoryId(patientPastHistory.getPatientId());
+			 
+		 		patientPastHistoryRepository.save(patientAllPersonalHistory.getPatientPastHistory()); 
+
+				 	 
+		 	}
+		 	else {
+		 		patientPastHistoryRepository.save(patientAllPersonalHistory.getPatientPastHistory()); 
+
+		 	 }
+		 	 */
+		 	
+		 	 
+		System.out.println(patientAllPersonalHistory.toString());
+		 
+		}
+		
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+			 
+		}
+	return info;
+	}
 	
 	
 }
