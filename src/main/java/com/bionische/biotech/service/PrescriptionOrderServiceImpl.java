@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.bionische.biotech.model.GetMedicalOrderDetails;
 import com.bionische.biotech.model.GetPrescriptionDetailsForOrder;
+import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.PrescriptionDetails;
 import com.bionische.biotech.model.PrescriptionOrderDetails;
 import com.bionische.biotech.model.PrescriptionToMedical;
@@ -85,5 +86,95 @@ catch (Exception e) {
 		}
 		return getPrescriptionDetailsForOrderList;
 	}
-	
+	@Override
+	public Info updateMedicalOrderStatusAndAmount(int requestId, int status, float totAmount) {
+		Info info=new Info();
+		try {
+		int res=prescriptionToMedicalRepository.updateMedicalOrderStatusAndAmount(requestId,status,totAmount);
+		
+		if(res>0)
+		{
+			info.setError(false);
+			info.setMessage("Order Status update successfully");
+		}
+		else {
+			 
+				info.setError(true);
+				info.setMessage("Failed to Update Order Status");
+			 
+		}
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+		return info;
+	}
+	@Override
+	public Info updatePrescriptionDetailsForOrder(List<PrescriptionOrderDetails> prescriptionOrderDetailsList) {
+		 Info info=new Info();
+		try {
+			prescriptionOrderDetailsRepository.saveAll(prescriptionOrderDetailsList);
+			info.setError(false);
+			info.setMessage("Successfully Updated");
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+		return info;
+	}
+	@Override
+	public Info updateMedicineOrderPaidStatus(int requestId, int paidStatus) {
+		Info info=new Info();
+try {
+		int res=prescriptionToMedicalRepository.updateMedicineOrderPaidStatus(requestId,paidStatus);
+		if(res>0)
+		{
+			info.setError(false);
+			info.setMessage("Order Status update successfully");
+		}
+		else {
+			 
+				info.setError(true);
+				info.setMessage("Failed to Update Order Status");
+			 
+		}
+}catch (Exception e) {
+	System.out.println(e.getMessage());// TODO: handle exception
+}
+		return info;
+	}
+	@Override
+	public Info updateMedicineOrderDeliveredStatus(int requestId, int status) {
+		Info info=new Info();
+		try {
+				int res=prescriptionToMedicalRepository.updateMedicineOrderDeliveredStatus(requestId,status);
+				if(res>0)
+				{
+					info.setError(false);
+					info.setMessage("Order Status update successfully");
+				}
+				else {
+					 
+						info.setError(true);
+						info.setMessage("Failed to Update Order Status");
+					 
+				}
+		}catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+				return info;
+	}
+	@Override
+	public List<GetMedicalOrderDetails> getMedicalOrderDetailsByMedicalIdAndStatusAndDate(int medicalId, int status,
+			String fromDate, String toDate) {
+		List<GetMedicalOrderDetails> getMedicalOrderDetailsList=new ArrayList<GetMedicalOrderDetails>();
+		try {
+			getMedicalOrderDetailsList=getMedicalOrderDetailsRepository.getMedicalOrderDetailsByMedicalIdAndStatusAndDate(medicalId, status,fromDate,toDate);
+				
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+				return getMedicalOrderDetailsList;
+	}
 }

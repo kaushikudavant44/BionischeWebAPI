@@ -14,7 +14,21 @@ public interface PrescriptionToMedicalRepository extends JpaRepository<Prescript
 	
 	
 	
-	PrescriptionToMedical save(PrescriptionToMedical prescriptionToMedical); 
+	PrescriptionToMedical save(PrescriptionToMedical prescriptionToMedical);
+	@Transactional
+	@Modifying
+	@Query("UPDATE PrescriptionToMedical p SET p.status =:status, p.totalAmt=:totAmount  WHERE p.requestToMedicalId=:requestId")
+	int updateMedicalOrderStatusAndAmount(@Param("requestId")int requestId, @Param("status")int status,@Param("totAmount") float totAmount);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE PrescriptionToMedical p SET p.paymentStatus =:paidStatus  WHERE p.requestToMedicalId=:requestId")
+	int updateMedicineOrderPaidStatus(@Param("requestId")int requestId, @Param("paidStatus")int paidStatus);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE PrescriptionToMedical p SET p.status =:status  WHERE p.requestToMedicalId=:requestId")
+	int updateMedicineOrderDeliveredStatus(@Param("requestId")int requestId, @Param("status")int status); 
 	
 	/*
 	@Query(value=" SELECT p.medical_request_id,p.patient_name,m.medical_name,p.doctor_name,p.hospital_name,p.meet_id,p.date,p.time,p.int_1,p.int_2,d.contact AS string_1,p.string_2,p.medical_id,\r\n" + 
