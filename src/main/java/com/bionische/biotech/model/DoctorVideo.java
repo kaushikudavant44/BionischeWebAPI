@@ -20,8 +20,10 @@ public class DoctorVideo {
 	private int doctorId;
 	@Column(name="emailid")
 	private String emailId;
+	
 	@Column(name="patientid")
 	private int patientId;
+	
 	@Column(name="status")
 	private int status;
 	@Column(name="datetime")
