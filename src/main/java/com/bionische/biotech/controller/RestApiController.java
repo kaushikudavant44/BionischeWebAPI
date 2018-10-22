@@ -2610,4 +2610,24 @@ System.out.println(e.getMessage());
 						
 						return getMedicalOrderDetailsRepository.getPatientAllOrderDetailsByPatientId(patientId);
 					}
+					
+					@RequestMapping(value = { "/updateRatingDoneNotificatiion" }, method = RequestMethod.POST)
+					public @ResponseBody Info updateRatingDoneNotificatiion(@RequestParam("notificationId")int notificationId) {
+				  
+						int res = patientNotificationRepository.updateDoneRating(notificationId,"done");
+						
+						Info info = new Info();
+						if(res>0)
+						{
+							info.setMessage("success");
+							info.setError(false);
+						}
+						else {
+							info.setMessage("failed");
+							info.setError(true);
+						}
+						 
+						
+						return info;
+					}
 }

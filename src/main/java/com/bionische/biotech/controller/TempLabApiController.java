@@ -123,7 +123,7 @@ public class TempLabApiController {
 				patientNotification.setNotification(LabDetails.getLabName()+" has sent your "+LabTests.getLabTestName()+" report on DATE "+patientReport.getReportDate()+" and TIME "+patientReport.getReportTime());					
 				patientNotification.setStatus(0);
 				patientNotification.setString1("Lab Report");
-				patientNotification.setString2("lab");
+				patientNotification.setString2("lrating");
 				patientNotification.setInt1(patientReport.getLabId());
 				patientNotificationRepository.save(patientNotification);
 			info.setError(false);
