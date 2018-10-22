@@ -6,13 +6,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bionische.biotech.ConstantFileUploadPath;
 import com.bionische.biotech.model.GetMedicalOrderDetails;
+import com.bionische.biotech.model.GetPatientContactDetailsById;
 import com.bionische.biotech.model.GetPrescriptionDetailsForOrder;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.PrescriptionDetails;
 import com.bionische.biotech.model.PrescriptionOrderDetails;
 import com.bionische.biotech.model.PrescriptionToMedical;
 import com.bionische.biotech.repository.GetMedicalOrderDetailsRepository;
+import com.bionische.biotech.repository.GetPatientContactDetailsByIdRepository;
 import com.bionische.biotech.repository.GetPrescriptionDetailsForOrderRepository;
 import com.bionische.biotech.repository.PrescriptionDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionOrderDetailsRepository;
@@ -37,6 +40,15 @@ public class PrescriptionOrderServiceImpl implements PrescriptionOrderService{
 	@Autowired
 	GetPrescriptionDetailsForOrderRepository getPrescriptionDetailsForOrderRepository;
 	
+	@Autowired
+	SendEMailService sendEMailService;
+	
+	@Autowired
+	SendTextMessageService sendTextMessageService;
+	
+	@Autowired
+	GetPatientContactDetailsByIdRepository getPatientContactDetailsByIdRepository;
+	
 	@Override
 	public PrescriptionToMedical orderPrescription(PrescriptionToMedical prescriptionToMedical) {
 		// TODO Auto-generated method stub
@@ -58,6 +70,9 @@ public class PrescriptionOrderServiceImpl implements PrescriptionOrderService{
 		prescriptionOrderDetails.setQuantity(Integer.parseInt(prescriptionDetailsList.get(i).getMedicineQuantity()));
 		
 		PrescriptionOrderDetails prescriptionOrderDetailsRes=prescriptionOrderDetailsRepository.save(prescriptionOrderDetails);
+		GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsById(prescriptionToMedical.getPatientId());
+		
+		sendEMailService.sendMail("Your Order has been successfully Place", getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+" Your order has been successfully place. \n To view your order "+ConstantFileUploadPath.FRONTEND_URL+"showMyOrder/ \n We will notify you about order status\n Thank you.", getPatientContactDetailsById.getEmail());
 		
 		}
 		
@@ -94,6 +109,11 @@ catch (Exception e) {
 		
 		if(res>0)
 		{
+			int patientId=prescriptionToMedicalRepository.getPatientId(requestId);
+			GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsById(patientId);
+			
+			sendEMailService.sendMail("Your Order is Ready", getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+" Your order is Ready. If your order is Home delivery then your order delivered soon. \n Your payable amount is : Rs. "+totAmount+" You can pay your order bill online by click on following link. "+ConstantFileUploadPath.FRONTEND_URL+"showMyOrder/ \n We will notify you about order status\n Thank you.", getPatientContactDetailsById.getEmail());
+			
 			info.setError(false);
 			info.setMessage("Order Status update successfully");
 		}
@@ -101,7 +121,7 @@ catch (Exception e) {
 			 
 				info.setError(true);
 				info.setMessage("Failed to Update Order Status");
-			 
+			  
 		}
 		}
 		catch (Exception e) {
@@ -150,6 +170,11 @@ try {
 				int res=prescriptionToMedicalRepository.updateMedicineOrderDeliveredStatus(requestId,status);
 				if(res>0)
 				{
+					int patientId=prescriptionToMedicalRepository.getPatientId(requestId);
+					GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsById(patientId);
+					
+					sendEMailService.sendMail("Your Order is Delivered Successfully", getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+" Your order is Deliverd successfully. "+ConstantFileUploadPath.FRONTEND_URL+"showMyOrder/ \n  Thank you.", getPatientContactDetailsById.getEmail());
+					
 					info.setError(false);
 					info.setMessage("Order Status update successfully");
 				}
