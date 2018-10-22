@@ -6,6 +6,7 @@ import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +40,7 @@ import com.bionische.biotech.model.GetDoctorRatingReviewCount;
 import com.bionische.biotech.model.GetHospitalClinicByDoctorIdAndAvailDate;
 import com.bionische.biotech.model.GetLabAppointment;
 import com.bionische.biotech.model.GetLabRatingReview;
+import com.bionische.biotech.model.GetMedicalOrderDetails;
 import com.bionische.biotech.model.GetPatientContactDetailsById;
 import com.bionische.biotech.model.GetPatientReviews;
 import com.bionische.biotech.model.GetRatingCount;
@@ -82,6 +84,7 @@ import com.bionische.biotech.repository.GetDoctorProfileRepository;
 import com.bionische.biotech.repository.GetHospitalClinicByDoctorIdAndAvailDateRepository;
 import com.bionische.biotech.repository.GetLabAppointmentRrepository;
 import com.bionische.biotech.repository.GetLabRatingReviewRepository;
+import com.bionische.biotech.repository.GetMedicalOrderDetailsRepository;
 import com.bionische.biotech.repository.GetPatientContactDetailsByIdRepository;
 import com.bionische.biotech.repository.GetRatingCountRepository;
 import com.bionische.biotech.repository.GetUsersCountRepository;
@@ -235,6 +238,9 @@ public class RestApiController {
 	
 	@Autowired
 	GetUsersCountRepository getUsersCountRepository;
+	
+	@Autowired
+	GetMedicalOrderDetailsRepository getMedicalOrderDetailsRepository;
 	
 	String MESSAGE;
 	
@@ -462,9 +468,20 @@ System.out.println(e.getMessage());
 	
 	{
 		Info info=new Info();
+		RatingDetails ratingDetailsRes = new RatingDetails();
 		try {
-	 
-		RatingDetails ratingDetailsRes=ratingDetailsRepository.save(ratingDetails);
+			
+		RatingDetails ratingDetailsResult=ratingDetailsRepository.getRatingByPatientAndDoctorId(ratingDetails.getDoctorId(), ratingDetails.getPatientId());
+			
+		if(ratingDetailsResult!=null)
+		{
+			ratingDetails.setRatingReviewId(ratingDetailsResult.getRatingReviewId());
+		    ratingDetailsRes=ratingDetailsRepository.save(ratingDetails);
+		}
+		else
+		{
+			ratingDetailsRes=ratingDetailsRepository.save(ratingDetails);
+		}
 	
 		
 		if(ratingDetailsRes!=null)
@@ -2495,10 +2512,22 @@ System.out.println(e.getMessage());
 					}
 					
 					@RequestMapping(value = { "/getPatientNotification"}, method = RequestMethod.POST)
-					public @ResponseBody List<PatientNotification> getPatientNotification(@RequestParam("patientId") int patientId) {
+					public @ResponseBody List<PatientNotification> getPatientNotification(@RequestParam("familyId") int familyId) {
 						
+						List<PatientDetails> patientDetailsList = patientDetailsRepository.findByFamilyIdAndDelStatus(familyId, 0);
 						
-					    return  patientNotificationRepository.findFirst20ByPatientIdOrderByNotificationIdDesc(patientId);
+						List<PatientNotification> patientNotificationList = new ArrayList<PatientNotification>();
+						for(PatientDetails list:patientDetailsList)
+						{  			
+							List<PatientNotification> patientNotificationRes =  patientNotificationRepository.findFirst20ByPatientIdOrderByNotificationIdDesc(list.getPatientId());
+							if(patientNotificationRes!=null)
+							{
+								patientNotificationList.addAll(patientNotificationRes);
+							}
+						}
+						patientNotificationList.sort(Comparator.comparingDouble(PatientNotification::getNotificationId).reversed());
+						
+					    return  patientNotificationList;
 					}
 
 					@RequestMapping(value = { "/changePatientNotificationStatus"}, method = RequestMethod.POST)
@@ -2566,5 +2595,19 @@ System.out.println(e.getMessage());
 					@RequestMapping(value = { "/getUserCounts"}, method = RequestMethod.GET)
 					public @ResponseBody GetUsersCount getUserCounts() {
 						return getUsersCountRepository.getUserCounts();
+					}
+					
+					@RequestMapping(value = { "/getPatientOrderDetailsByPatientId" }, method = RequestMethod.POST)
+					public @ResponseBody List<GetMedicalOrderDetails> getPatientOrderDetailsByPatientId(@RequestParam("patientId")int patientId) {
+				  
+						
+						return getMedicalOrderDetailsRepository.getPatientOrderDetailsByPatientId(patientId);
+					}
+					
+					@RequestMapping(value = { "/getPatientAllOrderDetailsByPatientId" }, method = RequestMethod.POST)
+					public @ResponseBody List<GetMedicalOrderDetails> getPatientAllOrderDetailsByPatientId(@RequestParam("patientId")int patientId) {
+				  
+						
+						return getMedicalOrderDetailsRepository.getPatientAllOrderDetailsByPatientId(patientId);
 					}
 }

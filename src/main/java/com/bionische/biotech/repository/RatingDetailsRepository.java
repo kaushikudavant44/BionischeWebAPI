@@ -30,4 +30,7 @@ public interface RatingDetailsRepository extends JpaRepository<RatingDetails, In
 
 	@Query(value="select * from rating_details where del_status=:delStatus AND doctor_id=:doctorId",nativeQuery=true)
 	List<RatingDetails> getRatingByDoctorId(@Param("doctorId")int doctorId, @Param("delStatus")int delStatus);
+	
+	@Query(value="select * from rating_details where patient_id=:patientId AND doctor_id=:doctorId",nativeQuery=true)
+	RatingDetails getRatingByPatientAndDoctorId(@Param("doctorId")int doctorId, @Param("patientId")int patientId);
 }

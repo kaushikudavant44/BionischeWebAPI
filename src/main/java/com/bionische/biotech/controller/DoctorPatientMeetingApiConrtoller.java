@@ -74,7 +74,10 @@ public class DoctorPatientMeetingApiConrtoller {
 			for(PatientDetails list:patientDetailsList)
 			{  			
 				getCartProductsList = getCartProductsRepository.getCartProductDetails(list.getPatientId());
+				if(getCartProductsList!=null)
+				{
 				getCartProductsListFinal.addAll(getCartProductsList);
+				}
 			}
 			
 		}catch (Exception e) {
