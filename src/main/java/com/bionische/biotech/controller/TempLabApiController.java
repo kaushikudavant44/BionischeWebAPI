@@ -287,29 +287,19 @@ public class TempLabApiController {
 			SharingReportWithDoc sharingReportWithDocRes=new SharingReportWithDoc();
 			
 		    sharingReportWithDocRes=sharingReportWithDocRepository.getSharingInfo(patientId,doctorId);	
-		    System.out.println(""+sharingReportWithDocRes.toString());
+		    
+		    System.out.println("sharingReportWithDocRes   "+sharingReportWithDocRes.toString());
+		    
 		    GetPatientReports getPatientReports = new GetPatientReports();
-			String reportIds=sharingReportWithDocRes.getReportId();
-			String[] reportId=reportIds.split(",");
-			System.out.println("cccdd"+reportId.toString());
-			LinkedHashSet<String> lhSetColors =  
-	                new LinkedHashSet<String>(Arrays.asList(reportId));
+		    
+			 
+			
+			List<String> reportIdList = Arrays.asList(sharingReportWithDocRes.getReportId().split(","));
+			
+			  
 	        
-	        //create array from the LinkedHashSet
-	        String[] newArray = lhSetColors.toArray(new String[ lhSetColors.size() ]);
-			
-			
-			System.out.println("checing:"+newArray);
-			System.out.println("length:"+newArray.length);
-			int length=newArray.length;
-			for(int i=length-1;i>0;i--)
-			{ 	System.out.println("dddddd");
-				System.out.println("newArray[i]:"+newArray[i]);
-				getPatientReports=getPatientReportsRepository.getPatientReportByReportId(Integer.parseInt(newArray[i]));
-				System.out.println("getPatientReports:"+getPatientReports.toString());
-				getPatientReportListByreportId.add(getPatientReports);				
-			}
-					
+			getPatientReportListByreportId=getPatientReportsRepository.getPatientReport(reportIdList);
+			 	
 			
 		return getPatientReportListByreportId;
 		
