@@ -84,7 +84,74 @@ public class DoctorDetailsInformation {
 	@Column(name="cityName")
 	private String cityName;
 	
+	@Column(name="hospital_id")
+	private int hospitalId;
 	
+	@Column(name="hospital_name")
+	private String hospitalName;
+	
+	@Column(name="contact_no")
+	private String hospitalContactNo;
+	
+	@Column(name="email_id")
+	private String hospitalEmailId;
+	
+	@Column(name="hospital_address")
+	private String hospitalAddress;
+	
+	@Column(name="available_time")
+	private String availableTime;
+	
+	
+	
+	public int getHospitalId() {
+		return hospitalId;
+	}
+
+	public void setHospitalId(int hospitalId) {
+		this.hospitalId = hospitalId;
+	}
+
+	public String getHospitalName() {
+		return hospitalName;
+	}
+
+	public void setHospitalName(String hospitalName) {
+		this.hospitalName = hospitalName;
+	}
+
+	public String getHospitalContactNo() {
+		return hospitalContactNo;
+	}
+
+	public void setHospitalContactNo(String hospitalContactNo) {
+		this.hospitalContactNo = hospitalContactNo;
+	}
+
+	public String getHospitalEmailId() {
+		return hospitalEmailId;
+	}
+
+	public void setHospitalEmailId(String hospitalEmailId) {
+		this.hospitalEmailId = hospitalEmailId;
+	}
+
+	public String getHospitalAddress() {
+		return hospitalAddress;
+	}
+
+	public void setHospitalAddress(String hospitalAddress) {
+		this.hospitalAddress = hospitalAddress;
+	}
+
+	public String getAvailableTime() {
+		return availableTime;
+	}
+
+	public void setAvailableTime(String availableTime) {
+		this.availableTime = availableTime;
+	}
+
 	public String getCityName() {
 		return cityName;
 	}
@@ -287,10 +354,10 @@ public class DoctorDetailsInformation {
 				+ ", qualification=" + qualification + ", college=" + college + ", passingYear=" + passingYear
 				+ ", specId=" + specId + ", councilRegNo=" + councilRegNo + ", councilName=" + councilName + ", fees="
 				+ fees + ", rating=" + rating + ", specializationType=" + specializationType + ", cityName=" + cityName
-				+ "]";
+				+ ", hospitalId=" + hospitalId + ", hospitalName=" + hospitalName + ", hospitalContactNo="
+				+ hospitalContactNo + ", hospitalEmailId=" + hospitalEmailId + ", hospitalAddress=" + hospitalAddress
+				+ ", availableTime=" + availableTime + "]";
 	}
 
-
-	
 	
 }

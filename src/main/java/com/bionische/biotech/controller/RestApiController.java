@@ -1749,9 +1749,23 @@ System.out.println(e.getMessage());
 				{
 					List<DoctorDetailsInformation> doctorDetailsInformationList = doctorDetailsInformationList=new ArrayList<DoctorDetailsInformation>();;
 					
+					
+					
+					
 				 try {
 					 doctorDetailsInformationList=getDoctorDetailsInformationRepository.findByCityIdAndDelStatus(cityId);
-					
+					 
+					 for(int i=0;i<doctorDetailsInformationList.size();i++) {
+						 
+						 List<String> availableTimeList = Arrays.asList(doctorDetailsInformationList.get(i).getAvailableTime().split(","));	 
+						 List<AppointmentTime> appointmentTimeList= appointmentTimeRepository.getDoctorAppointMentTime(availableTimeList.get(0), availableTimeList.get(availableTimeList.size()-1));
+						
+						 String docAvailableTime=appointmentTimeList.get(i).getTime()+" To "+appointmentTimeList.get(i+1).getTime();
+						 
+						 doctorDetailsInformationList.get(i).setAvailableTime(docAvailableTime);
+						 
+					 }
+					 
 				 }
 				 catch (Exception e) {
 					 e.printStackTrace();
@@ -1761,6 +1775,8 @@ System.out.println(e.getMessage());
 				 return doctorDetailsInformationList;
 				 
 				}
+				
+				
 				
 				
 				@RequestMapping(value = { "/getDoctorsListByCityIdAndSpecId"}, method = RequestMethod.POST)
@@ -1772,16 +1788,26 @@ System.out.println(e.getMessage());
 				 try {
 					 doctorDetailsInformationList=getDoctorDetailsInformationRepository.findBySpecIdAndCityIdAndDelStatus(specId,cityId);
 					
+					 for(int i=0;i<doctorDetailsInformationList.size();i++) {
+						 
+						 List<String> availableTimeList = Arrays.asList(doctorDetailsInformationList.get(i).getAvailableTime().split(","));	 
+						 List<AppointmentTime> appointmentTimeList= appointmentTimeRepository.getDoctorAppointMentTime(availableTimeList.get(0), availableTimeList.get(availableTimeList.size()-1));
+						
+						 String docAvailableTime=appointmentTimeList.get(i).getTime()+" To "+appointmentTimeList.get(i+1).getTime();
+						 
+						 doctorDetailsInformationList.get(i).setAvailableTime(docAvailableTime);
+						 
+					 }
+					 
 				 }
 				 catch (Exception e) {
 					 e.printStackTrace();
 					 	System.out.println(e.getMessage());
 				}
-				 
+				
 				 return doctorDetailsInformationList;
 				 
 				}
-				
 				//Get Patient username details		
 				
 				@RequestMapping(value = { "/getUserNameForForgetPwd" }, method = RequestMethod.POST)
@@ -2629,5 +2655,34 @@ System.out.println(e.getMessage());
 						 
 						
 						return info;
+					}
+					@RequestMapping(value = { "/getHospitalClinicByDoctorId"}, method = RequestMethod.POST)
+					public @ResponseBody List<GetHospitalClinicByDoctorIdAndAvailDate> getHospitalClinicByDoctorId(@RequestParam("doctorId") int doctorId) {
+											
+						
+						List<GetHospitalClinicByDoctorIdAndAvailDate> getHospitalClinicByDoctorIdAndAvailDateList=getHospitalClinicByDoctorIdAndAvailDateRepository.getHospitalClinicByDoctorId(doctorId);
+						
+						for(int i=0;i<getHospitalClinicByDoctorIdAndAvailDateList.size();i++) {
+							List<String> availableTimeList = Arrays.asList(getHospitalClinicByDoctorIdAndAvailDateList.get(i).getAvailableTime().split(","));
+							 
+							for(int j=0;j<availableTimeList.size();j++)
+							{
+								List<AppointmentTime> appointmentTimeList= appointmentTimeRepository.getDoctorAppointMentTime(availableTimeList.get(j), availableTimeList.get(availableTimeList.size()-1));
+							
+								for(int k=0;k<appointmentTimeList.size();k++) {
+									if(appointmentTimeList.get(k).getTimeId()==Integer.parseInt(availableTimeList.get(j)))
+								getHospitalClinicByDoctorIdAndAvailDateList.get(i).setFromTime(appointmentTimeList.get(k).getTime());
+									else if(appointmentTimeList.get(k).getTimeId()==Integer.parseInt(availableTimeList.get(availableTimeList.size()-1)))
+								getHospitalClinicByDoctorIdAndAvailDateList.get(i).setToTime(appointmentTimeList.get(k).getTime());
+								}
+									j=j+availableTimeList.size();
+								 
+								 
+							
+							
+							}
+						}
+						
+					    return  getHospitalClinicByDoctorIdAndAvailDateList;
 					}
 }
