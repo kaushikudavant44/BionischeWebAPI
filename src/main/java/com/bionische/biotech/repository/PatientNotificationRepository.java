@@ -22,7 +22,12 @@ public interface PatientNotificationRepository extends JpaRepository<PatientNoti
 	
 	@Transactional
 	@Modifying
-	@Query("UPDATE PatientNotification  SET string2 =:status WHERE notificationId=:notificationId")
-	int updateDoneRating(@Param("notificationId")int notificationId, @Param("status")String status);
+	@Query("DELETE PatientNotification  WHERE notificationId=:notificationId")
+	int updateDoneRating(@Param("notificationId")int notificationId);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE PatientNotification SET string2 =:status WHERE notificationId=:notificationId")
+	int updateLabDoneRating(@Param("notificationId")int notificationId, @Param("status")String status);
  
 }

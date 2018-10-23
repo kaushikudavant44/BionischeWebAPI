@@ -2640,7 +2640,27 @@ System.out.println(e.getMessage());
 					@RequestMapping(value = { "/updateRatingDoneNotificatiion" }, method = RequestMethod.POST)
 					public @ResponseBody Info updateRatingDoneNotificatiion(@RequestParam("notificationId")int notificationId) {
 				  
-						int res = patientNotificationRepository.updateDoneRating(notificationId,"done");
+						int res = patientNotificationRepository.updateDoneRating(notificationId);
+						
+						Info info = new Info();
+						if(res>0)
+						{
+							info.setMessage("success");
+							info.setError(false);
+						}
+						else {
+							info.setMessage("failed");
+							info.setError(true);
+						}
+						 
+						
+						return info;
+					}
+					
+					@RequestMapping(value = { "/updateLabRatingDoneNotificatiion" }, method = RequestMethod.POST)
+					public @ResponseBody Info updateLabRatingDoneNotificatiion(@RequestParam("notificationId")int notificationId) {
+				  
+						int res = patientNotificationRepository.updateLabDoneRating(notificationId,"ldone");
 						
 						Info info = new Info();
 						if(res>0)
