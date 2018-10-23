@@ -1780,10 +1780,15 @@ System.out.println(e.getMessage());
 						 List<String> availableTimeList = Arrays.asList(doctorDetailsInformationList.get(i).getAvailableTime().split(","));	 
 						 List<AppointmentTime> appointmentTimeList= appointmentTimeRepository.getDoctorAppointMentTime(availableTimeList.get(0), availableTimeList.get(availableTimeList.size()-1));
 						
-						 String docAvailableTime=appointmentTimeList.get(i).getTime()+" To "+appointmentTimeList.get(i+1).getTime();
-						 
-						 doctorDetailsInformationList.get(i).setAvailableTime(docAvailableTime);
-						 
+						 System.out.println(appointmentTimeList.toString());
+							
+							if(appointmentTimeList.size()!=0) {
+							 String docAvailableTime=appointmentTimeList.get(i).getTime()+" To "+appointmentTimeList.get(i+1).getTime();
+							 
+							 doctorDetailsInformationList.get(i).setAvailableTime(docAvailableTime);
+							}else {
+								doctorDetailsInformationList.get(i).setAvailableTime("0");
+							}
 					 }
 					 
 				 }
@@ -1813,9 +1818,16 @@ System.out.println(e.getMessage());
 						 List<String> availableTimeList = Arrays.asList(doctorDetailsInformationList.get(i).getAvailableTime().split(","));	 
 						 List<AppointmentTime> appointmentTimeList= appointmentTimeRepository.getDoctorAppointMentTime(availableTimeList.get(0), availableTimeList.get(availableTimeList.size()-1));
 						
-						 String docAvailableTime=appointmentTimeList.get(i).getTime()+" To "+appointmentTimeList.get(i+1).getTime();
 						 
-						 doctorDetailsInformationList.get(i).setAvailableTime(docAvailableTime);
+						 System.out.println(appointmentTimeList.toString());
+							
+							if(appointmentTimeList.size()!=0) {
+							 String docAvailableTime=appointmentTimeList.get(i).getTime()+" To "+appointmentTimeList.get(i+1).getTime();
+							 
+							 doctorDetailsInformationList.get(i).setAvailableTime(docAvailableTime);
+							}else {
+								doctorDetailsInformationList.get(i).setAvailableTime("0");
+							}
 						 
 					 }
 					 
