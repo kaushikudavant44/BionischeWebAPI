@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 @Entity
 public class GetDoctorListForAppointment {
@@ -64,15 +65,42 @@ public class GetDoctorListForAppointment {
 	@Column(name="fees")
 	private float fees;
 	
-/*	@Column(name="hospital_id")
-	private int hospitalId;*/
+ 	@Column(name="hospital_id")
+	private int hospitalId;  
 	
+
+	@Column(name="hospital_name")
+	private String hospitalName;
+	
+	@Column(name="hospital_address")
+	private String hospitalAddress;
+	
+	@Column(name="hospital_contact_no")
+	private String hospitalContactNo;
+	
+	@Column(name="city_name")
+	private String cityName;
+	
+	@Column(name="lat")
+	private float latitude;
+	
+	@Column(name="longitude")
+	private float longitude;
+	
+	@Column(name="available_time")
+	private String availableTime;
  
 	@Column(name="council_reg_no")
 	private String councilRegNo;
 	
 	@Column(name="council_name")
 	private String councilName;
+	
+	@Transient
+	private String fromTime;
+	
+	@Transient
+	private String toTime;
 	
 	private float rating;
 
@@ -237,6 +265,86 @@ public class GetDoctorListForAppointment {
 		this.fees = fees;
 	}
 
+	public int getHospitalId() {
+		return hospitalId;
+	}
+
+	public void setHospitalId(int hospitalId) {
+		this.hospitalId = hospitalId;
+	}
+
+	public String getHospitalName() {
+		return hospitalName;
+	}
+
+	public void setHospitalName(String hospitalName) {
+		this.hospitalName = hospitalName;
+	}
+
+	public String getHospitalAddress() {
+		return hospitalAddress;
+	}
+
+	public void setHospitalAddress(String hospitalAddress) {
+		this.hospitalAddress = hospitalAddress;
+	}
+
+	public String getHospitalContactNo() {
+		return hospitalContactNo;
+	}
+
+	public void setHospitalContactNo(String hospitalContactNo) {
+		this.hospitalContactNo = hospitalContactNo;
+	}
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+
+	public float getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(float latitude) {
+		this.latitude = latitude;
+	}
+
+	public float getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(float longitude) {
+		this.longitude = longitude;
+	}
+
+	public String getAvailableTime() {
+		return availableTime;
+	}
+
+	public void setAvailableTime(String availableTime) {
+		this.availableTime = availableTime;
+	}
+
+	public String getFromTime() {
+		return fromTime;
+	}
+
+	public void setFromTime(String fromTime) {
+		this.fromTime = fromTime;
+	}
+
+	public String getToTime() {
+		return toTime;
+	}
+
+	public void setToTime(String toTime) {
+		this.toTime = toTime;
+	}
+
 	@Override
 	public String toString() {
 		return "GetDoctorListForAppointment [doctorId=" + doctorId + ", fName=" + fName + ", lName=" + lName
@@ -244,18 +352,12 @@ public class GetDoctorListForAppointment {
 				+ yearOfExperience + ", aboutMe=" + aboutMe + ", profilePhoto=" + profilePhoto + ", contactNo="
 				+ contactNo + ", email=" + email + ", qualification=" + qualification + ", college=" + college
 				+ ", passingYear=" + passingYear + ", specId=" + specId + ", specType=" + specType + ", fees=" + fees
-				+ ", councilRegNo=" + councilRegNo + ", councilName=" + councilName + ", rating=" + rating + "]";
+				+ ", hospitalId=" + hospitalId + ", hospitalName=" + hospitalName + ", hospitalAddress="
+				+ hospitalAddress + ", hospitalContactNo=" + hospitalContactNo + ", cityName=" + cityName
+				+ ", latitude=" + latitude + ", longitude=" + longitude + ", availableTime=" + availableTime
+				+ ", councilRegNo=" + councilRegNo + ", councilName=" + councilName + ", fromTime=" + fromTime
+				+ ", toTime=" + toTime + ", rating=" + rating + "]";
 	}
-
-	 
-
-	 
-	
-/*	@Column(name="hospital_name")
-	private String hospitalName;
-	
-	@Column(name="hospital_address")
-	private String hospitalAddress;*/
 
 	 
 	 

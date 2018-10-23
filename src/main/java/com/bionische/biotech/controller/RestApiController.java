@@ -802,6 +802,26 @@ System.out.println(e.getMessage());
 			List<GetDoctorListForAppointment> getDoctorListForAppointmentLsit=new ArrayList<GetDoctorListForAppointment>();
 			try {
 				getDoctorListForAppointmentLsit=getDoctorListForAppointmentRepository.getDoctorListForAppointment(specId,cityId, date);
+			
+				for(int i=0;i<getDoctorListForAppointmentLsit.size();i++) {
+				List<String> availableTimeList = Arrays.asList(getDoctorListForAppointmentLsit.get(i).getAvailableTime().split(","));
+				 
+				for(int j=0;j<availableTimeList.size();j++)
+				{
+					List<AppointmentTime> appointmentTimeList= appointmentTimeRepository.getDoctorAppointMentTime(availableTimeList.get(j), availableTimeList.get(availableTimeList.size()-1));
+				
+					for(int k=0;k<appointmentTimeList.size();k++) {
+						if(appointmentTimeList.get(k).getTimeId()==Integer.parseInt(availableTimeList.get(j)))
+							getDoctorListForAppointmentLsit.get(i).setFromTime(appointmentTimeList.get(k).getTime());
+						else if(appointmentTimeList.get(k).getTimeId()==Integer.parseInt(availableTimeList.get(availableTimeList.size()-1)))
+							getDoctorListForAppointmentLsit.get(i).setToTime(appointmentTimeList.get(k).getTime());
+					}
+						j=j+availableTimeList.size();
+					 
+					 
+				
+				}
+				}
 			}
 			catch (Exception e) {
 			e.printStackTrace();
