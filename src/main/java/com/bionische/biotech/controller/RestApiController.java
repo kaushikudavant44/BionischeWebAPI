@@ -4,11 +4,14 @@ package com.bionische.biotech.controller;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -239,8 +242,7 @@ public class RestApiController {
 	@Autowired
 	GetUsersCountRepository getUsersCountRepository;
 	
-	@Autowired
-	GetMedicalOrderDetailsRepository getMedicalOrderDetailsRepository;
+	
 	
 	String MESSAGE;
 	
@@ -2655,19 +2657,7 @@ System.out.println(e.getMessage());
 						return getUsersCountRepository.getUserCounts();
 					}
 					
-					@RequestMapping(value = { "/getPatientOrderDetailsByPatientId" }, method = RequestMethod.POST)
-					public @ResponseBody List<GetMedicalOrderDetails> getPatientOrderDetailsByPatientId(@RequestParam("patientId")int patientId) {
-				  
-						
-						return getMedicalOrderDetailsRepository.getPatientOrderDetailsByPatientId(patientId);
-					}
 					
-					@RequestMapping(value = { "/getPatientAllOrderDetailsByPatientId" }, method = RequestMethod.POST)
-					public @ResponseBody List<GetMedicalOrderDetails> getPatientAllOrderDetailsByPatientId(@RequestParam("patientId")int patientId) {
-				  
-						
-						return getMedicalOrderDetailsRepository.getPatientAllOrderDetailsByPatientId(patientId);
-					}
 					
 					@RequestMapping(value = { "/updateRatingDoneNotificatiion" }, method = RequestMethod.POST)
 					public @ResponseBody Info updateRatingDoneNotificatiion(@RequestParam("notificationId")int notificationId) {

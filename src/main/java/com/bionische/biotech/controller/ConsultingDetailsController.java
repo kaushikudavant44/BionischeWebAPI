@@ -70,11 +70,6 @@ public class ConsultingDetailsController {
 	public @ResponseBody List getConsultingByDoctorIdAndDate(@RequestParam("doctorId") int doctorId,@RequestParam("patientId") int patientId,@RequestParam("startdate") String startdate,@RequestParam("enddate") String enddate)
 	
 	{
-		System.out.println("patientId:"+patientId);
-		System.out.println("doctorId:"+doctorId);
-		System.out.println("startdate:"+startdate);
-		System.out.println("enddate:"+enddate);
-		
 		
 	List<ConsultingDetails> consultingList =new ArrayList<ConsultingDetails>();
 		Info info=new Info();

@@ -1,6 +1,9 @@
 package com.bionische.biotech.controller;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bionische.biotech.model.ConsultingDetails;
 import com.bionische.biotech.model.DoctorPatientMeeting;
 import com.bionische.biotech.model.GetCartProducts;
+import com.bionische.biotech.model.GetMedicalOrderDetails;
 import com.bionische.biotech.model.GetRatingCount;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabNotification;
@@ -24,9 +28,11 @@ import com.bionische.biotech.model.PatientCart;
 import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.repository.ConsultingDetailsRepository;
 import com.bionische.biotech.repository.GetCartProductsRepository;
+import com.bionische.biotech.repository.GetMedicalOrderDetailsRepository;
 import com.bionische.biotech.repository.PatientAddressListRepository;
 import com.bionische.biotech.repository.PatientCartRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
+import com.bionische.biotech.repository.PrescriptionToMedicalRepository;
 import com.bionische.biotech.service.DoctorPatientMeetingService;
 import com.bionische.biotech.service.PrescriptionOrderService;
 
@@ -51,7 +57,11 @@ public class DoctorPatientMeetingApiConrtoller {
 	@Autowired
 	PatientDetailsRepository patientDetailsRepository;
 	
+	@Autowired
+	PrescriptionToMedicalRepository prescriptionToMedicalRepository;
 	
+	@Autowired
+	GetMedicalOrderDetailsRepository getMedicalOrderDetailsRepository;
 	
 	// insert specialization
 	@RequestMapping(value = { "/insertDoctoPatientMeeting" }, method = RequestMethod.POST)
@@ -206,6 +216,58 @@ public class DoctorPatientMeetingApiConrtoller {
 			System.out.println(e.getMessage());
 					}		
 		return info;
+	}
+	
+	@RequestMapping(value = { "/cancelOrder" }, method = RequestMethod.POST)
+	public @ResponseBody Info cancelOrder(@RequestParam("medicalRequestId") int medicalRequestId)
+	{ 
+		Info info = new Info();
+		int res=0;
+		
+		try {
+			
+			res=prescriptionToMedicalRepository.updateMedicineOrderDeliveredStatus(medicalRequestId,3);
+			if(res>0)
+			{				
+				info.setError(false);
+				info.setMessage("success");
+				
+			}
+			else {
+				info.setError(true);
+				info.setMessage("failed");				
+			}
+			
+		}catch (Exception e) {
+			System.out.println(e.getMessage());
+					}		
+		return info;
+	}
+	
+	@RequestMapping(value = { "/getPatientOrderDetailsByPatientIdAndDate" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetMedicalOrderDetails> getPatientOrderDetailsByPatientIdAndDate(@RequestParam("patientId")int patientId,@RequestParam("month")int month) {
+  
+		Date date = new Date(0);
+		if(month!=0)
+		{
+		   date = java.sql.Date.valueOf(LocalDate.now().minus(month, ChronoUnit.MONTHS));
+		}
+		
+		return getMedicalOrderDetailsRepository.getPatientOrderDetailsByPatientId(patientId,date);
+	}
+	
+	@RequestMapping(value = { "/getPatientAllOrderDetailsByPatientId" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetMedicalOrderDetails> getPatientAllOrderDetailsByPatientId(@RequestParam("patientId")int patientId) {
+  
+		
+		return getMedicalOrderDetailsRepository.getPatientAllOrderDetailsByPatientId(patientId);
+	}
+	
+	@RequestMapping(value = { "/getPatientOrderDetailsByRequestId" }, method = RequestMethod.POST)
+	public @ResponseBody GetMedicalOrderDetails getPatientOrderDetailsByRequestId(@RequestParam("requestId")int requestId) {
+  
+		
+		return getMedicalOrderDetailsRepository.getPatientOrderDetailsByRequestId(requestId);
 	}
 	
 }
