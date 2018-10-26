@@ -215,4 +215,19 @@ try {
 		}
 				return getMedicalOrderDetailsList;
 	}
+	@Override
+	public List<GetMedicalOrderDetails> getMedicalOrderDetailsByPatientIdAndStatusAndDate(int patientId, int status,
+			String fromDate, String toDate) {
+		
+		List<GetMedicalOrderDetails> getMedicalOrderDetailsList=new ArrayList<GetMedicalOrderDetails>();
+		try {
+			getMedicalOrderDetailsList=getMedicalOrderDetailsRepository.getMedicalOrderDetailsByPatientIdAndStatusAndDate(patientId, status,fromDate,toDate);
+				
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+				return getMedicalOrderDetailsList;
+				
+	}
 }

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bionische.biotech.Common.DateConverter;
- 
 import com.bionische.biotech.insurance.model.GetInsuranceDetails;
 import com.bionische.biotech.insurance.model.GetPlanDetailsList;
 import com.bionische.biotech.insurance.model.InsuranceCompanyDetails;
@@ -26,24 +25,21 @@ import com.bionische.biotech.insurance.repository.InsuranceRatingRepository;
 import com.bionische.biotech.insurance.repository.InsuranceReviewRepository;
 import com.bionische.biotech.model.AdminDetails;
 import com.bionische.biotech.model.AdminLogin;
+import com.bionische.biotech.model.GetDoctorHospitalDetails;
 import com.bionische.biotech.model.GetLabRatingReview;
 import com.bionische.biotech.model.GetMedicalOrderDetails;
 import com.bionische.biotech.model.GetPatientReports;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.MedicalDetails;
-import com.bionische.biotech.model.PatientDetails;
-import com.bionische.biotech.model.PatientLogin;
-import com.bionische.biotech.model.PrescriptionToMedical;
 import com.bionische.biotech.model.RatingDetails;
-import com.bionische.biotech.model.RatingDetailsList;
 import com.bionische.biotech.model.TermsAndConditions;
 import com.bionische.biotech.repository.AdminDetailsRepository;
+import com.bionische.biotech.repository.GetDoctorHospitalDetailsRepository;
 import com.bionische.biotech.repository.GetLabRatingReviewRepository;
 import com.bionische.biotech.repository.GetPatientReportsRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
-import com.bionische.biotech.repository.PrescriptionToMedicalRepository;
 import com.bionische.biotech.repository.RatingDetailsRepository;
 import com.bionische.biotech.repository.TermsAndConditionsRepository;
 import com.bionische.biotech.service.PrescriptionOrderService;
@@ -97,6 +93,9 @@ public class AdminPanelController {
 	
 	@Autowired
 	TermsAndConditionsRepository termsAndConditionsRepository;
+	
+	@Autowired
+	GetDoctorHospitalDetailsRepository getDoctorHospitalDetailsRepository;
 	/*
 	
 	@RequestMapping(value = { "/getDoctorAppointmentDetailsByPatientId" }, method = RequestMethod.POST)
@@ -581,5 +580,11 @@ public class AdminPanelController {
 		return prescriptionOrderService.getMedicalOrderDetailsByMedicalIdAndStatusAndDate(medicalId,  fromDate, toDate);
 	}
 	
+	@RequestMapping(value = { "/getAllDoctorsHospitalDetails"}, method = RequestMethod.POST)
+	public  List<GetDoctorHospitalDetails> getAllDoctorsHospitalDetails(@RequestParam("doctorId") int doctorId) {
+		 
+		return getDoctorHospitalDetailsRepository.getHospitalDetailsByDoctorIdAndDelStatus(doctorId);
 	
+	
+	}
 }

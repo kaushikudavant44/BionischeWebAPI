@@ -85,4 +85,11 @@ public class PrescriptionOrderApiController {
 		return prescriptionOrderService.updateMedicineOrderDeliveredStatus(requestId,status);
 	}
 	
+	
+	@RequestMapping(value = { "/getMedicalOrderDetailsByPatientIdAndAndDate" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetMedicalOrderDetails> getMedicalOrderDetailsByPatientIdAndAndDate(@RequestParam("patientId")int patientId,@RequestParam("status")int status,@RequestParam("fromDate")String fromDate,@RequestParam("toDate")String toDate) {
+  
+		
+		return prescriptionOrderService.getMedicalOrderDetailsByPatientIdAndStatusAndDate(patientId, status, fromDate, toDate);
+	}
 }

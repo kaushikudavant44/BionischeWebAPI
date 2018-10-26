@@ -20,6 +20,10 @@ public interface PrescriptionOrderService {
 	Info updateMedicineOrderDeliveredStatus(int requestId, int status);
 	List<GetMedicalOrderDetails> getMedicalOrderDetailsByMedicalIdAndStatusAndDate(int medicalId, int status,
 			String fromDate, String toDate);
+	
+	List<GetMedicalOrderDetails> getMedicalOrderDetailsByPatientIdAndStatusAndDate(int patientId, int status,
+			String fromDate, String toDate);
+	
 	List<GetMedicalOrderDetails> getMedicalOrderDetailsByMedicalIdAndStatusAndDate(int medicalId,
 			String fromDate, String toDate);
 }
