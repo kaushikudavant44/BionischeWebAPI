@@ -27,6 +27,7 @@ import com.bionische.biotech.insurance.repository.InsuranceReviewRepository;
 import com.bionische.biotech.model.AdminDetails;
 import com.bionische.biotech.model.AdminLogin;
 import com.bionische.biotech.model.GetLabRatingReview;
+import com.bionische.biotech.model.GetMedicalOrderDetails;
 import com.bionische.biotech.model.GetPatientReports;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabDetails;
@@ -45,6 +46,7 @@ import com.bionische.biotech.repository.MedicalDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionToMedicalRepository;
 import com.bionische.biotech.repository.RatingDetailsRepository;
 import com.bionische.biotech.repository.TermsAndConditionsRepository;
+import com.bionische.biotech.service.PrescriptionOrderService;
 import com.bionische.biotech.stemcell.model.GetStemCellsDetails;
 import com.bionische.biotech.stemcell.repository.GetStemCellsDetailsRepository;
 
@@ -72,8 +74,11 @@ public class AdminPanelController {
 	@Autowired
 	MedicalDetailsRepository medicalDetailsRepository;
 	
+	/*@Autowired
+	PrescriptionToMedicalRepository prescriptionToMedicalRepository;*/
+	
 	@Autowired
-	PrescriptionToMedicalRepository prescriptionToMedicalRepository;
+	PrescriptionOrderService prescriptionOrderService;
 	
 	@Autowired
 	InsuranceCompanyDetailsRepository insuranceCompanyDetailsRepository;
@@ -567,5 +572,14 @@ public class AdminPanelController {
 		System.out.println("res "+adminLogin.toString());
 		return adminLogin;
 	}
+	
+	
+	@RequestMapping(value = { "/getMedicalOrderDetailsByMedicalIdAndDate" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetMedicalOrderDetails> getMedicalOrderDetailsByMedicalIdAndDate(@RequestParam("medicalId")int medicalId,@RequestParam("fromDate")String fromDate,@RequestParam("toDate")String toDate) {
+  
+		 
+		return prescriptionOrderService.getMedicalOrderDetailsByMedicalIdAndStatusAndDate(medicalId,  fromDate, toDate);
+	}
+	
 	
 }
