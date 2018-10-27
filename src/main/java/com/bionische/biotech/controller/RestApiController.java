@@ -2282,6 +2282,20 @@ public @ResponseBody AppointmentTimeList getAllAppointTime(@RequestParam("doctor
 		}
 		return allRelations;
 	}
+	
+	@RequestMapping(value = { "/getRelations"}, method = RequestMethod.POST)
+	public @ResponseBody List<PatientMemberRelation> getRelations(@RequestBody List<String> relations) {
+		
+		List<PatientMemberRelation> allRelations=new ArrayList<>();
+		
+		try {
+			allRelations=patientMemberRelationRepository.getRelations(relations);
+			System.out.println(allRelations.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return allRelations;
+	}
 	//username validation
 	@RequestMapping(value = { "/mobileValidationOfDoctor" }, method = RequestMethod.POST)
 	public @ResponseBody Info verifyContactNumber(@RequestParam("contactNo") String contactNo)

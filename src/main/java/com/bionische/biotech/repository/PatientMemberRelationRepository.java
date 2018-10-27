@@ -11,5 +11,8 @@ public interface PatientMemberRelationRepository extends JpaRepository<PatientMe
 	
 	@Query(value="SELECT *  FROM patient_member_relation",nativeQuery=true)
 	List<PatientMemberRelation> getAllRelations();
+	
+	@Query(value="SELECT *  FROM patient_member_relation WHERE relation_type  NOT IN(:relations) ",nativeQuery=true)
+	List<PatientMemberRelation> getRelations(@Param("relations")List<String> relations);
 
 }
