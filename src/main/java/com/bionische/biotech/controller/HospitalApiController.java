@@ -186,13 +186,14 @@ public class HospitalApiController {
 	}
 	
 	@RequestMapping(value = { "/deleteClinicById" }, method = RequestMethod.POST)
-	public @ResponseBody Info deleteClinicById(@RequestParam("hospitalId") int hospitalId) {
+	public @ResponseBody Info deleteClinicById(@RequestParam("hospitalId") int hospitalId,@RequestParam("doctorId") int doctorId) {
 		
 		Info info = new Info();
 
 		
 		try {
-			int delStatus = hospitalDetailsRepository.deleteClinic(hospitalId,1);
+			int delStatus = doctorHospitalDetailsRepository.deleteDoctorHospital(hospitalId,doctorId,1);
+			
 			if(delStatus!=0) {
 				info.setMessage("Clinic Delete Successfully");
 				
@@ -209,7 +210,7 @@ public class HospitalApiController {
 	}
 	
 	@RequestMapping(value = { "/deleteDoctorHospitalById" }, method = RequestMethod.POST)
-	public @ResponseBody Info deleteClinicById(@RequestParam("hospitalId") int hospitalId,@RequestParam("doctorId") int doctorId) {
+	public @ResponseBody Info deleteDoctorHospitalById(@RequestParam("hospitalId") int hospitalId,@RequestParam("doctorId") int doctorId) {
 		
 		Info info = new Info();
 
