@@ -1792,8 +1792,9 @@ System.out.println(e.getMessage());
 								doctorDetailsInformationList.get(i).setAvailableTime("0");
 							}
 					 }
-					 
+					 System.out.println(doctorDetailsInformationList.toString());
 				 }
+				 
 				 catch (Exception e) {
 					 e.printStackTrace();
 					 	System.out.println(e.getMessage());
