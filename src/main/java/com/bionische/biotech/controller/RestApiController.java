@@ -394,6 +394,22 @@ System.out.println(e.getMessage());
 	 return patientDetailsRes;
 	 
 	}
+	@RequestMapping(value = { "/getPatientDetailsWithCityNameById" }, method = RequestMethod.POST)
+	public @ResponseBody PatientDetails getPatientDetailsWithCityNameById(@RequestParam("patientId") int patientId)
+	
+	{
+		PatientDetails patientDetailsRes=new PatientDetails();
+	 try {
+		 patientDetailsRes=	patientDetailsRepository.getPatientDetailsWithCityNameById(patientId);
+		 System.out.println("patientDetailsRes:"+patientDetailsRes.toString());
+		 
+	 }
+	 catch (Exception e) {
+System.out.println(e.getMessage());
+	}
+	 return patientDetailsRes;
+	 
+	}
 	
 	//insert specialization
 	@RequestMapping(value = { "/insertSpecialization" }, method = RequestMethod.POST)

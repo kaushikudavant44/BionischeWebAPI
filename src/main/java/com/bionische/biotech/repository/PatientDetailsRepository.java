@@ -22,6 +22,9 @@ public interface PatientDetailsRepository extends JpaRepository<PatientDetails, 
 	
 	PatientDetails findByPatientId(int patientId);	
 	
+	
+	
+	
 	@Query(value=" SELECT * from patient_details where uname=:userName AND del_status=0",nativeQuery=true)
 	PatientDetails getPatientLogin(@Param("userName")String userName);
 	
@@ -55,6 +58,12 @@ public interface PatientDetailsRepository extends JpaRepository<PatientDetails, 
 	
 	@Query(value=" SELECT * FROM patient_details WHERE patient_id=:patientId",nativeQuery=true)
 	PatientDetails getPatientDetailsBYId(@Param("patientId")int patientId);
+	
+	@Query(value=" SELECT p.l_name,p.f_name,p.m_name,p.birth_date,p.blood_group,p.gender,p.contact,p.email,c.city_name AS string1,p.patient_id,p.family_id," + 
+			"p.address,p.reg_date,p.city_id,p.del_status," + 
+			"p.age,p.int_1,p.int_2,p.string2,p.state_id,p.password,p.uname," + 
+			"p.qualification,p.profile_photo,p.country_id FROM patient_details p, city c  WHERE patient_id=:patientId AND c.city_id=p.city_id",nativeQuery=true)
+	PatientDetails getPatientDetailsWithCityNameById(@Param("patientId")int patientId);
  
 	@Query(value=" SELECT * from patient_details where contact=:contactNo AND del_status=0",nativeQuery=true)
 	PatientDetails getContactNumbers(@Param("contactNo")String contactNo);
