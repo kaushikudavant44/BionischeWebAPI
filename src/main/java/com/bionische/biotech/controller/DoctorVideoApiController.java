@@ -98,7 +98,7 @@ public class DoctorVideoApiController {
 	}
 
 
-	/*@RequestMapping(value = { "/insertDoctorAudio" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/insertDoctorAudio" }, method = RequestMethod.POST)
 	public @ResponseBody Info insertDoctorAudio(@RequestBody DoctorAudio doctorAudio)
 	{
 		//System.out.println("Comming List "+doctorAudio.toString());
@@ -161,7 +161,7 @@ public class DoctorVideoApiController {
 		}
 	
 		return doctorAudio;
-	}*/
+	}
 	
 	@RequestMapping(value = { "/updateVideoBypatientIdAndstatus" }, method = RequestMethod.POST)
 	public @ResponseBody Info updateVideoBypatientIdAndstatus(@RequestParam("patientId") int patientId)
