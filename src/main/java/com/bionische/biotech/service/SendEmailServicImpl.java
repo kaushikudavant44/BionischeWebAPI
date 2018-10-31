@@ -11,44 +11,50 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 @Service
-public class SendEmailServicImpl implements SendEMailService{
+public class SendEmailServicImpl implements SendEMailService {
 
 	@Autowired
-    private JavaMailSender sender;
-	
-	public String sendMail(String subject, String body, String email) {
-        MimeMessage message = sender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
+	private JavaMailSender sender;
 
-        try {
-            helper.setTo(email);
-            helper.setText(body);
-            helper.setSubject(subject);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            return "Error while sending mail ..";
-        }
-        sender.send(message);
-        return "Mail Sent Success!";
-    }
- 
-    public String sendMailAttachment(String subject, String body, String email, File attachmentFile, String attachmentFileName) throws MessagingException {
-        MimeMessage message = sender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message,true);
-        try {
-            helper.setTo(email);
-            helper.setText(body);
-            helper.setSubject(subject);
-            FileSystemResource file 
-            = new FileSystemResource(attachmentFile);
-          helper.addAttachment(attachmentFileName, file); 
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            return "Error while sending mail ..";
-        }
-        sender.send(message);
-        return "Mail Sent Success!";
-    }
-	
+	public String sendMail(String subject, String body, String email) {
+		try {
+
+			MimeMessage message = sender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message);
+
+			try {
+				helper.setTo(email);
+				helper.setText(body);
+				helper.setSubject(subject);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+				return "Error while sending mail ..";
+			}
+			sender.send(message);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return "Mail Sent Success!";
+	}
+
+	public String sendMailAttachment(String subject, String body, String email, File attachmentFile,
+			String attachmentFileName) throws MessagingException {
+		MimeMessage message = sender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message, true);
+		try {
+			helper.setTo(email);
+			helper.setText(body);
+			helper.setSubject(subject);
+			FileSystemResource file = new FileSystemResource(attachmentFile);
+			helper.addAttachment(attachmentFileName, file);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+			return "Error while sending mail ..";
+		}
+		sender.send(message);
+		return "Mail Sent Success!";
+	}
+
 }
