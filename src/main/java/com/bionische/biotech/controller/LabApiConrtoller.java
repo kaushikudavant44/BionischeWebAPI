@@ -827,6 +827,37 @@ public @ResponseBody Info insertPatientReport(@RequestBody ReportDetails reportD
 
 /** get patient report by test*/
 
+@RequestMapping(value = { "/insertPatientOwnReport" }, method = RequestMethod.POST)
+public @ResponseBody Info insertPatientOwnReport(@RequestBody ReportDetails reportDetails)
+{
+	System.out.println("Comming List "+reportDetails.toString());
+	ReportDetails patientReport=new ReportDetails();
+	Info info =new Info();
+	try {
+		patientReport=reportDetailsRepository.save(reportDetails);
+	
+	if(patientReport!=null)
+	{
+			info.setError(false);
+			info.setMessage("Success");
+		
+	}
+	else {
+		info.setError(true);
+		info.setMessage("Failed");
+	}
+}
+	
+	catch (Exception e) {
+		System.out.println(e.getMessage());
+		info.setError(true);
+		info.setMessage("Failed to insert");
+	}
+
+	return info;
+}
+
+
 
 	@RequestMapping(value = { "/getPatientReportsByTest" }, method = RequestMethod.POST)
 	public @ResponseBody List<ReportDetails> getPatientReportsByTest(@RequestParam("testId") int testId,@RequestParam("patientId") int patientId)
