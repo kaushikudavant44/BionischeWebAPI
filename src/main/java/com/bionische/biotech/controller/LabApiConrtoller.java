@@ -1020,7 +1020,26 @@ System.out.println(e.getMessage());
 	
 	
 	}
+	@RequestMapping(value = { "/updateLabAppointmentCompleteStatus" }, method = RequestMethod.POST)
+	public @ResponseBody Info updateLabAppointmentCompleteStatus(@RequestParam("appointId") int appointId)
+	{
+		Info info=new Info();
+		try {
+			
+		int res=labAppointmentRepository.finishedAppointments(appointId);
+		
+		if(res!=0) {
+			info.setMessage("Report submitted successfully");
+		}else {
+			info.setError(true);
+		}
+		
 
-
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return info;
+	}
+	
 
 }
