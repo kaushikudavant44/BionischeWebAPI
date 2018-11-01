@@ -203,11 +203,11 @@ try {
 				return getMedicalOrderDetailsList;
 	}
 	@Override
-	public List<GetMedicalOrderDetails> getMedicalOrderDetailsByMedicalIdAndStatusAndDate(int medicalId, 
+	public List<GetMedicalOrderDetails> getMedicalOrderDetailsByMedicalIdAndDate(int medicalId, 
 			String fromDate, String toDate) {
 		List<GetMedicalOrderDetails> getMedicalOrderDetailsList=new ArrayList<GetMedicalOrderDetails>();
 		try {
-			getMedicalOrderDetailsList=getMedicalOrderDetailsRepository.getMedicalOrderDetailsByMedicalIdAndStatusAndDate(medicalId, fromDate,toDate);
+			getMedicalOrderDetailsList=getMedicalOrderDetailsRepository.getMedicalOrderDetailsByMedicalIdAndDate(medicalId, fromDate,toDate);
 				
 		}
 		catch (Exception e) {
@@ -216,12 +216,12 @@ try {
 				return getMedicalOrderDetailsList;
 	}
 	@Override
-	public List<GetMedicalOrderDetails> getMedicalOrderDetailsByPatientIdAndStatusAndDate(int patientId, int status,
+	public List<GetMedicalOrderDetails> getMedicalOrderDetailsByPatientIdAndDate(int patientId,
 			String fromDate, String toDate) {
 		
 		List<GetMedicalOrderDetails> getMedicalOrderDetailsList=new ArrayList<GetMedicalOrderDetails>();
 		try {
-			getMedicalOrderDetailsList=getMedicalOrderDetailsRepository.getMedicalOrderDetailsByPatientIdAndStatusAndDate(patientId, status,fromDate,toDate);
+			getMedicalOrderDetailsList=getMedicalOrderDetailsRepository.getMedicalOrderDetailsByPatientIdAndStatusAndDate(patientId,fromDate,toDate);
 				
 		}
 		catch (Exception e) {

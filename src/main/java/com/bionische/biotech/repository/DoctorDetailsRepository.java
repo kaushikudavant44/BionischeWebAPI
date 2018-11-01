@@ -55,6 +55,11 @@ public interface DoctorDetailsRepository extends JpaRepository<DoctorDetails, Lo
 	@Query("UPDATE DoctorDetails a SET a.password =:newPassword  WHERE a.userName=:userName")
 	int updateNewPasswordByuserName(@Param("userName")String userName,@Param("newPassword")String newPassword);
 	
+	@Transactional
+	@Modifying
+	@Query("UPDATE DoctorDetails a SET a.delStatus =:delStatus  WHERE a.doctorId=:doctorId")
+	int updateDoctorDelStatus(@Param("doctorId")int doctorId,@Param("delStatus")int delStatus);
+	
 	@Query(value="SELECT * FROM doctor_details WHERE contact=:contactNo AND del_status=0;",nativeQuery=true)
 	DoctorDetails getContactNumbers(@Param("contactNo") String contactNo);
 	

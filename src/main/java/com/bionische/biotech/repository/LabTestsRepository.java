@@ -3,16 +3,19 @@ package com.bionische.biotech.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.bionische.biotech.model.City;
 import com.bionische.biotech.model.LabTests;
 
 public interface LabTestsRepository extends JpaRepository<LabTests, Integer>{
 	
 	List<LabTests> findByDelStatus(int delStatus);
 	
+	List<LabTests> findAll(); 
+	 
 	@Query(value=" SELECT * from lab_tests where lab_test_id=:testId AND del_status=0",nativeQuery=true)
 	LabTests getTestDetailsByTestId(@Param("testId")int testId);
 
@@ -21,6 +24,11 @@ public interface LabTestsRepository extends JpaRepository<LabTests, Integer>{
 	
 	@Query(value=" SELECT * FROM lab_tests WHERE lab_test_id IN (SELECT DISTINCT lab_test_id FROM patient_reports WHERE patient_id=:patientId)",nativeQuery=true)
 	List<LabTests> getTestOfPatients(@Param("patientId")int patientId);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE LabTests  SET delStatus =:delStatus WHERE labTestId=:labTestId")
+	 int updateTestStatus(@Param("labTestId")int labTestId, @Param("delStatus")int delStatus);
 	
 	
 	

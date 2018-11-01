@@ -21,9 +21,9 @@ public interface PrescriptionOrderService {
 	List<GetMedicalOrderDetails> getMedicalOrderDetailsByMedicalIdAndStatusAndDate(int medicalId, int status,
 			String fromDate, String toDate);
 	
-	List<GetMedicalOrderDetails> getMedicalOrderDetailsByPatientIdAndStatusAndDate(int patientId, int status,
+	List<GetMedicalOrderDetails> getMedicalOrderDetailsByPatientIdAndDate(int patientId, 
 			String fromDate, String toDate);
 	
-	List<GetMedicalOrderDetails> getMedicalOrderDetailsByMedicalIdAndStatusAndDate(int medicalId,
+	List<GetMedicalOrderDetails> getMedicalOrderDetailsByMedicalIdAndDate(int medicalId,
 			String fromDate, String toDate);
 }

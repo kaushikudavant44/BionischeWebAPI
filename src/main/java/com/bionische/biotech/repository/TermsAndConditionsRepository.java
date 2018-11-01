@@ -13,7 +13,7 @@ public interface TermsAndConditionsRepository extends JpaRepository<TermsAndCond
 	
 	TermsAndConditions save(TermsAndConditions termsAndConditions);
 	
-	List<TermsAndConditions> findByUserTypeAndDelStatus(int userType, int delStatus);
+	TermsAndConditions findByUserTypeAndDelStatus(int userType, int delStatus);
 	
 	@Query(value=" SELECT * form terms_and_conditions where term_and_condition_id=:termAndConditionId",nativeQuery=true)
 	TermsAndConditions getByTermAndConditionId(@Param("termAndConditionId")int termAndConditionId);

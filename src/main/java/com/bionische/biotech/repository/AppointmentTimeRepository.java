@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.bionische.biotech.model.AppointmentTime;
 
-public interface AppointmentTimeRepository extends JpaRepository<AppointmentTime, Integer>{
+public interface AppointmentTimeRepository extends JpaRepository<AppointmentTime, String>{
 
 	
 	@Query(value=" SELECT * from appointment_time t where t.time_id NOT IN(select a.time from doctor_appointment a where a.doctor_id=:doctorId AND a.date=:date)",nativeQuery=true)
@@ -45,6 +45,9 @@ public interface AppointmentTimeRepository extends JpaRepository<AppointmentTime
 	List<AppointmentTime> getClinicAvailabledAppointTime(@Param("doctorId")int doctorId,@Param("hospitalId")int hospitalId,@Param("date")String date, @Param("availableTimeList")List<String> availableTimeList,@Param("noOfPatient")int noOfPatient);
 	
 
+	@Query(value="SELECT time from appointment_time where time_id IN (:timeIdList)", nativeQuery=true)
+	List<String> getAppointTimeByIdList(@Param("timeIdList")List<String> timeIdList);
 	
+
 	
 }

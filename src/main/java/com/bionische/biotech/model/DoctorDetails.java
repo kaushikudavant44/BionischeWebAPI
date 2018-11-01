@@ -86,7 +86,7 @@ public class DoctorDetails {
 	private String councilName;
  
 	@Column(name="del_status")
-	private String delStatus;
+	private int delStatus;
 	
 	@Column(name="string1")
 	private String string1;
@@ -293,11 +293,12 @@ public class DoctorDetails {
 		this.councilName = councilName;
 	}
 
-	public String getDelStatus() {
+	 
+	public int getDelStatus() {
 		return delStatus;
 	}
 
-	public void setDelStatus(String delStatus) {
+	public void setDelStatus(int delStatus) {
 		this.delStatus = delStatus;
 	}
 

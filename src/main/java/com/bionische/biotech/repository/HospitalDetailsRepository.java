@@ -35,4 +35,8 @@ public interface HospitalDetailsRepository extends JpaRepository<HospitalDetails
 	@Modifying
 	@Query("UPDATE HospitalDetails  SET delstatus =:delstatus WHERE hospitalId=:hospitalId")
 	int deleteClinic(@Param("hospitalId")int hospitalId, @Param("delstatus")int delstatus);
+
+
+
+	List<HospitalDetails> findByType(int type);
 }   

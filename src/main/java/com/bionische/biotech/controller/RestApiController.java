@@ -2273,17 +2273,17 @@ public @ResponseBody AppointmentTimeList getAllAppointTime(@RequestParam("doctor
 	}
 	
 	@RequestMapping(value = { "/getTermsAndConditionByUserType"}, method = RequestMethod.POST)
-	public @ResponseBody List<TermsAndConditions> getTermsAndConditionByUserType(@RequestParam("userType") int userType) {
+	public @ResponseBody TermsAndConditions getTermsAndConditionByUserType(@RequestParam("userType") int userType) {
 		
-		List<TermsAndConditions> termsAndConditionsList=new ArrayList<>();
+		 TermsAndConditions  termsAndConditions=new TermsAndConditions();
 		
 		try {
-			termsAndConditionsList=termsAndConditionsRepository.findByUserTypeAndDelStatus(userType, 0);
-			System.out.println(termsAndConditionsList.toString());
+			termsAndConditions=termsAndConditionsRepository.findByUserTypeAndDelStatus(userType, 0);
+			System.out.println(termsAndConditions.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return termsAndConditionsList;
+		return termsAndConditions;
 	}
 	 
 	@RequestMapping(value = { "/getAllRelations"}, method = RequestMethod.GET)
