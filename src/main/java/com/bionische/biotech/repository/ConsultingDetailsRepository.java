@@ -35,7 +35,7 @@ public interface ConsultingDetailsRepository extends JpaRepository<ConsultingDet
 	List<ConsultingDetails> getConsultingDetailsByDateHavePresc(@Param("startdate")String startdate,@Param("enddate")String enddate, @Param("patientId")int patientId);
 
 
-	@Query(value="SELECT m.meet_id,m.doctor_id,m.patient_id,CONCAT(p.f_name,' ',p.l_name) as patient_name,h.hospital_name,p.f_name,m.time,m.date,m.patient_problem,m.note, m.discussion FROM patient_details p,hospital_details h, doctor_details d,doctor_patient_meeting m WHERE  m.doctor_id=:doctorId AND m.date BETWEEN :startdate AND :enddate AND m.patient_id=p.patient_id AND m.patient_id=p.patient_id AND h.hospital_id=d.hospital_id GROUP BY m.meet_id",nativeQuery=true)
+	@Query(value="SELECT m.meet_id,m.doctor_id,m.patient_id,CONCAT(p.f_name,' ',p.l_name) as patient_name,h.hospital_name,p.f_name,m.time,m.date,m.patient_problem,m.note, m.discussion FROM patient_details p,hospital_details h, doctor_details d,doctor_patient_meeting m WHERE  m.doctor_id=:doctorId AND m.date BETWEEN :startdate AND :enddate AND m.patient_id=p.patient_id AND m.patient_id=p.patient_id AND h.hospital_id=d.hospital_id GROUP BY m.meet_id ORDER BY m.meet_id DESC",nativeQuery=true)
 	
     List<ConsultingDetails> getConsultingDetailsByDateANDdoctorId(@Param("startdate")String startdate,@Param("enddate") String enddate, @Param("doctorId")int doctorId);
 
