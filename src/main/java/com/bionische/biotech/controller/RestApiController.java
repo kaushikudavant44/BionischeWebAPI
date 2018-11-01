@@ -51,6 +51,7 @@ import com.bionische.biotech.model.GetUsersCount;
 import com.bionische.biotech.model.HospitalDetails;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabAppointment;
+import com.bionische.biotech.model.LabCertificateDetails;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.LabNotification;
 import com.bionische.biotech.model.LabTests;
@@ -59,6 +60,7 @@ import com.bionische.biotech.model.PatientAddress;
 import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.PatientMemberRelation;
 import com.bionische.biotech.model.PatientNotification;
+import com.bionische.biotech.model.PharmacyCertificateDetails;
 import com.bionische.biotech.model.PrescriptionDetails;
 import com.bionische.biotech.model.RatingDetails;
 import com.bionische.biotech.model.RatingDetailsList;
@@ -93,6 +95,7 @@ import com.bionische.biotech.repository.GetRatingCountRepository;
 import com.bionische.biotech.repository.GetUsersCountRepository;
 import com.bionische.biotech.repository.HospitalDetailsRepository;
 import com.bionische.biotech.repository.LabAppointmentRepository;
+import com.bionische.biotech.repository.LabCertificateDetailsRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.LabNotificationRepository;
 import com.bionische.biotech.repository.LabTestsRepository;
@@ -101,6 +104,7 @@ import com.bionische.biotech.repository.PatientAddressRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.PatientMemberRelationRepository;
 import com.bionische.biotech.repository.PatientNotificationRepository;
+import com.bionische.biotech.repository.PharmacyCertificateDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionDetailsRepository;
 import com.bionische.biotech.repository.RatingDetailsRepository;
 import com.bionische.biotech.repository.SharingReportWithDocRepository;
@@ -241,6 +245,12 @@ public class RestApiController {
 	
 	@Autowired
 	GetUsersCountRepository getUsersCountRepository;
+	
+	@Autowired
+	LabCertificateDetailsRepository labCertificateDetailsRepository;
+	
+	@Autowired
+	PharmacyCertificateDetailsRepository pharmacyCertificateDetailsRepository;
 	
 	
 	
@@ -2639,6 +2649,38 @@ System.out.println(e.getMessage());
 						Info info=new Info();			
 						try {
 					      doctorCertificateDetailsRepository.save(doctorCertificateDetails);
+					      info.setError(false);
+					      info.setMessage("success");
+											}
+											catch (Exception e) {
+												System.out.println(e.getMessage());
+												 info.setError(true);
+											      info.setMessage("Failed");
+											}
+						return info;
+					}
+					
+					@RequestMapping(value = { "/insertLabCertificateDetails"}, method = RequestMethod.POST)
+					public @ResponseBody Info insertLabCertificateDetails(@RequestBody LabCertificateDetails labCertificateDetails) {
+						Info info=new Info();			
+						try {
+							labCertificateDetailsRepository.save(labCertificateDetails);
+					      info.setError(false);
+					      info.setMessage("success");
+											}
+											catch (Exception e) {
+												System.out.println(e.getMessage());
+												 info.setError(true);
+											      info.setMessage("Failed");
+											}
+						return info;
+					}
+					
+					@RequestMapping(value = { "/insertPharmacyCertificateDetails"}, method = RequestMethod.POST)
+					public @ResponseBody Info insertPharmacyCertificateDetails(@RequestBody PharmacyCertificateDetails pharmacyCertificateDetails) {
+						Info info=new Info();			
+						try {
+							pharmacyCertificateDetailsRepository.save(pharmacyCertificateDetails);
 					      info.setError(false);
 					      info.setMessage("success");
 											}
