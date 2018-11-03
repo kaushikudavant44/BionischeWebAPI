@@ -154,7 +154,7 @@ public class LoginApiController {
 		LabLogin labLogin=new LabLogin();
 		Info info=new Info();
 		
-		labDetails=labDetailsRepository.findByUserNameAndDelStatus(userName, 0);
+		labDetails=labDetailsRepository.getLoginByUserName(userName);
 		if(labDetails!=null)
 		{
 			 

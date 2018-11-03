@@ -23,6 +23,9 @@ public interface LabDetailsRepository extends JpaRepository<LabDetails, Integer>
     LabDetails findByLabId(int labId);
     
     LabDetails findByUserNameAndDelStatus(String userName, int delStatus);
+    
+    @Query(value=" SELECT * from lab_details where uname=:userName AND del_status!=1",nativeQuery=true)
+	LabDetails getLoginByUserName(@Param("userName")String userName);
 
 	
 	@Query(value=" SELECT * from lab_details where city_id=:cityId AND del_status=0",nativeQuery=true)
