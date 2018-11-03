@@ -18,12 +18,13 @@ public interface FreequantlyUsedMedicinesRepository extends JpaRepository<Freequ
 	
 	
 	@Query(value=" SELECT * from frequently_used_medicine where doctor_id=:doctorId AND del_status=:delAtatus ORDER BY medicine_name ASC",nativeQuery=true)
-	List<FreequantlyUsedMedicines> getFrequentlyUsedMedicineBYDoctorUd(@Param("doctorId")int patientId, @Param("delAtatus")int delAtatus);
+	List<FreequantlyUsedMedicines> getFrequentlyUsedMedicineBYDoctorUd(@Param("doctorId")int doctorId, @Param("delAtatus")int delAtatus);
 	
 	@Transactional
 	@Modifying
 	@Query("DELETE from FreequantlyUsedMedicines  where freequantlyUsedMedicinesId=:medicineId")
 	int deleteMedicine(@Param("medicineId")int medicineId);
 
+	FreequantlyUsedMedicines findByDoctorIdAndMedicineName(int doctorId,String medicineName);
 
 }

@@ -1583,11 +1583,20 @@ System.out.println(e.getMessage());
 				public  Info insertFreequentlyUsedMedicine(@RequestBody FreequantlyUsedMedicines freequantlyUsedMedicinesList1) {
 					Info info=new Info();
 					
-					FreequantlyUsedMedicines freequantlyUsedMedicines = new FreequantlyUsedMedicines();
+					 
+					 
+					int doctorId=freequantlyUsedMedicinesList1.getDoctorId();
+					String medicineName=freequantlyUsedMedicinesList1.getMedicineName();
 					
-							
-							freequantlyUsedMedicines = freequantlyUsedMedicinesRepository.save(freequantlyUsedMedicinesList1);
+					try {
 					
+					FreequantlyUsedMedicines freequantlyUsedMedicines=freequantlyUsedMedicinesRepository.findByDoctorIdAndMedicineName(doctorId, medicineName);
+					
+					if(freequantlyUsedMedicines!=null) {
+						info.setMessage("Medicine Already Exist");
+					}else {
+						freequantlyUsedMedicines = freequantlyUsedMedicinesRepository.save(freequantlyUsedMedicinesList1);
+					}
 					 if(freequantlyUsedMedicines!=null)
 					 {
 						 info.setError(false);
@@ -1597,7 +1606,10 @@ System.out.println(e.getMessage());
 						 info.setError(true); 
 						 info.setMessage("Failed");
 					 }
-					
+						
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
 						 return info;
 				}
 				 

@@ -39,6 +39,7 @@ import com.bionische.biotech.model.LabTestsList;
 import com.bionische.biotech.model.PatientNotification;
 import com.bionische.biotech.model.ReportDetails;
 import com.bionische.biotech.model.SharingReportWithDoc;
+import com.bionische.biotech.model.TransactionDetails;
 import com.bionische.biotech.repository.AppointmentTimeRepository;
 import com.bionische.biotech.repository.BabyBornReportsRepository;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
@@ -58,6 +59,7 @@ import com.bionische.biotech.repository.LabTestsRepository;
 import com.bionische.biotech.repository.PatientNotificationRepository;
 import com.bionische.biotech.repository.ReportDetailsRepository;
 import com.bionische.biotech.repository.SharingReportWithDocRepository;
+import com.bionische.biotech.repository.TransactionDetailsRepository;
 import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.SendEMailService;
 
@@ -106,8 +108,8 @@ public class LabApiConrtoller {
 	@Autowired
 	GetLabAppointmentRrepository getLabAppointmentRrepository;
 	
-
-
+	@Autowired
+	TransactionDetailsRepository transactionDetailsRepository;
 
 
 
@@ -781,7 +783,7 @@ public @ResponseBody List<LabTests> getAllLabTypes() {
 /** insert patient Report*/
 
 @RequestMapping(value = { "/insertPatientReport" }, method = RequestMethod.POST)
-public @ResponseBody Info insertPatientReport(@RequestBody ReportDetails reportDetails)
+public @ResponseBody ReportDetails insertPatientReport(@RequestBody ReportDetails reportDetails)
 {
 	System.out.println("Comming List "+reportDetails.toString());
 	ReportDetails patientReport=new ReportDetails();
@@ -822,8 +824,12 @@ public @ResponseBody Info insertPatientReport(@RequestBody ReportDetails reportD
 		info.setMessage("Failed to insert");
 	}
 
-	return info;
+	return patientReport;
 }
+
+
+
+
 
 /** get patient report by test*/
 
@@ -1072,5 +1078,28 @@ System.out.println(e.getMessage());
 		return info;
 	}
 	
+	@RequestMapping(value = { "/insertTestTransaction" }, method = RequestMethod.POST)
+	public @ResponseBody Info insertTestTransaction(@RequestBody TransactionDetails transactionDetails)
+	{
+		
+		
+		Info info =new Info();
+		try {
+			TransactionDetails transactionDetailsRes=transactionDetailsRepository.save(transactionDetails);
+			if(transactionDetailsRes!=null) {
+				
+			}
+			
+			System.out.println("transactionDetailsRes"+transactionDetailsRes);
+			
+			
+			}
+		
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		return info;
+	}
 
 }
