@@ -3,8 +3,10 @@ package com.bionische.biotech.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.PatientDetails;
@@ -24,5 +26,9 @@ public interface ReportDetailsRepository extends JpaRepository<ReportDetails, In
 	List<ReportDetails> findByreportDateAndpatientIdAndDelStatus(@Param("fromDate")String fromDate,@Param("toDate")String reportDate, @Param("patientId")int patientId);
 	
 	
+	@Transactional
+	@Modifying
+	@Query("UPDATE ReportDetails p SET p.int2 =1  WHERE p.reportId=:reportId")
+	int updatePaymentStatusByReportId(@Param("reportId")int reportId);
 	 
 }

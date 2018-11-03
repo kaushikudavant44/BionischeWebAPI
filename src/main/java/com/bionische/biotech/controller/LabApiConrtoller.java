@@ -111,9 +111,6 @@ public class LabApiConrtoller {
 	@Autowired
 	TransactionDetailsRepository transactionDetailsRepository;
 
-
-
-
 @Autowired
 LabTestsRepository labTypesRepository;
 
@@ -1087,6 +1084,10 @@ System.out.println(e.getMessage());
 		try {
 			TransactionDetails transactionDetailsRes=transactionDetailsRepository.save(transactionDetails);
 			if(transactionDetailsRes!=null) {
+				
+				int reportId=transactionDetailsRes.getReportId();
+				int paymentStatus=reportDetailsRepository.updatePaymentStatusByReportId(reportId);
+				
 				
 			}
 			
