@@ -654,12 +654,23 @@ public class AdminPanelController {
 	public @ResponseBody DoctorCertificateDetails getDoctorCertificate(@RequestParam("doctorId") int doctorId) {
 		DoctorCertificateDetails doctorCertificateDetails=new DoctorCertificateDetails();
 		try {
-			doctorCertificateDetails = doctorCertificateDetailsRepository.findByDoctorIdAndDelStatus(doctorId, 0);
+			doctorCertificateDetails = doctorCertificateDetailsRepository.findByDoctorIdAndDelStatus(doctorId, 2);
 			 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 		return doctorCertificateDetails;
+	} 
+	@RequestMapping(value = { "/getDoctorAllCertificate" }, method = RequestMethod.POST)
+	public @ResponseBody List<DoctorCertificateDetails> getDoctorAllCertificate(@RequestParam("doctorId") int doctorId) {
+		List<DoctorCertificateDetails> doctorCertificateDetailsList=new ArrayList<DoctorCertificateDetails>();
+		try {
+			doctorCertificateDetailsList = doctorCertificateDetailsRepository.findByDoctorIdOrderByDelStatusDesc(doctorId);
+			 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return doctorCertificateDetailsList;
 	} 
 	
 	
@@ -669,6 +680,7 @@ public class AdminPanelController {
 		Info info=new Info();
 		try {
 			int res = doctorDetailsRepository.updateDoctorDelStatus(doctorId, 0);
+			doctorCertificateDetailsRepository.updateCertificateDelStatus(doctorId,2, "Accepted");
 			 if(res>0)
 			 {
 				 info.setError(false);
@@ -684,5 +696,40 @@ public class AdminPanelController {
 		}
 		return info;
 	} 
+	@RequestMapping(value = { "/doctorVerificationReject" }, method = RequestMethod.POST)
+	public @ResponseBody Info doctorVerificationReject(@RequestParam("doctorId") int doctorId, @RequestParam("message")String message) {
+		Info info=new Info();
+		try {
+			int res = doctorDetailsRepository.updateDoctorDelStatus(doctorId, 3);
+			doctorCertificateDetailsRepository.updateCertificateDelStatus(doctorId, 1, message);
+			 if(res>0)
+			 {
+				 info.setError(false);
+				 info.setMessage("Doctor DelStatus Update Successfully");
+			 }
+			 else 
+			 {
+				 info.setError(true);
+				 info.setMessage("Failed to update Doctor DelStatus");
+			 }
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return info;
+	} 
+	
+	@RequestMapping(value = { "/getDoctorPendingVerificationList" }, method = RequestMethod.GET)
+	public @ResponseBody List<DoctorCertificateDetails> getDoctorPendingVerificationList() {
+		List<DoctorCertificateDetails> doctorCertificateDetailsList=new ArrayList<DoctorCertificateDetails>();
+		try {
+			doctorCertificateDetailsList = doctorCertificateDetailsRepository.getDoctorPendingVerificationList();
+			 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return doctorCertificateDetailsList;
+	} 
+	
+	
 	
 }

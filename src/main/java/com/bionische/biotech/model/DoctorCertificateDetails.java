@@ -1,14 +1,24 @@
 package com.bionische.biotech.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name="doctor_certificate_details")
+@EntityListeners(AuditingEntityListener.class)
 public class DoctorCertificateDetails {
 
 	
@@ -25,6 +35,20 @@ public class DoctorCertificateDetails {
 	
 	@Column(name="string1")
     private String string1;
+	
+	@Column(name = "create_date")
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreatedDate
+	private Date createDate;
+	
+	/** Last modified date */
+	@LastModifiedDate
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "last_modified_date")
+	private Date lastModifiedDate;
+	
+	@Column(name="message")
+    private String message;
 	
 	@Column(name="del_status")
     private int delStatus;
@@ -80,14 +104,34 @@ public class DoctorCertificateDetails {
 		this.int1 = int1;
 	}
 
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	 
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	 
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
 	@Override
 	public String toString() {
 		return "DoctorCertificateDetails [cetrificateId=" + cetrificateId + ", cetrificate=" + cetrificate
-				+ ", doctorId=" + doctorId + ", string1=" + string1 + ", delStatus=" + delStatus + ", int1=" + int1
-				+ "]";
+				+ ", doctorId=" + doctorId + ", string1=" + string1 + ", createDate=" + createDate
+				+ ", lastModifiedDate=" + lastModifiedDate + ", message=" + message + ", delStatus=" + delStatus
+				+ ", int1=" + int1 + "]";
 	}
-	
-	
-	
+
+	 
 	
 }

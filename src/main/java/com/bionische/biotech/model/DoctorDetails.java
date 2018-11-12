@@ -1,11 +1,18 @@
 package com.bionische.biotech.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name="doctor_details")
@@ -102,6 +109,17 @@ public class DoctorDetails {
 
 	@Column(name="fees")
 	private float fees;
+	
+	@Column(name = "create_date")
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreatedDate
+	private Date createDate;
+	
+	/** Last modified date */
+	@LastModifiedDate
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "last_modified_date")
+	private Date lastModifiedDate;
 	
 	public float getFees() {
 		return fees;
@@ -342,6 +360,16 @@ public class DoctorDetails {
 		this.hospitalId = hospitalId;
 	}
 
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	 
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
 	@Override
 	public String toString() {
 		return "DoctorDetails [doctorId=" + doctorId + ", userName=" + userName + ", password=" + password + ", fName="
@@ -351,8 +379,13 @@ public class DoctorDetails {
 				+ profilePhoto + ", contactNo=" + contactNo + ", email=" + email + ", qualification=" + qualification
 				+ ", college=" + college + ", passingYear=" + passingYear + ", specId=" + specId + ", councilRegNo="
 				+ councilRegNo + ", councilName=" + councilName + ", delStatus=" + delStatus + ", string1=" + string1
-				+ ", string2=" + string2 + ", int1=" + int1 + ", int2=" + int2 + ", fees=" + fees + "]";
+				+ ", string2=" + string2 + ", int1=" + int1 + ", int2=" + int2 + ", fees=" + fees + ", createDate="
+				+ createDate + ", lastModifiedDate=" + lastModifiedDate + "]";
 	}
+
+	 
+
+	 
  
 	 
 
