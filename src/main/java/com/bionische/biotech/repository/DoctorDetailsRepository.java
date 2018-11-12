@@ -70,4 +70,5 @@ public interface DoctorDetailsRepository extends JpaRepository<DoctorDetails, Lo
 	int getDoctorId( @Param("appointId")int appointId);
 	
 	
+	
 }
