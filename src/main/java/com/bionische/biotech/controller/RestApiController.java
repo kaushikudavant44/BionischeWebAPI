@@ -312,13 +312,13 @@ public class RestApiController {
 	//Get Doctor Profile 
 	//Ganesh
 	 @RequestMapping(value = { "/getDoctorProfile" }, method = RequestMethod.POST)
-	public @ResponseBody DoctorDetails getDoctorProfile(@RequestParam("doctorId") int doctorId)
+	public @ResponseBody GetDoctorProfile getDoctorProfile(@RequestParam("doctorId") int doctorId)
 	
 	{
-		 DoctorDetails getDoctorProfile=new DoctorDetails();
-		// GetDoctorProfile getDoctorProfile=new GetDoctorProfile();
+		/* DoctorDetails getDoctorProfile=new DoctorDetails();*/
+		 GetDoctorProfile getDoctorProfile=new GetDoctorProfile();
 	 try {
-		 getDoctorProfile=	doctorDetailsRepository.findByDoctorId(doctorId);
+		 getDoctorProfile=	getDoctorProfileRepository.getDoctorProfile(doctorId);
 		
 	 }
 	 catch (Exception e) {

@@ -89,6 +89,19 @@ public class GetDoctorProfile {
 	
 	@Column(name="council_name")
 	private String councilName;
+	
+	@Column(name="del_status")
+	private int delStatus;
+
+	
+	
+	public int getDelStatus() {
+		return delStatus;
+	}
+
+	public void setDelStatus(int delStatus) {
+		this.delStatus = delStatus;
+	}
 
 	public int getDoctorId() {
 		return doctorId;
@@ -298,8 +311,11 @@ public class GetDoctorProfile {
 				+ address + ", yearOfExperience=" + yearOfExperience + ", aboutMe=" + aboutMe + ", profilePhoto="
 				+ profilePhoto + ", contactNo=" + contactNo + ", email=" + email + ", qualification=" + qualification
 				+ ", college=" + college + ", passingYear=" + passingYear + ", specId=" + specId + ", specType="
-				+ specType + ", int2=" + int2 + ", councilRegNo=" + councilRegNo + ", councilName=" + councilName + "]";
+				+ specType + ", int2=" + int2 + ", councilRegNo=" + councilRegNo + ", councilName=" + councilName
+				+ ", delStatus=" + delStatus + "]";
 	}
+
+	
 
 	
 	
