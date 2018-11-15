@@ -330,7 +330,7 @@ CreateDirectoryService createDirectoryService;
 		try {
 		
 			System.out.println("details:"+labId+" "+date+" "+fromTime+" "+toTime);
-		appointmentTime=appointmentTimeRepository.getLabAppointMent(labId,date,fromTime,toTime);
+		appointmentTime=appointmentTimeRepository.getLabAppointMent(fromTime,toTime);
 		
 		System.out.println("appointmentTime:"+appointmentTime.toString());
 		appointmentTimeList.setAppointmentTimeList(appointmentTime);
