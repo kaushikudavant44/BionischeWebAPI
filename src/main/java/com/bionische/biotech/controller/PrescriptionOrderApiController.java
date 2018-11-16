@@ -85,6 +85,12 @@ public class PrescriptionOrderApiController {
 		return prescriptionOrderService.updateMedicineOrderDeliveredStatus(requestId,status);
 	}
 	
+	@RequestMapping(value = { "/getMedicalCancelledOrderByMedicalIdAndStatus" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetMedicalOrderDetails> getMedicalCancelledOrderByMedicalIdAndStatus(@RequestParam("medicalId")int medicalId,@RequestParam("status")int status) {
+  
+		
+		return prescriptionOrderService.getMedicalCancelledOrderByMedicalIdAndStatus(medicalId, status);
+	}
 	
 	 
 }

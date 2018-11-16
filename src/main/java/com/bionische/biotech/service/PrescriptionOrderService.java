@@ -26,4 +26,6 @@ public interface PrescriptionOrderService {
 	
 	List<GetMedicalOrderDetails> getMedicalOrderDetailsByMedicalIdAndDate(int medicalId,
 			String fromDate, String toDate);
+	
+	List<GetMedicalOrderDetails> getMedicalCancelledOrderByMedicalIdAndStatus(int medicalId,int status);
 }

@@ -230,4 +230,17 @@ try {
 				return getMedicalOrderDetailsList;
 				
 	}
+	
+	@Override
+	public List<GetMedicalOrderDetails> getMedicalCancelledOrderByMedicalIdAndStatus(int medicalId, int status) {
+		List<GetMedicalOrderDetails> getMedicalOrderDetailsList=new ArrayList<GetMedicalOrderDetails>();
+try {
+	getMedicalOrderDetailsList=getMedicalOrderDetailsRepository.getMedicalCancelledOrderByMedicalIdAndStatus(medicalId, status);
+		
+}
+catch (Exception e) {
+	System.out.println(e.getMessage());// TODO: handle exception
+}
+		return getMedicalOrderDetailsList;
+	}
 }
