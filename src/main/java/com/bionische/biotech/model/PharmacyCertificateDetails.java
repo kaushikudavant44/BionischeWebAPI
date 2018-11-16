@@ -1,11 +1,18 @@
 package com.bionische.biotech.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name="pharmacy_certificate_details")
@@ -19,15 +26,29 @@ public class PharmacyCertificateDetails {
 	@Column(name="certificate")
     private String cetrificate;
 	
-	@Column(name="pharmacy_id")
-    private int pharmacyId;
+	@Column(name="medical_id")
+    private int medicalId;
 	
 	@Column(name="string1")
     private String string1;
 	
+	@Column(name = "create_date")
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreatedDate
+	private Date createDate;
+	
+	/** Last modified date */
+	@LastModifiedDate
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "last_modified_date")
+	private Date lastModifiedDate;
+	
+	@Column(name="message")
+    private String message;
+	
 	@Column(name="del_status")
     private int delStatus;
-	
+
 	@Column(name="int_1")
     private int int1;
 
@@ -47,13 +68,7 @@ public class PharmacyCertificateDetails {
 		this.cetrificate = cetrificate;
 	}
 
-	public int getPharmacyId() {
-		return pharmacyId;
-	}
-
-	public void setPharmacyId(int pharmacyId) {
-		this.pharmacyId = pharmacyId;
-	}
+	 
 
 	public String getString1() {
 		return string1;
@@ -82,10 +97,12 @@ public class PharmacyCertificateDetails {
 	@Override
 	public String toString() {
 		return "PharmacyCertificateDetails [cetrificateId=" + cetrificateId + ", cetrificate=" + cetrificate
-				+ ", pharmacyId=" + pharmacyId + ", string1=" + string1 + ", delStatus=" + delStatus + ", int1=" + int1
-				+ "]";
+				+ ", medicalId=" + medicalId + ", string1=" + string1 + ", createDate=" + createDate
+				+ ", lastModifiedDate=" + lastModifiedDate + ", message=" + message + ", delStatus=" + delStatus
+				+ ", int1=" + int1 + "]";
 	}
-	
+
+	 
 	
 
 }

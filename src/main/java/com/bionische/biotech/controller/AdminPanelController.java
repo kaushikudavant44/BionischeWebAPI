@@ -32,8 +32,10 @@ import com.bionische.biotech.model.GetDoctorHospitalDetails;
 import com.bionische.biotech.model.GetLabRatingReview;
 import com.bionische.biotech.model.GetMedicalOrderDetails;
 import com.bionische.biotech.model.GetPatientReports;
+import com.bionische.biotech.model.GetVerificationPendingCount;
 import com.bionische.biotech.model.HospitalDetails;
 import com.bionische.biotech.model.Info;
+import com.bionische.biotech.model.LabCertificateDetails;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.LabTests;
 import com.bionische.biotech.model.MedicalDetails;
@@ -47,10 +49,13 @@ import com.bionische.biotech.repository.GetDocAvailableTimeDetailsRepository;
 import com.bionische.biotech.repository.GetDoctorHospitalDetailsRepository;
 import com.bionische.biotech.repository.GetLabRatingReviewRepository;
 import com.bionische.biotech.repository.GetPatientReportsRepository;
+import com.bionische.biotech.repository.GetVerificationPendingCountRepository;
 import com.bionische.biotech.repository.HospitalDetailsRepository;
+import com.bionische.biotech.repository.LabCertificateDetailsRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.LabTestsRepository;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
+import com.bionische.biotech.repository.PharmacyCertificateDetailsRepository;
 import com.bionische.biotech.repository.RatingDetailsRepository;
 import com.bionische.biotech.repository.TermsAndConditionsRepository;
 import com.bionische.biotech.service.PrescriptionOrderService;
@@ -126,6 +131,13 @@ public class AdminPanelController {
 	
 	@Autowired
 	DoctorCertificateDetailsRepository doctorCertificateDetailsRepository;
+	@Autowired
+	PharmacyCertificateDetailsRepository pharmacyCertificateDetailsRepository;
+	@Autowired
+	LabCertificateDetailsRepository labCertificateDetailsRepository;
+	
+	@Autowired
+	GetVerificationPendingCountRepository getVerificationPendingCountRepository;
 	/*
 	 * 
 	 * @RequestMapping(value = { "/getDoctorAppointmentDetailsByPatientId" }, method
@@ -145,6 +157,14 @@ public class AdminPanelController {
 	 * return getDoctorAppointmentDetailsList; }
 	 */
 
+	
+	
+	@RequestMapping(value = { "/getVerificationPendingCount" }, method = RequestMethod.GET)
+	public @ResponseBody GetVerificationPendingCount getVerificationPendingCount() {
+ 
+		return getVerificationPendingCountRepository.getVerificationCount();
+	}
+	
 	@RequestMapping(value = { "/getInsuranceDetailsByDateAndFamily" }, method = RequestMethod.POST)
 	public @ResponseBody List<GetInsuranceDetails> getInsuranceDetailsByDateAndFamily(
 			@RequestParam("familyId") int familyId, @RequestParam("fromDate") String fromDate,
@@ -731,5 +751,116 @@ public class AdminPanelController {
 	} 
 	
 	
+	@RequestMapping(value = { "/getLabAllCertificate" }, method = RequestMethod.POST)
+	public @ResponseBody List<LabCertificateDetails> getLabAllCertificate(@RequestParam("labId") int labId) {
+		List<LabCertificateDetails> labCertificateDetailsList=new ArrayList<LabCertificateDetails>();
+		try {
+			labCertificateDetailsList = labCertificateDetailsRepository.findByLabIdOrderByDelStatusDesc(labId);
+			 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return labCertificateDetailsList; 
+	} 
+	
+	
+	@RequestMapping(value = { "/getLabPendingVerificationList" }, method = RequestMethod.GET)
+	public @ResponseBody List<LabCertificateDetails> getLabPendingVerificationList() {
+		List<LabCertificateDetails> labCertificateDetailsList=new ArrayList<LabCertificateDetails>();
+		try {
+			labCertificateDetailsList = labCertificateDetailsRepository.getLabPendingVerificationList();
+			 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return labCertificateDetailsList;
+	} 
+	@RequestMapping(value = { "/labVerificationReject" }, method = RequestMethod.POST)
+	public @ResponseBody Info labVerificationReject(@RequestParam("labId") int labId, @RequestParam("message")String message) {
+		Info info=new Info();
+		try {
+			int res = labDetailsRepository.updateLabDelStatus(labId, 3);
+			labCertificateDetailsRepository.updateCertificateDelStatus(labId, 1, message);
+			 if(res>0)
+			 {
+				 info.setError(false);
+				 info.setMessage("Lab DelStatus Update Successfully");
+			 }
+			 else 
+			 {
+				 info.setError(true);
+				 info.setMessage("Failed to update Lab DelStatus");
+			 }
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return info;
+	} 
+
+	@RequestMapping(value = { "/labVerificationProcess" }, method = RequestMethod.POST)
+	public @ResponseBody Info labVerificationProcess(@RequestParam("labId") int labId) {
+		Info info=new Info();
+		try {
+			int res = labDetailsRepository.updateLabDelStatus(labId, 0);
+			labCertificateDetailsRepository.updateCertificateDelStatus(labId,2, "Accepted");
+			 if(res>0)
+			 {
+				 info.setError(false);
+				 info.setMessage("Lab DelStatus Update Successfully");
+			 }
+			 else 
+			 {
+				 info.setError(true);
+				 info.setMessage("Failed to update Lab DelStatus");
+			 }
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return info;
+	} 
+	
+	@RequestMapping(value = { "/pharmacyVerificationReject" }, method = RequestMethod.POST)
+	public @ResponseBody Info pharmacyVerificationReject(@RequestParam("medicalId") int medicalId, @RequestParam("message")String message) {
+		Info info=new Info();
+		try {
+			int res = medicalDetailsRepository.updateMedicalDelStatus(medicalId, 3);
+			pharmacyCertificateDetailsRepository.updateCertificateDelStatus(medicalId, 1, message);
+			 if(res>0)
+			 {
+				 info.setError(false);
+				 info.setMessage("medical DelStatus Update Successfully");
+			 }
+			 else 
+			 {
+				 info.setError(true);
+				 info.setMessage("Failed to update medical DelStatus");
+			 }
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return info;
+	} 
+	
+	@RequestMapping(value = { "/pharmacyVerificationProcess" }, method = RequestMethod.POST)
+	public @ResponseBody Info pharmacyVerificationProcess(@RequestParam("medicalId") int medicalId) {
+		Info info=new Info();
+		try {
+			int res = medicalDetailsRepository.updateMedicalDelStatus(medicalId, 0);
+			pharmacyCertificateDetailsRepository.updateCertificateDelStatus(medicalId,2, "Accepted");
+			 if(res>0)
+			 {
+				 info.setError(false);
+				 info.setMessage("Pharmacy DelStatus Update Successfully");
+			 }
+			 else 
+			 {
+				 info.setError(true);
+				 info.setMessage("Failed to update Pharmacy DelStatus");
+			 }
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return info;
+	} 
 	
 }

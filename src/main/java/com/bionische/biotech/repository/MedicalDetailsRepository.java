@@ -51,4 +51,11 @@ public interface MedicalDetailsRepository extends JpaRepository<MedicalDetails, 
 	
 	@Query(value=" SELECT * from medical_details where email=:email AND del_status=0",nativeQuery=true)
 	MedicalDetails getPharmacyEmail(@Param("email")String email);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE MedicalDetails a SET a.delStatus =:delStatus  WHERE a.medicalId=:medicalId")
+	int updateMedicalDelStatus(@Param("medicalId")int medicalId,@Param("delStatus")int delStatus);
+	
+	 
 }

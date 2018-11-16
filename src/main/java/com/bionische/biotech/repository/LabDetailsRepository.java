@@ -76,4 +76,9 @@ public interface LabDetailsRepository extends JpaRepository<LabDetails, Integer>
 	@Query(value=" SELECT * from lab_details where email=:email AND del_status=0",nativeQuery=true)
 	LabDetails getLabEmail(@Param("email")String email);
 	
+	@Transactional
+	@Modifying
+	@Query("UPDATE LabDetails a SET a.delStatus =:delStatus  WHERE a.labId=:labId")
+	int updateLabDelStatus(@Param("labId")int labId, @Param("delStatus")int delStatus);
+	
 }

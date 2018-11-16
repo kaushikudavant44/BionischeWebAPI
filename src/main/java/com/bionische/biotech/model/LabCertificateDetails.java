@@ -1,19 +1,26 @@
 package com.bionische.biotech.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
-@Table(name="lab_certificate_details")
+@Table(name="m_lab_certificate_details")
 public class LabCertificateDetails {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="cetrificate_id")
+	@Column(name="certificate_id")
     private int cetrificateId;
 	
 	@Column(name="certificate")
@@ -24,6 +31,20 @@ public class LabCertificateDetails {
 	
 	@Column(name="string1")
     private String string1;
+	
+	@Column(name = "create_date")
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreatedDate
+	private Date createDate;
+	
+	/** Last modified date */
+	@LastModifiedDate
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "last_modified_date")
+	private Date lastModifiedDate;
+	
+	@Column(name="message")
+    private String message;
 	
 	@Column(name="del_status")
     private int delStatus;
