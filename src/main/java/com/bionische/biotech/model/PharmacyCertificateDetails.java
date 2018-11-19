@@ -15,12 +15,12 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
-@Table(name="pharmacy_certificate_details")
+@Table(name="m_pharmacy_certificate_details")
 public class PharmacyCertificateDetails {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="cetrificate_id")
+	@Column(name="certificate_id")
     private int cetrificateId;
 	
 	@Column(name="certificate")
@@ -30,9 +30,9 @@ public class PharmacyCertificateDetails {
     private int medicalId;
 	
 	@Column(name="string1")
-    private String string1;
-	
-	@Column(name = "create_date")
+    private String string1; 
+	 
+	@Column(name ="create_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	private Date createDate;
@@ -92,6 +92,33 @@ public class PharmacyCertificateDetails {
 
 	public void setInt1(int int1) {
 		this.int1 = int1;
+	}
+
+	public int getMedicalId() {
+		return medicalId;
+	}
+
+	public void setMedicalId(int medicalId) {
+		this.medicalId = medicalId;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	 
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	 
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
 	@Override

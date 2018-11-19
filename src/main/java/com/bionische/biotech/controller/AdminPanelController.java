@@ -39,6 +39,8 @@ import com.bionische.biotech.model.LabCertificateDetails;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.LabTests;
 import com.bionische.biotech.model.MedicalDetails;
+import com.bionische.biotech.model.PackageDetails;
+import com.bionische.biotech.model.PharmacyCertificateDetails;
 import com.bionische.biotech.model.RatingDetails;
 import com.bionische.biotech.model.TermsAndConditions;
 import com.bionische.biotech.repository.AdminDetailsRepository;
@@ -55,6 +57,7 @@ import com.bionische.biotech.repository.LabCertificateDetailsRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.LabTestsRepository;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
+import com.bionische.biotech.repository.PackageDetailsRepository;
 import com.bionische.biotech.repository.PharmacyCertificateDetailsRepository;
 import com.bionische.biotech.repository.RatingDetailsRepository;
 import com.bionische.biotech.repository.TermsAndConditionsRepository;
@@ -138,6 +141,9 @@ public class AdminPanelController {
 	
 	@Autowired
 	GetVerificationPendingCountRepository getVerificationPendingCountRepository;
+	@Autowired
+	PackageDetailsRepository packageDetailsRepository;
+	
 	/*
 	 * 
 	 * @RequestMapping(value = { "/getDoctorAppointmentDetailsByPatientId" }, method
@@ -681,6 +687,30 @@ public class AdminPanelController {
 		}
 		return doctorCertificateDetails;
 	} 
+	
+	@RequestMapping(value = { "/getLabCertificate" }, method = RequestMethod.POST)
+	public @ResponseBody LabCertificateDetails getLabCertificate(@RequestParam("labId") int labId) {
+		LabCertificateDetails labCertificateDetails=new LabCertificateDetails();
+		try {
+			labCertificateDetails = labCertificateDetailsRepository.findByLabIdAndDelStatus(labId, 2);
+			 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return labCertificateDetails;
+	}
+	
+	@RequestMapping(value = { "/getPharmacyCertificate" }, method = RequestMethod.POST)
+	public @ResponseBody PharmacyCertificateDetails getPharmacyCertificate(@RequestParam("medicalId") int medicalId) {
+		PharmacyCertificateDetails pharmacyCertificateDetails=new PharmacyCertificateDetails();
+		try {
+			pharmacyCertificateDetails = pharmacyCertificateDetailsRepository.findByMedicalIdAndDelStatus(medicalId, 2);
+			 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return pharmacyCertificateDetails;
+	}
 	@RequestMapping(value = { "/getDoctorAllCertificate" }, method = RequestMethod.POST)
 	public @ResponseBody List<DoctorCertificateDetails> getDoctorAllCertificate(@RequestParam("doctorId") int doctorId) {
 		List<DoctorCertificateDetails> doctorCertificateDetailsList=new ArrayList<DoctorCertificateDetails>();
@@ -819,6 +849,31 @@ public class AdminPanelController {
 		return info;
 	} 
 	
+	
+	@RequestMapping(value = { "/getPharmacyPendingVerificationList" }, method = RequestMethod.GET)
+	public @ResponseBody List<PharmacyCertificateDetails> getPharmacyPendingVerificationList() {
+		List<PharmacyCertificateDetails> pharmacyCertificateDetailsList=new ArrayList<PharmacyCertificateDetails>();
+		try {
+			pharmacyCertificateDetailsList = pharmacyCertificateDetailsRepository.getPharmacyPendingVerificationList();
+			 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return pharmacyCertificateDetailsList;
+	} 
+	
+	@RequestMapping(value = { "/getPharmacyAllCertificate" }, method = RequestMethod.POST)
+	public @ResponseBody List<PharmacyCertificateDetails> getPharmacyAllCertificate(@RequestParam("medicalId") int medicalId) {
+		List<PharmacyCertificateDetails> pharmacyCertificateDetailsList=new ArrayList<PharmacyCertificateDetails>();
+		try {
+			pharmacyCertificateDetailsList = pharmacyCertificateDetailsRepository.findByMedicalIdOrderByDelStatusDesc(medicalId);
+			 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return pharmacyCertificateDetailsList; 
+	} 
+	
 	@RequestMapping(value = { "/pharmacyVerificationReject" }, method = RequestMethod.POST)
 	public @ResponseBody Info pharmacyVerificationReject(@RequestParam("medicalId") int medicalId, @RequestParam("message")String message) {
 		Info info=new Info();
@@ -863,4 +918,45 @@ public class AdminPanelController {
 		return info;
 	} 
 	
+	
+	 
+	@RequestMapping(value = { "/insertPackageDetails" }, method = RequestMethod.POST)
+	public @ResponseBody Info insertPackageDetails(@RequestBody PackageDetails packageDetails) {
+	 
+		Info info=new Info();
+		try {
+			PackageDetails packageDetailsRes = packageDetailsRepository.save(packageDetails);
+			
+			 if(packageDetailsRes!=null)
+			 {
+				 info.setError(false);
+				 info.setMessage("Package Save successfully");
+			 }
+			 else
+			 {
+				 info.setError(true);
+				 info.setMessage("Failed to save package details");
+			 }
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			 info.setError(true);
+			 info.setMessage("Failed to save package details");
+		}
+		return info; 
+	} 
+	@RequestMapping(value = { "/getCurrentPackageDetailsByUserType" }, method = RequestMethod.POST)
+	public @ResponseBody List<PackageDetails> getCurrentPackageDetailsByUserType(@RequestParam("userType")int userType) {
+	 
+		List<PackageDetails> packageDetailsList=new ArrayList<PackageDetails>();
+		
+		try {
+			packageDetailsList= packageDetailsRepository.findByUserType(userType);
+			
+			 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		 
+		}
+		return packageDetailsList; 
+	} 
 }

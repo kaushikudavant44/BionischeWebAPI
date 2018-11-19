@@ -24,8 +24,12 @@ public interface PharmacyCertificateDetailsRepository extends JpaRepository<Phar
 	int updateCertificateDelStatus(@Param("medicalId")int medicalId,@Param("delStatus")int delStatus,@Param("message")String message);
 	 
 	
-	@Query(value=" SELECT c.cetrificate_id, c.certificate, c.doctor_id, medical_name as string1,"
-			+ "c.create_date, c.last_modified_date,c.message, c.int_1, c.del_status from doctor_certificate_details c, lab_details d where c.del_status=0 AND d.medical_id=c.medical_id",nativeQuery=true)
-	List<PharmacyCertificateDetails> getLabPendingVerificationList();
+	@Query(value=" SELECT c.certificate_id, c.certificate, c.medical_id, d.medical_name as string1,"
+			+ "c.create_date, c.last_modified_date,c.message, c.int_1, c.del_status from m_pharmacy_certificate_details c, medical_details d where c.del_status=0 AND d.medical_id=c.medical_id",nativeQuery=true)
+	List<PharmacyCertificateDetails> getPharmacyPendingVerificationList();
+
+	 
+
+	  
 	
 }

@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,9 +14,11 @@ import javax.persistence.TemporalType;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name="m_package")
+@EntityListeners(AuditingEntityListener.class)
 public class PackageDetails {
 
 	
@@ -55,7 +58,7 @@ public class PackageDetails {
 	private int delStatus;
 	
 	@Column(name="packageDuration")
-	private int package_duration;
+	private int packageDuration;
 	
 	@Column(name="duration_type")
 	private int durationType;
@@ -139,13 +142,25 @@ public class PackageDetails {
 	}
 
 
-	public int getPackage_duration() {
-		return package_duration;
+ 
+
+	public int getPackageDuration() {
+		return packageDuration;
 	}
 
 
-	public void setPackage_duration(int package_duration) {
-		this.package_duration = package_duration;
+	public void setPackageDuration(int packageDuration) {
+		this.packageDuration = packageDuration;
+	}
+
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+
+	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
 	}
 
 
@@ -174,9 +189,12 @@ public class PackageDetails {
 		return "PackageDetails [packageId=" + packageId + ", packageName=" + packageName + ", userType=" + userType
 				+ ", packageDesc=" + packageDesc + ", termsAndCondition=" + termsAndCondition + ", createDate="
 				+ createDate + ", lastModifiedDate=" + lastModifiedDate + ", delStatus=" + delStatus
-				+ ", package_duration=" + package_duration + ", durationType=" + durationType + ", packageCost="
+				+ ", packageDuration=" + packageDuration + ", durationType=" + durationType + ", packageCost="
 				+ packageCost + "]";
 	}
+
+
+	 
 	
 	
 }
