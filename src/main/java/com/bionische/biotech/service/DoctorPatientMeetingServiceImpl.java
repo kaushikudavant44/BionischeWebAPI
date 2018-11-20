@@ -37,7 +37,7 @@ public class DoctorPatientMeetingServiceImpl implements DoctorPatientMeetingServ
 		PatientNotification patientNotification = new PatientNotification();
 		
 		patientNotification.setPatientId(doctorPatientMeeting.getPatientId());
-		patientNotification.setNotification(doctorDetails.getfName()+" "+doctorDetails.getlName()+"       "+doctorPatientMeeting.getPatientProblem());					
+		patientNotification.setNotification(doctorDetails.getfName()+" "+doctorDetails.getlName());					
 		patientNotification.setStatus(0);
 		patientNotification.setString1("Rate Your Doctor");
 		patientNotification.setString2("drating");
