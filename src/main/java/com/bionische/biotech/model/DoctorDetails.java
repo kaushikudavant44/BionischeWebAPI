@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,9 +14,11 @@ import javax.persistence.TemporalType;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name="doctor_details")
+@EntityListeners(AuditingEntityListener.class)
 public class DoctorDetails {
 	
 	
@@ -65,7 +68,7 @@ public class DoctorDetails {
 	@Column(name="about_me")
 	private String aboutMe;
 	
-	@Column(name="profile_photo")
+	@Column(name="profile_photo", nullable=true)
 	private String profilePhoto;
 	
 	@Column(name="contact")

@@ -56,7 +56,7 @@ public class GetDoctorProfile {
 	@Column(name="about_me")
 	private String aboutMe;
 	
-	@Column(name="profile_photo")
+	@Column(name="profile_photo", nullable=true)
 	private String profilePhoto;
 	
 	@Column(name="contact")
