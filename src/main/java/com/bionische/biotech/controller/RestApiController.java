@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -319,7 +320,7 @@ public class RestApiController {
 		 GetDoctorProfile getDoctorProfile=new GetDoctorProfile();
 	 try {
 		 getDoctorProfile=	getDoctorProfileRepository.getDoctorProfile(doctorId);
-		
+		System.out.println(getDoctorProfile.toString());
 	 }
 	 catch (Exception e) {
 System.out.println(e.getMessage());
@@ -2812,5 +2813,25 @@ System.out.println(e.getMessage());
 						}
 						
 					    return  getHospitalClinicByDoctorIdAndAvailDateList;
+					}
+					
+					
+					@RequestMapping(value = { "/sendOtpOnMobile"}, method = RequestMethod.POST)
+					public @ResponseBody Info sendOtpOnMobile(@RequestParam("contactNo") String contactNo) {
+						Info info=new Info();
+						// create instance of Random class
+						Random rand = new Random();
+						// Generate random integers in range 0 to 999
+						int generatedOTP = rand.nextInt(1000000);
+						
+						MESSAGE=generatedOTP+" is your One Time Password for verification of user mobile number";
+						try { 
+						
+						sendTextMessageService.sendTextSms(MESSAGE , contactNo);
+						info.setMessage(""+generatedOTP);
+						}catch(Exception e) {
+							e.printStackTrace();
+						}
+						return info;
 					}
 }
