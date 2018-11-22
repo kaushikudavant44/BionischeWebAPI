@@ -30,5 +30,8 @@ public interface ReportDetailsRepository extends JpaRepository<ReportDetails, In
 	@Modifying
 	@Query("UPDATE ReportDetails p SET p.int2 =1  WHERE p.reportId=:reportId")
 	int updatePaymentStatusByReportId(@Param("reportId")int reportId);
+	
+	
+	
 	 
 }

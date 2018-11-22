@@ -36,6 +36,7 @@ import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.LabNotification;
 import com.bionische.biotech.model.LabTests;
 import com.bionische.biotech.model.LabTestsList;
+import com.bionische.biotech.model.PateintReportPaymentDetails;
 import com.bionische.biotech.model.PatientNotification;
 import com.bionische.biotech.model.ReportDetails;
 import com.bionische.biotech.model.SharingReportWithDoc;
@@ -56,6 +57,7 @@ import com.bionische.biotech.repository.LabAppointmentRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.LabNotificationRepository;
 import com.bionische.biotech.repository.LabTestsRepository;
+import com.bionische.biotech.repository.PateintReportPaymentDetailsRepository;
 import com.bionische.biotech.repository.PatientNotificationRepository;
 import com.bionische.biotech.repository.ReportDetailsRepository;
 import com.bionische.biotech.repository.SharingReportWithDocRepository;
@@ -110,6 +112,9 @@ public class LabApiConrtoller {
 	
 	@Autowired
 	TransactionDetailsRepository transactionDetailsRepository;
+
+	@Autowired
+	PateintReportPaymentDetailsRepository pateintReportPaymentDetailsRepository;
 
 @Autowired
 LabTestsRepository labTypesRepository;
@@ -1103,4 +1108,21 @@ System.out.println(e.getMessage());
 		return info;
 	}
 
+	@RequestMapping(value = { "/getLabPaymentInvoice" }, method = RequestMethod.POST)
+	public @ResponseBody List<PateintReportPaymentDetails> getLabPaymentInvoice(@RequestParam("patientId") int patientId)
+	
+	{
+		 List<PateintReportPaymentDetails>  reportDetailsRes=new ArrayList<>();
+	 try {
+		  reportDetailsRes=pateintReportPaymentDetailsRepository.findByPatientIdAndPaymentStatus(patientId,0);
+		
+	 }
+	 catch (Exception e) {
+System.out.println(e.getMessage());
+	}
+	 return reportDetailsRes;
+	 
+	 
+	}
+	
 }
