@@ -1088,11 +1088,13 @@ System.out.println(e.getMessage());
 		Info info =new Info();
 		try {
 			TransactionDetails transactionDetailsRes=transactionDetailsRepository.save(transactionDetails);
-			if(transactionDetailsRes!=null) {
+			if(transactionDetailsRes!=null ) {
 				
 				int reportId=transactionDetailsRes.getReportId();
+				ReportDetails reportDetails=reportDetailsRepository.findByReportId(reportId);
+				if(reportDetails.getInt2()==1) {
 				int paymentStatus=reportDetailsRepository.updatePaymentStatusByReportId(reportId);
-				
+				}
 				
 			}
 			

@@ -43,13 +43,13 @@ public class TransactionDetails {
 	private int status;
 	
 	@Column(name="amount")
-	private int amount;
+	private float amount;
 	
 	@Column(name="discount")
-	private int discount;
+	private float discount;
 	
 	@Column(name="totalAmount")
-	private int totalAmount;
+	private float totalAmount;
 	
 	@Column(name="int_1")
 	private int int1;
@@ -119,27 +119,29 @@ public class TransactionDetails {
 		this.status = status;
 	}
 
-	public int getAmount() {
+	
+
+	public float getAmount() {
 		return amount;
 	}
 
-	public void setAmount(int amount) {
+	public void setAmount(float amount) {
 		this.amount = amount;
 	}
 
-	public int getDiscount() {
+	public float getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(int discount) {
+	public void setDiscount(float discount) {
 		this.discount = discount;
 	}
 
-	public int getTotalAmount() {
+	public float getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(int totalAmount) {
+	public void setTotalAmount(float totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 
@@ -183,6 +185,8 @@ public class TransactionDetails {
 				+ totalAmount + ", int1=" + int1 + ", int2=" + int2 + ", string1=" + string1 + ", reportId=" + reportId
 				+ "]";
 	}
+
+	
 
 	
 	
