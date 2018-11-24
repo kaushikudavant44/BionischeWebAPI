@@ -32,6 +32,6 @@ public interface ReportDetailsRepository extends JpaRepository<ReportDetails, In
 	int updatePaymentStatusByReportId(@Param("reportId")int reportId);
 	
 	
-	
+	ReportDetails findByReportId(int reportId);
 	 
 }
