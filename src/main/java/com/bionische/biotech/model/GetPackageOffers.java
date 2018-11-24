@@ -15,8 +15,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
-@Table(name="m_package_offers")
-public class PackageOffers {
+ 
+public class GetPackageOffers {
 
 	
 	@Id
@@ -71,12 +71,17 @@ public class PackageOffers {
 	@Column(name="current_user_count")
 	private int currentUserCount;
 	
-	@Column(name="string1")
-	private String string1;
+	@Column(name="package_name")
+	private String packageName;
 	
-	@Column(name="int_1")
-	private int int1;
+	@Column(name="package_cost")
+	private int packageCost;
 	
+	@Column(name="package_duration")
+	private int packageDuration;
+	
+	@Column(name="duration_type")
+	private int durationType;
 
 	public int getOfferId() {
 		return offerId;
@@ -186,32 +191,60 @@ public class PackageOffers {
 		this.discountPer = discountPer;
 	}
 
-	public String getString1() {
-		return string1;
+	public String getPackageName() {
+		return packageName;
 	}
 
-	public void setString1(String string1) {
-		this.string1 = string1;
+	public void setPackageName(String packageName) {
+		this.packageName = packageName;
 	}
 
-	public int getInt1() {
-		return int1;
+	public int getPackageCost() {
+		return packageCost;
 	}
 
-	public void setInt1(int int1) {
-		this.int1 = int1;
+	public void setPackageCost(int packageCost) {
+		this.packageCost = packageCost;
+	}
+
+	public int getPackageDuration() {
+		return packageDuration;
+	}
+
+	public void setPackageDuration(int packageDuration) {
+		this.packageDuration = packageDuration;
+	}
+
+	public int getDurationType() {
+		return durationType;
+	}
+
+	public void setDurationType(int durationType) {
+		this.durationType = durationType;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
 	}
 
 	@Override
 	public String toString() {
-		return "PackageOffers [offerId=" + offerId + ", packageId=" + packageId + ", offerTitle=" + offerTitle
+		return "GetPackageOffers [offerId=" + offerId + ", packageId=" + packageId + ", offerTitle=" + offerTitle
 				+ ", startDate=" + startDate + ", endDate=" + endDate + ", userType=" + userType + ", discountPer="
 				+ discountPer + ", termsAndCondition=" + termsAndCondition + ", createDate=" + createDate
 				+ ", lastModifiedDate=" + lastModifiedDate + ", delStatus=" + delStatus + ", promoCode=" + promoCode
-				+ ", maxUser=" + maxUser + ", currentUserCount=" + currentUserCount + ", string1=" + string1 + ", int1="
-				+ int1 + "]";
+				+ ", maxUser=" + maxUser + ", currentUserCount=" + currentUserCount + ", packageName=" + packageName
+				+ ", packageCost=" + packageCost + ", packageDuration=" + packageDuration + ", durationType="
+				+ durationType + "]";
 	}
 
+	 
+
+	 
 	 
 	
 }

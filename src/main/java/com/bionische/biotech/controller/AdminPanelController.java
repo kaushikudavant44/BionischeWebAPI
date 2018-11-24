@@ -31,6 +31,7 @@ import com.bionische.biotech.model.GetDocAvailableTimeDetails;
 import com.bionische.biotech.model.GetDoctorHospitalDetails;
 import com.bionische.biotech.model.GetLabRatingReview;
 import com.bionische.biotech.model.GetMedicalOrderDetails;
+import com.bionische.biotech.model.GetPackageOffers;
 import com.bionische.biotech.model.GetPatientReports;
 import com.bionische.biotech.model.GetVerificationPendingCount;
 import com.bionische.biotech.model.HospitalDetails;
@@ -40,6 +41,7 @@ import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.LabTests;
 import com.bionische.biotech.model.MedicalDetails;
 import com.bionische.biotech.model.PackageDetails;
+import com.bionische.biotech.model.PackageOffers;
 import com.bionische.biotech.model.PharmacyCertificateDetails;
 import com.bionische.biotech.model.RatingDetails;
 import com.bionische.biotech.model.TermsAndConditions;
@@ -50,6 +52,7 @@ import com.bionische.biotech.repository.DoctorDetailsRepository;
 import com.bionische.biotech.repository.GetDocAvailableTimeDetailsRepository;
 import com.bionische.biotech.repository.GetDoctorHospitalDetailsRepository;
 import com.bionische.biotech.repository.GetLabRatingReviewRepository;
+import com.bionische.biotech.repository.GetPackageOffersRepository;
 import com.bionische.biotech.repository.GetPatientReportsRepository;
 import com.bionische.biotech.repository.GetVerificationPendingCountRepository;
 import com.bionische.biotech.repository.HospitalDetailsRepository;
@@ -58,6 +61,7 @@ import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.LabTestsRepository;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
 import com.bionische.biotech.repository.PackageDetailsRepository;
+import com.bionische.biotech.repository.PackageOffersRepository;
 import com.bionische.biotech.repository.PharmacyCertificateDetailsRepository;
 import com.bionische.biotech.repository.RatingDetailsRepository;
 import com.bionische.biotech.repository.TermsAndConditionsRepository;
@@ -91,7 +95,8 @@ public class AdminPanelController {
 	
 	@Autowired
 	DoctorDetailsRepository doctorDetailsRepository;
-
+	@Autowired
+	PackageOffersRepository packageOffersRepository;
 	/*
 	 * @Autowired PrescriptionToMedicalRepository prescriptionToMedicalRepository;
 	 */
@@ -143,7 +148,8 @@ public class AdminPanelController {
 	GetVerificationPendingCountRepository getVerificationPendingCountRepository;
 	@Autowired
 	PackageDetailsRepository packageDetailsRepository;
-	
+	@Autowired
+	GetPackageOffersRepository getPackageOffersRepository;
 	/*
 	 * 
 	 * @RequestMapping(value = { "/getDoctorAppointmentDetailsByPatientId" }, method
@@ -930,7 +936,7 @@ public class AdminPanelController {
 			 if(packageDetailsRes!=null)
 			 {
 				 info.setError(false);
-				 info.setMessage("Package Save successfully");
+				 info.setMessage("Package Details Save successfully");
 			 }
 			 else
 			 {
@@ -950,7 +956,7 @@ public class AdminPanelController {
 		List<PackageDetails> packageDetailsList=new ArrayList<PackageDetails>();
 		
 		try {
-			packageDetailsList= packageDetailsRepository.findByUserType(userType);
+			packageDetailsList= packageDetailsRepository.findByUserTypeAndDelStatus(userType,0);
 			
 			 
 		} catch (Exception e) {
@@ -958,5 +964,96 @@ public class AdminPanelController {
 		 
 		}
 		return packageDetailsList; 
+	} 
+	
+	@RequestMapping(value = { "/insertPackageOffers" }, method = RequestMethod.POST)
+	public @ResponseBody Info insertPackageOffers(@RequestBody PackageOffers packageOffers) {
+	 
+		Info info=new Info();
+		try {
+			PackageOffers packageOffersRes = packageOffersRepository.save(packageOffers);
+			
+			 if(packageOffersRes!=null)
+			 {
+				 info.setError(false);
+				 info.setMessage("Package Offers Save successfully");
+			 }
+			 else
+			 {
+				 info.setError(true);
+				 info.setMessage("Failed to save package Offers");
+			 }
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			 info.setError(true);
+			 info.setMessage("Failed to save package details");
+		}
+		return info; 
+	} 
+	@RequestMapping(value = { "/getCurrentActivePackageOffers" }, method = RequestMethod.GET)
+	public @ResponseBody List<GetPackageOffers> getCurrentActivePackageOffers() {
+	 
+		List<GetPackageOffers> getPackageOffersList=new ArrayList<GetPackageOffers>();
+		
+		try {
+			getPackageOffersList= getPackageOffersRepository.getCurrentActivePackageOffers();
+			
+			 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		 
+		}
+		return getPackageOffersList; 
+	} 
+	
+	@RequestMapping(value = { "/deletePackageOffer" }, method = RequestMethod.POST)
+	public @ResponseBody Info deletePackageOffer(@RequestParam("offerId")int offerId) {
+	 
+		Info info=new Info();
+		try {
+			int res= packageOffersRepository.deletePackageOffers(offerId);
+			if(res>0)
+			{
+				info.setError(false);
+				info.setMessage("Offer Delete Successfully");
+			}
+			else
+			{
+				info.setError(true);
+				info.setMessage("Failed to Delete offer");
+			}
+			 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			info.setError(true);
+			info.setMessage("Failed to Delete offer");
+		 
+		}
+		return info; 
+	} 
+	@RequestMapping(value = { "/deletePackage" }, method = RequestMethod.POST)
+	public @ResponseBody Info deletePackage(@RequestParam("packageId")int packageId) {
+	 
+		Info info=new Info();
+		try {
+			int res= packageDetailsRepository.deletePackage(packageId);
+			if(res>0)
+			{
+				info.setError(false);
+				info.setMessage("Package Delete Successfully");
+			}
+			else
+			{
+				info.setError(true);
+				info.setMessage("Failed to Delete Package");
+			}
+			 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			info.setError(true);
+			info.setMessage("Failed to Delete Package");
+		 
+		}
+		return info; 
 	} 
 }
