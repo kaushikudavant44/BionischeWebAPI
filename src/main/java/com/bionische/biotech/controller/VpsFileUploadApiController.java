@@ -60,65 +60,52 @@ public class VpsFileUploadApiController {
 			@RequestParam("userId") int userId) throws IOException {
 
 		Info info = new Info();
-
+		info.setError(true);
 		System.out.println("File Name: " + file.getOriginalFilename());
 		Path path = null;
 		byte[] bytes = file.getBytes();
-
-		System.out.println("1111111");
-
 		String fileExtention = getFileExtension(file);
-		
-		
-		
-			if(imageType==1) {
-			  
-			
-				path = Paths.get(ConstantFileUploadPath.DOCTOR_PATH + "/" + userId + "/profile/" + imageName);
-			
-			}
-			else if(imageType==2)
-			{
-				System.out.println("222");
-				
-				path = Paths.get(ConstantFileUploadPath.PATIENT_PATH+userId+"/profile/"+imageName);
-			}
-			else if(imageType==3)
-			{
-				  
-				System.out.println("333");
-				path = Paths.get(ConstantFileUploadPath.PHARMACY_PATH+userId+"/profile/"+imageName);
-			}
-			
-			else if(imageType==4)
-			{
-				System.out.println("4444");
-				
-				path = Paths.get(ConstantFileUploadPath.LAB_PATH+userId+"/profile/"+imageName);
-			}
-			
-			else if(imageType==5)
-			{
-				System.out.println("666");
-				path = Paths.get(ConstantFileUploadPath.PATIENT_PATH+userId+"/reports/"+imageName);
-				//path = Paths.get(patientImages+userId+"//reports//"+imageName);
-			}
-				
-			
-			else if(imageType==7)
-			{
-				System.out.println("777");
-				path = Paths.get(ConstantFileUploadPath.DOCTOR_PATH+userId+"/documents/"+imageName);
-			}else if(imageType==8) {
-				System.out.println("888");
-				path = Paths.get(ConstantFileUploadPath.LAB_PATH+userId+"/documents/"+imageName);
-			}else if(imageType==6) {
-				System.out.println("666");
-				path = Paths.get(ConstantFileUploadPath.PHARMACY_PATH+userId+"/documents/"+imageName);
-			}
-		
-		
-		Files.write(path, bytes);
+
+		if (imageType == 1) {
+
+			path = Paths.get(ConstantFileUploadPath.DOCTOR_PATH + "/" + userId + "/profile/" + imageName);
+			// path = Paths.get("\\images\\");
+		} else if (imageType == 2) {
+
+			path = Paths.get(ConstantFileUploadPath.PATIENT_PATH + userId + "/profile/" + imageName);
+		} else if (imageType == 3) {
+
+			path = Paths.get(ConstantFileUploadPath.PHARMACY_PATH + userId + "/profile/" + imageName);
+		}
+
+		else if (imageType == 4) {
+
+			path = Paths.get(ConstantFileUploadPath.LAB_PATH + userId + "/profile/" + imageName);
+		}
+
+		else if (imageType == 5) {
+
+			path = Paths.get(ConstantFileUploadPath.PATIENT_PATH + userId + "/reports/" + imageName);
+			// path = Paths.get(patientImages+userId+"//reports//"+imageName);
+		} else if (imageType == 6) {
+
+			path = Paths.get(ConstantFileUploadPath.PHARMACY_PATH + userId + "/documents/" + imageName);
+		} else if (imageType == 7) {
+
+			path = Paths.get(ConstantFileUploadPath.DOCTOR_PATH + userId + "/documents/" + imageName);
+		} else if (imageType == 8) {
+
+			path = Paths.get(ConstantFileUploadPath.LAB_PATH + userId + "/documents/" + imageName);
+		}
+		try {
+			Files.write(path, bytes);
+			info.setError(false);
+			info.setMessage("File Upload Successfully");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			info.setError(true);
+			info.setMessage("Failed to Upload File ");
+		}
 
 		return info;
 
