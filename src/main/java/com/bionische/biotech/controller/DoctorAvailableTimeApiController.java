@@ -81,9 +81,9 @@ public class DoctorAvailableTimeApiController {
 	
 	
 	Info info=new Info();
-	
+	info.setError(true);
 	DocAvailableTime docAvailableTime1 =new DocAvailableTime();
-	
+	try {
 	docAvailableTime1 = docAvailableTimeRepository.getAvailableTimeByDoctorIdAndHospitalId(docAvailableTime.getDoctorId(), docAvailableTime.getDate(), docAvailableTime.getHospitalId());
 	if(docAvailableTime1!=null)
 	{
@@ -91,8 +91,14 @@ public class DoctorAvailableTimeApiController {
 	}
 	
 	docAvailableTimeRepository.save(docAvailableTime);
-	
-	
+	info.setError(false);
+	info.setMessage("save Data AvailableDocTimeDetails");
+	}
+	catch (Exception e) {
+		info.setError(true);
+		info.setMessage("failed to save Data");
+		// TODO: handle exception
+	}
 	return info;
 }
 	
