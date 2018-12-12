@@ -2,6 +2,8 @@ package com.bionische.biotech.controller;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,12 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.DoctorLogin;
+import com.bionische.biotech.model.DoctorSubscriptionDetails;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.LabLogin;
 import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.PatientLogin;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
+import com.bionische.biotech.repository.DoctorSubscriptionDetailsRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
 
@@ -32,6 +36,9 @@ public class LoginApiController {
 	 
 	@Autowired
 	LabDetailsRepository labDetailsRepository;
+	
+	@Autowired
+	DoctorSubscriptionDetailsRepository doctorSubscriptionDetailsRepository;
 	
 	@RequestMapping(value = { "/patientLoginProcess" }, method = RequestMethod.POST)
 	public @ResponseBody PatientLogin patientLoginProcess(@RequestParam("userName") String userName,@RequestParam("password") String password) {
@@ -121,6 +128,25 @@ public class LoginApiController {
 				info.setError(false);
 				info.setMessage("Login Successfull");
 				doctorLogin.setInfo(info);
+				Info doctorSuscriptionInfo =new Info();
+				doctorSuscriptionInfo.setError(true);
+				DoctorSubscriptionDetails doctorSubscriptionDetailsRes=doctorSubscriptionDetailsRepository.findByPackageExpDateGreaterThanEqualAndDoctorIdAndTxnStatus(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), doctorDetails.getDoctorId(),1);
+				if(doctorSubscriptionDetailsRes!=null)
+				{
+					doctorSuscriptionInfo.setError(false);
+					doctorSuscriptionInfo.setMessage(doctorSubscriptionDetailsRes.getPackageExpDate());
+					doctorLogin.setDoctorSuscriptionInfo(doctorSuscriptionInfo);
+				}
+				else
+				{
+					doctorSuscriptionInfo.setError(true);
+					doctorSuscriptionInfo.setMessage("Doctor Suscription is pendding");
+					doctorLogin.setDoctorSuscriptionInfo(doctorSuscriptionInfo);
+				}
+
+			
+			
+			
 			}
 			else{
 				info.setError(true);

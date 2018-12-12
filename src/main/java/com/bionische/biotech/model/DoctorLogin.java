@@ -4,6 +4,7 @@ public class DoctorLogin {
 
 	DoctorDetails doctorDetails;
 	Info info;
+	Info doctorSuscriptionInfo;
 	public DoctorDetails getDoctorDetails() {
 		return doctorDetails;
 	}
@@ -16,9 +17,17 @@ public class DoctorLogin {
 	public void setInfo(Info info) {
 		this.info = info;
 	}
+	public Info getDoctorSuscriptionInfo() {
+		return doctorSuscriptionInfo;
+	}
+	public void setDoctorSuscriptionInfo(Info doctorSuscriptionInfo) {
+		this.doctorSuscriptionInfo = doctorSuscriptionInfo;
+	}
 	@Override
 	public String toString() {
-		return "DoctorLogin [doctorDetails=" + doctorDetails + ", info=" + info + "]";
+		return "DoctorLogin [doctorDetails=" + doctorDetails + ", info=" + info + ", doctorSuscriptionInfo="
+				+ doctorSuscriptionInfo + "]";
 	}
+	 
 	
 }
