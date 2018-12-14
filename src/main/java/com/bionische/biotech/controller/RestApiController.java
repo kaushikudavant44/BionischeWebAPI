@@ -411,7 +411,7 @@ System.out.println(e.getMessage());
 System.out.println(e.getMessage());
 	}
 	 return patientDetailsRes;
-	 
+	  
 	}
 	@RequestMapping(value = { "/getPatientDetailsWithCityNameById" }, method = RequestMethod.POST)
 	public @ResponseBody PatientDetails getPatientDetailsWithCityNameById(@RequestParam("patientId") int patientId)
