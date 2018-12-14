@@ -7,6 +7,7 @@ public class PatientLogin {
 	PatientDetails patientDetails;
 	
 	Info info;
+	Info suscriptionInfo;
 
 	public PatientDetails getPatientDetails() {
 		return patientDetails;
@@ -24,10 +25,21 @@ public class PatientLogin {
 		this.info = info;
 	}
 
+	public Info getSuscriptionInfo() {
+		return suscriptionInfo;
+	}
+
+	public void setSuscriptionInfo(Info suscriptionInfo) {
+		this.suscriptionInfo = suscriptionInfo;
+	}
+
 	@Override
 	public String toString() {
-		return "PatientLogin [patientDetails=" + patientDetails + ", info=" + info + "]";
+		return "PatientLogin [patientDetails=" + patientDetails + ", info=" + info + ", suscriptionInfo="
+				+ suscriptionInfo + "]";
 	}
+
+	 
 	
 	
 }

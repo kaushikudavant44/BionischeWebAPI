@@ -15,6 +15,10 @@ public class PateintReportPaymentDetails {
 	@Column(name="report_id")
 	private int reportId;
 	
+	@Column(name="txn_table_id")
+	private int txnTableId;
+	
+	
 	@Column(name="report_date")
 	private String reportDate;
 	
@@ -144,13 +148,24 @@ public class PateintReportPaymentDetails {
 		this.totalAmount = totalAmount;
 	}
 
+	public int getTxnTableId() {
+		return txnTableId;
+	}
+
+	public void setTxnTableId(int txnTableId) {
+		this.txnTableId = txnTableId;
+	}
+
 	@Override
 	public String toString() {
-		return "PateintReportPaymentDetails [reportId=" + reportId + ", reportDate=" + reportDate + ", labName="
-				+ labName + ", reportFileName=" + reportFileName + ", paymentStatus=" + paymentStatus + ", labTestName="
-				+ labTestName + ", labTestId=" + labTestId + ", createdDate=" + createdDate + ", amountType="
-				+ amountType + ", amount=" + amount + ", discount=" + discount + ", totalAmount=" + totalAmount + "]";
+		return "PateintReportPaymentDetails [reportId=" + reportId + ", txnTableId=" + txnTableId + ", reportDate="
+				+ reportDate + ", labName=" + labName + ", reportFileName=" + reportFileName + ", paymentStatus="
+				+ paymentStatus + ", labTestName=" + labTestName + ", labTestId=" + labTestId + ", createdDate="
+				+ createdDate + ", amountType=" + amountType + ", amount=" + amount + ", discount=" + discount
+				+ ", totalAmount=" + totalAmount + "]";
 	}
+
+	 
 	
 	
 	

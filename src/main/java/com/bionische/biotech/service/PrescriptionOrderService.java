@@ -28,4 +28,6 @@ public interface PrescriptionOrderService {
 			String fromDate, String toDate);
 	
 	List<GetMedicalOrderDetails> getMedicalCancelledOrderByMedicalIdAndStatus(int medicalId,int status);
+	Info updatePatientMedicinePayment(float txnAmt, String orderId, String txnId, int txnStatus,
+			int requestToMedicalId);
 }

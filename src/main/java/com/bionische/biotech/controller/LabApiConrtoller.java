@@ -1127,4 +1127,38 @@ System.out.println(e.getMessage());
 	 
 	}
 	
+	
+	
+	@RequestMapping(value = { "/updateLabReportsPayment" }, method = RequestMethod.POST)
+	public @ResponseBody Info updateLabReportsPayment(@RequestParam("reportId") int amountType,@RequestParam("reportId") int reportId,@RequestParam("txnTableId") int txnTableId,@RequestParam("txnStatus") int txnStatus,@RequestParam("txnId") String txnId,@RequestParam("orderId") String orderId,@RequestParam("txnAmt") float txnAmt)
+	{
+ 
+		
+		Info info =new Info();
+		info.setError(true);
+		try {
+
+			int resTransaction=transactionDetailsRepository.updateLabReportsPayment(amountType,txnTableId, txnStatus, txnId, orderId, txnAmt);
+			
+			int reportStatusRes=reportDetailsRepository.updatePaymentStatusByReportIdAndStatus(reportId, txnStatus);
+			if(reportStatusRes>0 ) {
+				
+				info.setError(true);
+				info.setMessage("Payment updated");
+			}
+			else {
+				info.setError(true);
+				info.setMessage("Payment updated Failed");
+			}
+			 
+			}
+		
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+			info.setError(true);
+			info.setMessage("Problem in Lab report Payment updated");
+		}
+
+		return info;
+	}
 }

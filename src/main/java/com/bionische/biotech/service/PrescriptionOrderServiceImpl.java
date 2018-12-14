@@ -243,4 +243,31 @@ catch (Exception e) {
 }
 		return getMedicalOrderDetailsList;
 	}
+	@Override
+	public Info updatePatientMedicinePayment(float txnAmt, String orderId, String txnId, int txnStatus,
+			int requestToMedicalId) {
+		
+		Info info=new Info();
+		info.setError(true);
+		try {
+		int res=prescriptionToMedicalRepository.updateMedicinePayment(txnAmt,orderId,txnId,txnStatus,requestToMedicalId);
+		if(res>0)
+		{
+			info.setError(false);
+			info.setMessage("Payment update successfully");
+		}
+		else
+		{
+			info.setError(true);
+			info.setMessage("Payment update Failed");
+		}
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			info.setError(true);
+			info.setMessage("Payment update Failed");
+			System.out.println(e.getMessage());
+		}
+		return info;
+	}
 }

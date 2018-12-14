@@ -92,8 +92,39 @@ public class PrescriptionToMedical {
 	@Column(name="email")
 	private String email;
 
+	@Column(name="txn_id")
+	private String txnId;
+
+	@Column(name="order_id")
+	private String orderId;
+
+	@Column(name="payment_date")
+	private String paymentDate;
 	
-	
+	public String getTxnId() {
+		return txnId;
+	}
+
+
+
+	public void setTxnId(String txnId) {
+		this.txnId = txnId;
+	}
+
+
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+
+
 	public Date getOrderDate() {
 		return orderDate;
 	}
@@ -257,6 +288,18 @@ public class PrescriptionToMedical {
 
 
 
+	public String getPaymentDate() {
+		return paymentDate;
+	}
+
+
+
+	public void setPaymentDate(String paymentDate) {
+		this.paymentDate = paymentDate;
+	}
+
+
+
 	@Override
 	public String toString() {
 		return "PrescriptionToMedical [requestToMedicalId=" + requestToMedicalId + ", meetId=" + meetId + ", orderDate="
@@ -264,9 +307,13 @@ public class PrescriptionToMedical {
 				+ patientId + ", doctorId=" + doctorId + ", deliveryType=" + deliveryType + ", totalAmt=" + totalAmt
 				+ ", pincode=" + pincode + ", patientContact=" + patientContact + ", paymentStatus=" + paymentStatus
 				+ ", int1=" + int1 + ", int2=" + int2 + ", string1=" + string1 + ", string2=" + string2 + ", delStatus="
-				+ delStatus + ", status=" + status + ", address=" + address + ", email=" + email + "]";
+				+ delStatus + ", status=" + status + ", address=" + address + ", email=" + email + ", txnId=" + txnId
+				+ ", orderId=" + orderId + ", paymentDate=" + paymentDate + "]";
 	}
 
+
+
+	 
 	 
 	
 	

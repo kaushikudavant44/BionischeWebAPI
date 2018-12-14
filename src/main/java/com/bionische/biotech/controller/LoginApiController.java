@@ -24,6 +24,7 @@ import com.bionische.biotech.repository.DoctorDetailsRepository;
 import com.bionische.biotech.repository.DoctorSubscriptionDetailsRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
+import com.bionische.biotech.repository.PatientSuscriptionDetailsRepository;
 
 @RestController
 public class LoginApiController {
@@ -39,6 +40,8 @@ public class LoginApiController {
 	
 	@Autowired
 	DoctorSubscriptionDetailsRepository doctorSubscriptionDetailsRepository;
+	@Autowired
+	PatientSuscriptionDetailsRepository patientSuscriptionDetailsRepository;
 	
 	@RequestMapping(value = { "/patientLoginProcess" }, method = RequestMethod.POST)
 	public @ResponseBody PatientLogin patientLoginProcess(@RequestParam("userName") String userName,@RequestParam("password") String password) {
@@ -48,6 +51,7 @@ public class LoginApiController {
 		
 		PatientLogin patientLogin=new PatientLogin();
 		Info info=new Info();
+		
 		
 		patientDetails=patientDetailsRepository.getPatientLogin(userName);
 		if(patientDetails!=null)
@@ -70,6 +74,17 @@ public class LoginApiController {
 				info.setError(false);
 				info.setMessage("Login Successfull");
 				patientLogin.setInfo(info);
+				Info suscriptionInfo=new Info();
+				suscriptionInfo.setError(true);
+				 if(patientSuscriptionDetailsRepository.findByPatientIdAndStatus(patientDetails.getPatientId(), 1)!=null) {
+				
+					suscriptionInfo.setError(false);
+					suscriptionInfo.setMessage("Valid Patient");
+				 }
+				 else {
+					 suscriptionInfo.setError(true);
+						suscriptionInfo.setMessage("Patient payment Not Update yet");
+				 }
 			}
 			else{
 				info.setError(true);

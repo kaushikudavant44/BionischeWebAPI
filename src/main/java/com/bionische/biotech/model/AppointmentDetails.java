@@ -52,6 +52,23 @@ public class AppointmentDetails {
 	
 	@Column(name="hospital_id")
     private String hospitalId;
+	
+	@Column(name="payment_status")
+    private int paymentStatus;
+	
+	@Column(name="txn_id")
+    private String txnId;
+
+	@Column(name="order_id")
+    private String orderId;
+	
+
+	@Column(name="amount")
+    private float amount;
+	
+
+	@Column(name="payment_date")
+    private String paymentDate;
     
 	public int getDoctorId() {
 		return doctorId;
@@ -129,13 +146,45 @@ public class AppointmentDetails {
 	public void setDelStatus(int delStatus) {
 		this.delStatus = delStatus;
 	}
+	public int getPaymentStatus() {
+		return paymentStatus;
+	}
+	public void setPaymentStatus(int paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+	public String getTxnId() {
+		return txnId;
+	}
+	public void setTxnId(String txnId) {
+		this.txnId = txnId;
+	}
+	public String getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+	public float getAmount() {
+		return amount;
+	}
+	public void setAmount(float amount) {
+		this.amount = amount;
+	}
+	public String getPaymentDate() {
+		return paymentDate;
+	}
+	public void setPaymentDate(String paymentDate) {
+		this.paymentDate = paymentDate;
+	}
 	@Override
 	public String toString() {
 		return "AppointmentDetails [appointId=" + appointId + ", doctorId=" + doctorId + ", status=" + status
 				+ ", patientId=" + patientId + ", time=" + time + ", date=" + date + ", int1=" + int1 + ", int2=" + int2
 				+ ", string1=" + string1 + ", string2=" + string2 + ", delStatus=" + delStatus + ", hospitalId="
-				+ hospitalId + "]";
+				+ hospitalId + ", paymentStatus=" + paymentStatus + ", txnId=" + txnId + ", orderId=" + orderId
+				+ ", amount=" + amount + ", paymentDate=" + paymentDate + "]";
 	}
+	 
 	  
 	
  

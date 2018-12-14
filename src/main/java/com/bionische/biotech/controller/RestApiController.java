@@ -4,15 +4,12 @@ package com.bionische.biotech.controller;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,7 +41,6 @@ import com.bionische.biotech.model.GetDoctorRatingReviewCount;
 import com.bionische.biotech.model.GetHospitalClinicByDoctorIdAndAvailDate;
 import com.bionische.biotech.model.GetLabAppointment;
 import com.bionische.biotech.model.GetLabRatingReview;
-import com.bionische.biotech.model.GetMedicalOrderDetails;
 import com.bionische.biotech.model.GetPatientContactDetailsById;
 import com.bionische.biotech.model.GetPatientReviews;
 import com.bionische.biotech.model.GetRatingCount;
@@ -61,6 +57,7 @@ import com.bionische.biotech.model.PatientAddress;
 import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.PatientMemberRelation;
 import com.bionische.biotech.model.PatientNotification;
+import com.bionische.biotech.model.PatientSuscriptionDetails;
 import com.bionische.biotech.model.PharmacyCertificateDetails;
 import com.bionische.biotech.model.PrescriptionDetails;
 import com.bionische.biotech.model.RatingDetails;
@@ -90,7 +87,6 @@ import com.bionische.biotech.repository.GetDoctorProfileRepository;
 import com.bionische.biotech.repository.GetHospitalClinicByDoctorIdAndAvailDateRepository;
 import com.bionische.biotech.repository.GetLabAppointmentRrepository;
 import com.bionische.biotech.repository.GetLabRatingReviewRepository;
-import com.bionische.biotech.repository.GetMedicalOrderDetailsRepository;
 import com.bionische.biotech.repository.GetPatientContactDetailsByIdRepository;
 import com.bionische.biotech.repository.GetRatingCountRepository;
 import com.bionische.biotech.repository.GetUsersCountRepository;
@@ -105,6 +101,7 @@ import com.bionische.biotech.repository.PatientAddressRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.PatientMemberRelationRepository;
 import com.bionische.biotech.repository.PatientNotificationRepository;
+import com.bionische.biotech.repository.PatientSuscriptionDetailsRepository;
 import com.bionische.biotech.repository.PharmacyCertificateDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionDetailsRepository;
 import com.bionische.biotech.repository.RatingDetailsRepository;
@@ -252,10 +249,19 @@ public class RestApiController {
 	
 	@Autowired
 	PharmacyCertificateDetailsRepository pharmacyCertificateDetailsRepository;
-	
-	
+	@Autowired
+	PatientSuscriptionDetailsRepository patientSuscriptionDetailsRepository;
 	
 	String MESSAGE;
+	
+	
+
+	@RequestMapping(value = { "/insertPatientSuscriptionDetails" }, method = RequestMethod.POST)
+	public @ResponseBody PatientSuscriptionDetails insertPatientSuscriptionDetails(@RequestBody PatientSuscriptionDetails patientSuscriptionDetails)
+	{
+		return patientSuscriptionDetailsRepository.save(patientSuscriptionDetails);
+	
+	}
 	
 	@RequestMapping(value = { "/insertDoctorDetails" }, method = RequestMethod.POST)
 	public @ResponseBody DoctorDetails insertDoctorDetails(@RequestBody DoctorDetails doctorDetails)
@@ -332,11 +338,11 @@ System.out.println(e.getMessage());
 	
 	
 	@RequestMapping(value = { "/insertPatientDetails" }, method = RequestMethod.POST)
-	public @ResponseBody Info insertPatientDetails(@RequestBody PatientDetails patientDetails)
+	public @ResponseBody PatientDetails insertPatientDetails(@RequestBody PatientDetails patientDetails)
 	{
 		System.out.println("Comming List "+patientDetails.toString());
 		PatientDetails patientDetailsRes=new PatientDetails();
-		Info info =new Info();
+	//	Info info =new Info();
 		try {
 			
 			if(patientDetails.getFamilyId()==0)
@@ -369,22 +375,22 @@ System.out.println(e.getMessage());
 			else {
 				sendEMailService.sendMail("Patient Register Successfully", "Patient Register Successfully", patientDetailsRes.getEmail());
 			} 
-			info.setError(false);
-			info.setMessage("Success");
+		//	info.setError(false);
+		//	info.setMessage("Success");
 		}
-		else {
+		/*else {
 			info.setError(true);
 			info.setMessage("Failed to insert");
-		}
+		}*/
 }
 		
 		catch (Exception e) {
 			System.out.println(e.getMessage());
-			info.setError(true);
-			info.setMessage("Failed to insert");
+		//	info.setError(true);
+		//	info.setMessage("Failed to insert");
 		}
 	
-		return info;
+		return patientDetailsRes;
 	}
 	
 	//Get Patient detail
@@ -396,9 +402,10 @@ System.out.println(e.getMessage());
 	{
 		PatientDetails patientDetailsRes=new PatientDetails();
 	 try {
+		 if(patientSuscriptionDetailsRepository.findByPatientIdAndStatus(patientId, 1)!=null) {
 		 patientDetailsRes=	patientDetailsRepository.getPatientDetailsBYId(patientId);
 		 System.out.println("patientDetailsRes:"+patientDetailsRes.toString());
-		 
+		 }
 	 }
 	 catch (Exception e) {
 System.out.println(e.getMessage());

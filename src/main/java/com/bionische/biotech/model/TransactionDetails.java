@@ -19,8 +19,8 @@ public class TransactionDetails {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="transaction_id")
-	private int transactionId;
+	@Column(name="id")
+	private int id;
 	
 	@Column(name="user_type")
 	private int userType;
@@ -62,13 +62,39 @@ public class TransactionDetails {
 	
 	@Column(name="report_id")
 	private int reportId;
+	
+	@Column(name="txn_id")
+	private String txnId;
+	
+	@Column(name="order_id")
+	private String orderId;
+	
 
-	public int getTransactionId() {
-		return transactionId;
+	@Column(name="payment_date")
+	private String paymentDate;
+
+	public int getId() {
+		return id;
 	}
 
-	public void setTransactionId(int transactionId) {
-		this.transactionId = transactionId;
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getTxnId() {
+		return txnId;
+	}
+
+	public void setTxnId(String txnId) {
+		this.txnId = txnId;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	public int getUserType() {
@@ -177,15 +203,24 @@ public class TransactionDetails {
 		this.reportId = reportId;
 	}
 
-	@Override
-	public String toString() {
-		return "TransactionDetails [transactionId=" + transactionId + ", userType=" + userType + ", fromUserId="
-				+ fromUserId + ", toUserId=" + toUserId + ", createdDate=" + createdDate + ", amountType=" + amountType
-				+ ", status=" + status + ", amount=" + amount + ", discount=" + discount + ", totalAmount="
-				+ totalAmount + ", int1=" + int1 + ", int2=" + int2 + ", string1=" + string1 + ", reportId=" + reportId
-				+ "]";
+	public String getPaymentDate() {
+		return paymentDate;
 	}
 
+	public void setPaymentDate(String paymentDate) {
+		this.paymentDate = paymentDate;
+	}
+
+	@Override
+	public String toString() {
+		return "TransactionDetails [id=" + id + ", userType=" + userType + ", fromUserId=" + fromUserId + ", toUserId="
+				+ toUserId + ", createdDate=" + createdDate + ", amountType=" + amountType + ", status=" + status
+				+ ", amount=" + amount + ", discount=" + discount + ", totalAmount=" + totalAmount + ", int1=" + int1
+				+ ", int2=" + int2 + ", string1=" + string1 + ", reportId=" + reportId + ", txnId=" + txnId
+				+ ", orderId=" + orderId + ", paymentDate=" + paymentDate + "]";
+	}
+
+	 
 	
 
 	

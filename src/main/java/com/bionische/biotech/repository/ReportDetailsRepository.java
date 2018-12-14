@@ -31,6 +31,10 @@ public interface ReportDetailsRepository extends JpaRepository<ReportDetails, In
 	@Query("UPDATE ReportDetails p SET p.int2 =1  WHERE p.reportId=:reportId")
 	int updatePaymentStatusByReportId(@Param("reportId")int reportId);
 	
+	@Transactional
+	@Modifying
+	@Query("UPDATE ReportDetails p SET p.int2 =:status  WHERE p.reportId=:reportId")
+	int updatePaymentStatusByReportIdAndStatus(@Param("reportId")int reportId, @Param("status")int status);
 	
 	ReportDetails findByReportId(int reportId);
 	 
