@@ -18,11 +18,13 @@ import com.bionische.biotech.model.DoctorSubscriptionDetails;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.LabLogin;
+import com.bionische.biotech.model.LabSubscriptionDetails;
 import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.PatientLogin;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
 import com.bionische.biotech.repository.DoctorSubscriptionDetailsRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
+import com.bionische.biotech.repository.LabSubscriptionDetailsRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.PatientSuscriptionDetailsRepository;
 
@@ -42,6 +44,8 @@ public class LoginApiController {
 	DoctorSubscriptionDetailsRepository doctorSubscriptionDetailsRepository;
 	@Autowired
 	PatientSuscriptionDetailsRepository patientSuscriptionDetailsRepository;
+	@Autowired
+	LabSubscriptionDetailsRepository labSubscriptionDetailsRepository;
 	
 	@RequestMapping(value = { "/patientLoginProcess" }, method = RequestMethod.POST)
 	public @ResponseBody PatientLogin patientLoginProcess(@RequestParam("userName") String userName,@RequestParam("password") String password) {
@@ -215,6 +219,24 @@ public class LoginApiController {
 				info.setError(false);
 				info.setMessage("Login Successfull");
 				labLogin.setInfo(info);
+				
+				Info labSuscriptionInfo =new Info();
+				labSuscriptionInfo.setError(true);
+				LabSubscriptionDetails labSubscriptionDetailsRes=labSubscriptionDetailsRepository.findByPackageExpDateGreaterThanEqualAndLabIdAndTxnStatus(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), labDetails.getLabId(),1);
+				
+				if(labSubscriptionDetailsRes!=null)
+				{
+					labSuscriptionInfo.setError(false);
+					labSuscriptionInfo.setMessage(labSubscriptionDetailsRes.getPackageExpDate());
+					labLogin.setLabSuscriptionInfo(labSuscriptionInfo);
+				}
+				else
+				{
+					labSuscriptionInfo.setError(true);
+					labSuscriptionInfo.setMessage("Lab Suscription is pendding");
+					labLogin.setLabSuscriptionInfo(labSuscriptionInfo);
+				}
+
 			}
 			else{
 				info.setError(true);

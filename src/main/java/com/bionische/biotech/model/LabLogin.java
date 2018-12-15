@@ -4,6 +4,8 @@ public class LabLogin {
 	
 	LabDetails labDetails;
 	Info info;
+	Info labSuscriptionInfo;
+	
 	public LabDetails getLabDetails() {
 		return labDetails;
 	}
@@ -16,11 +18,17 @@ public class LabLogin {
 	public void setInfo(Info info) {
 		this.info = info;
 	}
+	public Info getLabSuscriptionInfo() {
+		return labSuscriptionInfo;
+	}
+	public void setLabSuscriptionInfo(Info labSuscriptionInfo) {
+		this.labSuscriptionInfo = labSuscriptionInfo;
+	}
 	@Override
 	public String toString() {
-		return "LabLogin [labDetails=" + labDetails + ", info=" + info + "]";
+		return "LabLogin [labDetails=" + labDetails + ", info=" + info + ", labSuscriptionInfo=" + labSuscriptionInfo
+				+ "]";
 	}
-	
-	
+	 
 
 }

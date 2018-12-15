@@ -28,13 +28,13 @@ public interface LabDetailsRepository extends JpaRepository<LabDetails, Integer>
 	LabDetails getLoginByUserName(@Param("userName")String userName);
 
 	
-	@Query(value=" SELECT * from lab_details where city_id=:cityId AND del_status=0",nativeQuery=true)
+	@Query(value=" SELECT l.* from lab_details l, t_lab_subscription_details ls where l.city_id=:cityId AND l.del_status=0 AND ls.package_exp_date>=NOW() AND l.lab_id=ls.lab_id AND ls.txn_status=1",nativeQuery=true)
 	List<LabDetails> getByCityIdAndDelStatus(@Param("cityId")int cityId);
 	
 	List<LabDetails> findByDelStatus(int delStatus);
 	 
 
-	@Query(value=" SELECT * from lab_details where city_id=:cityId AND tests_types LIKE :testId AND del_status=0 ",nativeQuery=true)
+	@Query(value=" SELECT l.* from lab_details l, t_lab_subscription_details ls where l.city_id=:cityId AND l.tests_types LIKE :testId AND l.del_status=0  AND l.del_status=0 AND ls.package_exp_date>=NOW() AND l.lab_id=ls.lab_id AND ls.txn_status=1",nativeQuery=true)
 
 	List<LabDetails> getByCityIdAndTestIdAndDelStatus(@Param("cityId")int cityId, @Param("testId")String testId);
 	

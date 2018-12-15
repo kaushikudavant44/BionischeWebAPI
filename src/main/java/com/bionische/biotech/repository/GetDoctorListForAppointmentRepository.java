@@ -17,6 +17,6 @@ public interface GetDoctorListForAppointmentRepository extends JpaRepository<Get
 				+" d.profile_photo, d.contact, d.email, d.qualification, d.college, d.passing_year, d.spec_id, s.spec_type,"
 				+" d.council_reg_no, d.council_name, COALESCE((select ((SUM(r.rating)*5)/(count(r.rating_review_id)*5)) from rating_details r"
 				+"  where r.doctor_id=d.doctor_id),0) AS rating from doctor_details d, hospital_details h, city c,"
-				+"  doctor_specialization s, doc_available_time a where d.spec_id=:specId AND d.city_id=:cityId AND d.del_status=0 AND d.spec_id=s.spec_id AND d.doctor_id=a.doctor_id AND a.date=:date AND h.hospital_id=a.hospital_id AND c.city_id=h.cityid GROUP BY a.doctor_id ",nativeQuery=true)
+				+"  doctor_specialization s, doc_available_time a, t_doctor_subscription_details ds where d.spec_id=:specId AND d.city_id=:cityId AND d.del_status=0 AND d.spec_id=s.spec_id AND d.doctor_id=a.doctor_id AND a.date=:date AND h.hospital_id=a.hospital_id AND c.city_id=h.cityid GROUP BY a.doctor_id AND d.doctor_id=ds.doctor_id AND ds.package_exp_date>=NOW() AND ds.txn_status=1",nativeQuery=true)
 	List<GetDoctorListForAppointment> getDoctorListForAppointment(@Param("specId")int specId, @Param("cityId")int cityId, @Param("date")String date);
 }

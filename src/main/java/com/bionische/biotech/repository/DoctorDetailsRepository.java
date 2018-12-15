@@ -23,7 +23,7 @@ public interface DoctorDetailsRepository extends JpaRepository<DoctorDetails, Lo
 	@Query(value=" SELECT * from doctor_details where uname=:userName AND del_status!=1",nativeQuery=true)
 	DoctorDetails getLoginUserName(  @Param("userName") String userName);
 	
-	@Query(value=" SELECT * from doctor_details where spec_id=:specId AND city_id=:cityId AND del_status=0",nativeQuery=true)
+	@Query(value=" SELECT d.* from doctor_details d, t_doctor_subscription_details s where d.spec_id=:specId AND d.city_id=:cityId AND d.del_status=0 AND d.doctor_id=s.doctor_id AND s.package_exp_date>=NOW() AND s.txn_status=1",nativeQuery=true)
 	List<DoctorDetails> getBySpecIdAndCityIdAndDelStatus(@Param("specId")int specId, @Param("cityId")int cityId);
 	
 	@Query(value="SELECT * FROM doctor_details WHERE doctor_id IN (SELECT doctor_id FROM doctor_patient_meeting WHERE patient_id=:patientId)",nativeQuery=true)

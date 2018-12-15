@@ -2,6 +2,8 @@ package com.bionische.biotech.controller;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,15 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bionische.biotech.model.HospitalDetails;
 import com.bionische.biotech.model.Info;
-import com.bionische.biotech.model.LabDetails;
+import com.bionische.biotech.model.LabSubscriptionDetails;
 import com.bionische.biotech.model.MedicalDetails;
 import com.bionische.biotech.model.MedicalLogin;
-import com.bionische.biotech.model.PatientDetails;
-import com.bionische.biotech.model.PatientLogin;
-import com.bionische.biotech.repository.DoctorDetailsRepository;
+import com.bionische.biotech.model.PharmacySubscriptionDetails;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
+import com.bionische.biotech.repository.PharmacySubscriptionDetailsRepository;
 import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.SendEMailService;
 @RestController
@@ -32,6 +32,8 @@ public class MedicalApiController {
 	
 	@Autowired
 	CreateDirectoryService createDirectoryService;
+	@Autowired
+	PharmacySubscriptionDetailsRepository pharmacySubscriptionDetailsRepository;
 	
 	@RequestMapping(value = { "/insertMedicalDetails" }, method = RequestMethod.POST)
 	public @ResponseBody MedicalDetails insertMedicalDetails(@RequestBody MedicalDetails medicalDetails)
@@ -127,6 +129,25 @@ public class MedicalApiController {
 				
 				info.setMessage("Login Successfull");
 				medicalLogin.setInfo(info);
+				
+				Info pharmacySuscriptionInfo =new Info();
+				pharmacySuscriptionInfo.setError(true);
+				PharmacySubscriptionDetails pharmacySubscriptionDetailsRes=pharmacySubscriptionDetailsRepository.findByPackageExpDateGreaterThanEqualAndMedicalIdAndTxnStatus(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), medicalDetails.getMedicalId(),1);
+				
+				if(pharmacySubscriptionDetailsRes!=null)
+				{
+					pharmacySuscriptionInfo.setError(false);
+					pharmacySuscriptionInfo.setMessage(pharmacySubscriptionDetailsRes.getPackageExpDate());
+					medicalLogin.setPharmacySuscriptionInfo(pharmacySuscriptionInfo);
+				}
+				else
+				{
+					pharmacySuscriptionInfo.setError(true);
+					pharmacySuscriptionInfo.setMessage("Pharmacy Suscription is pendding");
+					medicalLogin.setPharmacySuscriptionInfo(pharmacySuscriptionInfo);
+				}
+
+				
 			}
 			else{
 				info.setError(true);
@@ -310,4 +331,19 @@ public class MedicalApiController {
 			        return info;
 				 
 				}
+				
+				@RequestMapping(value = { "/insertPharmacySuscriptionDetails" }, method = RequestMethod.POST)
+				public @ResponseBody PharmacySubscriptionDetails insertPharmacySuscriptionDetails(@RequestBody PharmacySubscriptionDetails pharmacySubscriptionDetails)
+				{
+					PharmacySubscriptionDetails pharmacySubscriptionDetailsRes=new PharmacySubscriptionDetails();
+					try {
+						pharmacySubscriptionDetailsRes=pharmacySubscriptionDetailsRepository.save(pharmacySubscriptionDetails);
+				  
+					}
+					catch (Exception e) {
+						System.out.println(e.getMessage());// TODO: handle exception 
+					}
+					return pharmacySubscriptionDetailsRes;
+				}
+				
 }

@@ -18,7 +18,7 @@ import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.AppointmentTimeList;
 import com.bionische.biotech.model.DoctorDetails;
-import com.bionische.biotech.model.DoctorNotification;
+import com.bionische.biotech.model.DoctorSubscriptionDetails;
 import com.bionische.biotech.model.GetDoctorRatingReviewCount;
 import com.bionische.biotech.model.GetLabAppointment;
 import com.bionische.biotech.model.GetLabForAppointment;
@@ -34,6 +34,7 @@ import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabAppointment;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.LabNotification;
+import com.bionische.biotech.model.LabSubscriptionDetails;
 import com.bionische.biotech.model.LabTests;
 import com.bionische.biotech.model.LabTestsList;
 import com.bionische.biotech.model.PateintReportPaymentDetails;
@@ -56,6 +57,7 @@ import com.bionische.biotech.repository.GetReportDetailsForLabRepository;
 import com.bionische.biotech.repository.LabAppointmentRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.LabNotificationRepository;
+import com.bionische.biotech.repository.LabSubscriptionDetailsRepository;
 import com.bionische.biotech.repository.LabTestsRepository;
 import com.bionische.biotech.repository.PateintReportPaymentDetailsRepository;
 import com.bionische.biotech.repository.PatientNotificationRepository;
@@ -139,8 +141,8 @@ SharingReportWithDocRepository sharingReportWithDocRepository;
 
 @Autowired
 GetPatientUploadedReportsRepository getPatientUploadedReportsRepository;
-
-
+@Autowired
+LabSubscriptionDetailsRepository labSubscriptionDetailsRepository;
 
 @Autowired
 CreateDirectoryService createDirectoryService;
@@ -1160,5 +1162,23 @@ System.out.println(e.getMessage());
 		}
 
 		return info;
+	}
+	
+	
+	@RequestMapping(value = { "/insertLabSuscriptionDetails" }, method = RequestMethod.POST)
+	public @ResponseBody LabSubscriptionDetails insertLabSuscriptionDetails(@RequestBody LabSubscriptionDetails labSubscriptionDetails)
+	{
+		LabSubscriptionDetails labSubscriptionDetailsRes=new LabSubscriptionDetails();
+		try {
+			  labSubscriptionDetailsRes=labSubscriptionDetailsRepository.save(labSubscriptionDetails);
+	 
+		 
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+			 
+		}
+		
+		return labSubscriptionDetailsRes;
 	}
 }
