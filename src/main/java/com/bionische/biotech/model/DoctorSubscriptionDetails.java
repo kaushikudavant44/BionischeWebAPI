@@ -14,6 +14,7 @@ import javax.persistence.TemporalType;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name="t_doctor_subscription_details")
@@ -42,9 +43,8 @@ public class DoctorSubscriptionDetails {
 	private String orderId;
 	
 	@Column(name = "created_date")
-	@Temporal(TemporalType.TIMESTAMP)
-	@CreatedDate
-	private Date createdDate;
+	 
+	private String createdDate;
 	
 	@Column(name="package_exp_date")
 	private String packageExpDate;
@@ -54,6 +54,12 @@ public class DoctorSubscriptionDetails {
 	
 	@Column(name="txn_status")
 	private int txnStatus;
+	
+	@Column(name="offer_id")
+	private int offerId;
+	
+	@Column(name="package_amt")
+	private float packageAmt;
 	
 	public int getSuscriptionId() {
 		return suscriptionId;
@@ -113,11 +119,12 @@ public class DoctorSubscriptionDetails {
 		this.orderId = orderId;
 	}
 
-	public Date getCreatedDate() {
+	 
+	public String getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Date createdDate) {
+	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
 	}
 
@@ -137,17 +144,30 @@ public class DoctorSubscriptionDetails {
 		this.txnStatus = txnStatus;
 	}
 
+	public int getOfferId() {
+		return offerId;
+	}
+
+	public void setOfferId(int offerId) {
+		this.offerId = offerId;
+	}
+
+	public float getPackageAmt() {
+		return packageAmt;
+	}
+
+	public void setPackageAmt(float packageAmt) {
+		this.packageAmt = packageAmt;
+	}
+
 	@Override
 	public String toString() {
 		return "DoctorSubscriptionDetails [suscriptionId=" + suscriptionId + ", doctorId=" + doctorId + ", packageId="
 				+ packageId + ", amount=" + amount + ", delStatus=" + delStatus + ", orderId=" + orderId
 				+ ", createdDate=" + createdDate + ", packageExpDate=" + packageExpDate + ", txnId=" + txnId
-				+ ", txnStatus=" + txnStatus + "]";
+				+ ", txnStatus=" + txnStatus + ", offerId=" + offerId + ", packageAmt=" + packageAmt + "]";
 	}
 
-	 
-
-	 
 	 
 	
 	

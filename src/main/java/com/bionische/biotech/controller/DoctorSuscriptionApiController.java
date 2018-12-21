@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bionische.biotech.model.DoctorSubscriptionDetails;
+import com.bionische.biotech.model.GetPromoCodeValidRes;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.repository.DoctorSubscriptionDetailsRepository;
+import com.bionische.biotech.repository.GetPromoCodeValidResRepository;
 
 @RestController
 @RequestMapping(value = { "/doctorSuscription"})
@@ -18,6 +20,8 @@ public class DoctorSuscriptionApiController {
 
 	@Autowired
 	DoctorSubscriptionDetailsRepository doctorSubscriptionDetailsRepository;
+	@Autowired
+	GetPromoCodeValidResRepository getPromoCodeValidResRepository;
 	
 	@RequestMapping(value = { "/insertDoctorSuscriptionDetails" }, method = RequestMethod.POST)
 	public @ResponseBody Info insertDoctorSuscriptionDetails(@RequestBody DoctorSubscriptionDetails doctorSubscriptionDetails)
@@ -63,6 +67,30 @@ public class DoctorSuscriptionApiController {
 		}
 		
 		return doctorSubscriptionDetailsRes;
+	}
+	
+	
+	@RequestMapping(value = { "/checkPromoCodeValidation" }, method = RequestMethod.POST)
+	public @ResponseBody GetPromoCodeValidRes checkPromoCodeValidation(@RequestParam("promoCode")String promoCode, @RequestParam("userType")int userType)
+	{
+		
+	  
+			GetPromoCodeValidRes getPromoCodeValidRes=getPromoCodeValidResRepository.checkPromoCodeValidation(promoCode, userType);
+			//System.out.println("getPromoCodeValidRes "+getPromoCodeValidRes.toString());
+			//getPromoCodeValidRes.setError(true);
+		 if(getPromoCodeValidRes!=null)
+		 {
+			 getPromoCodeValidRes.setError(false);
+			 getPromoCodeValidRes.setMessage("Promo Code Applied Successfully");
+		 }
+		 else
+		 {
+			 getPromoCodeValidRes=new GetPromoCodeValidRes();
+			 getPromoCodeValidRes.setError(true);
+			 getPromoCodeValidRes.setMessage("Invalid Promo code!");
+		 }
+		 
+		return getPromoCodeValidRes;
 	}
 	
 }

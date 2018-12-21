@@ -40,6 +40,12 @@ public class PatientSuscriptionDetails {
 	
 	@Column(name="payment_date")
 	private String paymentDate;
+	
+	@Column(name="offer_id")
+	private int offerId;
+	
+	@Column(name="package_amt")
+	private float packageAmt;
 
 	public int getSuscriptionId() {
 		return suscriptionId;
@@ -105,12 +111,30 @@ public class PatientSuscriptionDetails {
 		this.paymentDate = paymentDate;
 	}
 
+	public int getOfferId() {
+		return offerId;
+	}
+
+	public void setOfferId(int offerId) {
+		this.offerId = offerId;
+	}
+
+	public float getPackageAmt() {
+		return packageAmt;
+	}
+
+	public void setPackageAmt(float packageAmt) {
+		this.packageAmt = packageAmt;
+	}
+
 	@Override
 	public String toString() {
 		return "PatientSuscriptionDetails [suscriptionId=" + suscriptionId + ", patientId=" + patientId + ", packageId="
 				+ packageId + ", status=" + status + ", amount=" + amount + ", txnId=" + txnId + ", orderId=" + orderId
-				+ ", paymentDate=" + paymentDate + "]";
+				+ ", paymentDate=" + paymentDate + ", offerId=" + offerId + ", packageAmt=" + packageAmt + "]";
 	}
+
+	 
 	
 	
 }

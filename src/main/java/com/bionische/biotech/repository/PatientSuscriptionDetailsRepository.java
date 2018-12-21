@@ -10,4 +10,6 @@ public interface PatientSuscriptionDetailsRepository extends JpaRepository<Patie
 	PatientSuscriptionDetails save(PatientSuscriptionDetails patientSuscriptionDetails);
 	
 	PatientSuscriptionDetails findByPatientIdAndStatus(int patientId, int status);
+
+	PatientSuscriptionDetails findByStatusNotAndPatientId(int status, int patientId);
 }

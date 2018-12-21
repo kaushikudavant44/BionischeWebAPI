@@ -48,6 +48,12 @@ public class LabSubscriptionDetails {
 	@Column(name="txn_status")
 	private int txnStatus;
 	
+	@Column(name="offer_id")
+	private int offerId;
+	
+	@Column(name="package_amt")
+	private float packageAmt;
+	
 	public int getSuscriptionId() {
 		return suscriptionId;
 	}
@@ -133,14 +139,30 @@ public class LabSubscriptionDetails {
 		this.paymentDate = paymentDate;
 	}
 
+	public int getOfferId() {
+		return offerId;
+	}
+
+	public void setOfferId(int offerId) {
+		this.offerId = offerId;
+	}
+
+	public float getPackageAmt() {
+		return packageAmt;
+	}
+
+	public void setPackageAmt(float packageAmt) {
+		this.packageAmt = packageAmt;
+	}
+
 	@Override
 	public String toString() {
 		return "LabSubscriptionDetails [suscriptionId=" + suscriptionId + ", labId=" + labId + ", packageId="
 				+ packageId + ", amount=" + amount + ", delStatus=" + delStatus + ", orderId=" + orderId
 				+ ", paymentDate=" + paymentDate + ", packageExpDate=" + packageExpDate + ", txnId=" + txnId
-				+ ", txnStatus=" + txnStatus + "]";
+				+ ", txnStatus=" + txnStatus + ", offerId=" + offerId + ", packageAmt=" + packageAmt + "]";
 	}
-
+ 
 	 
 
 	 
