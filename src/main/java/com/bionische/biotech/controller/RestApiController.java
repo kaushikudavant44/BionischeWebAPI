@@ -1484,7 +1484,17 @@ System.out.println(e.getMessage());
 					
 					Info info=new Info();
 					try {
-						res = patientDetailsRepository.updateNewPassword(patientId,newPassword);
+						
+						MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+						messageDigest.update(newPassword.getBytes(),0, newPassword.length());  
+						String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+						if (hashedPass.length() < 32) {
+						   hashedPass = "0" + hashedPass; 
+						}
+						 
+						 
+					
+						res = patientDetailsRepository.updateNewPassword(patientId,hashedPass);
 						if(res>0)
 						{
 							GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsById(patientId);
