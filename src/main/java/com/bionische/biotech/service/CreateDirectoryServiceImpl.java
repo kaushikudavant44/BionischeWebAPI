@@ -23,6 +23,7 @@ public class CreateDirectoryServiceImpl implements CreateDirectoryService{
 		      
 		      new File(ConstantFileUploadPath.DOCTOR_PATH+folderName+"/profile").mkdir();
 		      new File(ConstantFileUploadPath.DOCTOR_PATH+folderName+"/documents").mkdir();
+		      new File(ConstantFileUploadPath.DOCTOR_PATH+folderName+"/signature").mkdir();
 		    } 
 		    
 		  }catch (Exception e){//Catch exception if any

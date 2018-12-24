@@ -90,6 +90,9 @@ public class GetDoctorProfile {
 	@Column(name="council_name")
 	private String councilName;
 	
+	@Column(name="signature", nullable=true)
+	private String signature;
+	
 	@Column(name="del_status")
 	private int delStatus;
 
@@ -303,6 +306,14 @@ public class GetDoctorProfile {
 		this.int2 = int2;
 	}
 
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+
 	@Override
 	public String toString() {
 		return "GetDoctorProfile [doctorId=" + doctorId + ", fName=" + fName + ", lName=" + lName + ", mName=" + mName
@@ -312,8 +323,10 @@ public class GetDoctorProfile {
 				+ profilePhoto + ", contactNo=" + contactNo + ", email=" + email + ", qualification=" + qualification
 				+ ", college=" + college + ", passingYear=" + passingYear + ", specId=" + specId + ", specType="
 				+ specType + ", int2=" + int2 + ", councilRegNo=" + councilRegNo + ", councilName=" + councilName
-				+ ", delStatus=" + delStatus + "]";
+				+ ", signature=" + signature + ", delStatus=" + delStatus + "]";
 	}
+
+	 
 
 	
 

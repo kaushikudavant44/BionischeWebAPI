@@ -124,6 +124,9 @@ public class DoctorDetails {
 	@Column(name = "last_modified_date")
 	private Date lastModifiedDate;
 	
+	@Column(name="signature", nullable=true)
+	private String signature;
+	
 	public float getFees() {
 		return fees;
 	}
@@ -373,6 +376,14 @@ public class DoctorDetails {
 		return lastModifiedDate;
 	}
 
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+
 	@Override
 	public String toString() {
 		return "DoctorDetails [doctorId=" + doctorId + ", userName=" + userName + ", password=" + password + ", fName="
@@ -383,18 +394,8 @@ public class DoctorDetails {
 				+ ", college=" + college + ", passingYear=" + passingYear + ", specId=" + specId + ", councilRegNo="
 				+ councilRegNo + ", councilName=" + councilName + ", delStatus=" + delStatus + ", string1=" + string1
 				+ ", string2=" + string2 + ", int1=" + int1 + ", int2=" + int2 + ", fees=" + fees + ", createDate="
-				+ createDate + ", lastModifiedDate=" + lastModifiedDate + "]";
+				+ createDate + ", lastModifiedDate=" + lastModifiedDate + ", signature=" + signature + "]";
 	}
 
-	 
-
-	 
- 
-	 
-
-	 
-	 
-	 
-	
-
+	  
 }
