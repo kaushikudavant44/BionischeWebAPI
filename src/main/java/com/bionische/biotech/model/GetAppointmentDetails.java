@@ -28,6 +28,10 @@ public class GetAppointmentDetails {
 	@Column(name="time")
 	private String time;
 	
+ 
+	@Column(name="amount")
+	private float amount;
+	
 	@Column(name="date")
 	private String date;
 	
@@ -182,15 +186,24 @@ public class GetAppointmentDetails {
 		this.timeId = timeId;
 	}
 
+	public float getAmount() {
+		return amount;
+	}
+
+	public void setAmount(float amount) {
+		this.amount = amount;
+	}
+
 	@Override
 	public String toString() {
 		return "GetAppointmentDetails [appointId=" + appointId + ", doctorId=" + doctorId + ", timeId=" + timeId
-				+ ", patientId=" + patientId + ", time=" + time + ", date=" + date + ", hospitalId=" + hospitalId
-				+ ", hospitalName=" + hospitalName + ", hospitalAddress=" + hospitalAddress + ", doctorName="
-				+ doctorName + ", patientName=" + patientName + ", profilePhoto=" + profilePhoto + ", delStatus="
-				+ delStatus + ", status=" + status + ", int_1=" + int_1 + "]";
+				+ ", patientId=" + patientId + ", time=" + time + ", amount=" + amount + ", date=" + date
+				+ ", hospitalId=" + hospitalId + ", hospitalName=" + hospitalName + ", hospitalAddress="
+				+ hospitalAddress + ", doctorName=" + doctorName + ", patientName=" + patientName + ", profilePhoto="
+				+ profilePhoto + ", delStatus=" + delStatus + ", status=" + status + ", int_1=" + int_1 + "]";
 	}
-	
+
+	 
 	
 	
 }
