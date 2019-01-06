@@ -1132,7 +1132,7 @@ System.out.println(e.getMessage());
 	
 	
 	@RequestMapping(value = { "/updateLabReportsPayment" }, method = RequestMethod.POST)
-	public @ResponseBody Info updateLabReportsPayment(@RequestParam("reportId") int amountType,@RequestParam("reportId") int reportId,@RequestParam("txnTableId") int txnTableId,@RequestParam("txnStatus") int txnStatus,@RequestParam("txnId") String txnId,@RequestParam("orderId") String orderId,@RequestParam("txnAmt") float txnAmt)
+	public @ResponseBody Info updateLabReportsPayment(@RequestParam("amountType") int amountType,@RequestParam("reportId") int reportId,@RequestParam("txnTableId") int txnTableId,@RequestParam("txnStatus") int txnStatus,@RequestParam("txnId") String txnId,@RequestParam("orderId") String orderId,@RequestParam("txnAmt") float txnAmt)
 	{
  
 		

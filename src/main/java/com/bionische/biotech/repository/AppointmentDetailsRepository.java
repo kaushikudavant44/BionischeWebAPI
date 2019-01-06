@@ -52,6 +52,12 @@ int cancelDoctorAppointmentByPatient(@Param("appointId")int appointId);
 @Query("UPDATE AppointmentDetails  SET paymentStatus =:paymentStatus, amount=:amount, txnId=:txnId, orderId=:orderId, paymentDate=NOW() WHERE appointId=:appointId")
 int updateAppointmentPayment(@Param("appointId")int appointId,@Param("paymentStatus")int paymentStatus,	@Param("amount")float amount,@Param("txnId")String txnId,@Param("orderId")String orderId);
 
+@Transactional
+@Modifying
+@Query("UPDATE AppointmentDetails  SET int_2 =:receiptNo WHERE appointId IN(:appointId)")
+int updateConsultingReceiptStatusAndReceiptNo(@Param("appointId")List<Integer> appointId,@Param("receiptNo")int receiptNo);
+
+
 }
 
 
