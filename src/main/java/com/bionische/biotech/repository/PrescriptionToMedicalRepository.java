@@ -37,7 +37,12 @@ public interface PrescriptionToMedicalRepository extends JpaRepository<Prescript
 	@Transactional
 	@Modifying
 	@Query("UPDATE PrescriptionToMedical p SET p.paymentDate=NOW(), p.status =:txnStatus, p.totalAmt=:txnAmt,p.orderId=:orderId, p.txnId=:txnId  WHERE p.requestToMedicalId=:requestToMedicalId")
-	int updateMedicinePayment(@Param("txnAmt")float txnAmt, @Param("orderId")String orderId, @Param("txnId")String txnId, @Param("txnStatus")int txnStatus, @Param("requestToMedicalId")int requestToMedicalId); 
+	int updateMedicinePayment(@Param("txnAmt")float txnAmt, @Param("orderId")String orderId, @Param("txnId")String txnId, @Param("txnStatus")int txnStatus, @Param("requestToMedicalId")int requestToMedicalId);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE PrescriptionToMedical  SET int_1 =:receiptNo WHERE requestToMedicalId IN(:requestId)")
+int updatePrescriptionReceiptStatusAndReceiptNo(@Param("requestId")List<Integer> requestId, @Param("receiptNo")int receiptNo); 
 	
 	/*
 	@Query(value=" SELECT p.medical_request_id,p.patient_name,m.medical_name,p.doctor_name,p.hospital_name,p.meet_id,p.date,p.time,p.int_1,p.int_2,d.contact AS string_1,p.string_2,p.medical_id,\r\n" + 

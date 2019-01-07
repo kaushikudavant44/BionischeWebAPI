@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.bionische.biotech.account.model.LabReportReceipt;
 
-public interface LabReportReceiptRepository extends JpaRepository<LabReportReceipt, Integer>{
+public interface LabReportReceiptRepository extends JpaRepository<LabReportReceipt, String>{
 
 	
 	LabReportReceipt save(LabReportReceipt labReportReceipt);

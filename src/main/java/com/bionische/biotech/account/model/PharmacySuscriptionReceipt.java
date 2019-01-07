@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
  
-public class DoctorSuscriptionReceipt {
+public class PharmacySuscriptionReceipt {
 
 	
 	@Id
@@ -17,8 +17,8 @@ public class DoctorSuscriptionReceipt {
 	@Column(name="suscription_id")
 	private int suscriptionId;
 	
-	@Column(name="doctor_id")
-	private int doctorId;
+	@Column(name="medical_id")
+	private int medicalId;
 	
 	@Column(name="amount")
 	private float amount;
@@ -67,14 +67,7 @@ public class DoctorSuscriptionReceipt {
 	public void setSuscriptionId(int suscriptionId) {
 		this.suscriptionId = suscriptionId;
 	}
-
-	public int getDoctorId() {
-		return doctorId;
-	}
-
-	public void setDoctorId(int doctorId) {
-		this.doctorId = doctorId;
-	}
+ 
 
 	public float getAmount() {
 		return amount;
@@ -172,6 +165,14 @@ public class DoctorSuscriptionReceipt {
 		this.address = address;
 	}
 
+	public int getMedicalId() {
+		return medicalId;
+	}
+
+	public void setMedicalId(int medicalId) {
+		this.medicalId = medicalId;
+	}
+
 	public String getCompanyName() {
 		return companyName;
 	}
@@ -182,7 +183,7 @@ public class DoctorSuscriptionReceipt {
 
 	@Override
 	public String toString() {
-		return "DoctorSuscriptionReceipt [suscriptionId=" + suscriptionId + ", doctorId=" + doctorId + ", amount="
+		return "PharmacySuscriptionReceipt [suscriptionId=" + suscriptionId + ", medicalId=" + medicalId + ", amount="
 				+ amount + ", orderId=" + orderId + ", createdDate=" + createdDate + ", txnId=" + txnId
 				+ ", packageAmt=" + packageAmt + ", companyGstNo=" + companyGstNo + ", gstNo=" + gstNo + ", contactNo1="
 				+ contactNo1 + ", contactNo2=" + contactNo2 + ", email=" + email + ", website=" + website + ", address="
