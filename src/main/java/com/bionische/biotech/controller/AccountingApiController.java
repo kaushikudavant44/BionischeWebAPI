@@ -19,9 +19,14 @@ import com.bionische.biotech.account.model.GetDoctorConsultingPaymentForReceipt;
 import com.bionische.biotech.account.model.GetDoctorConsultingReceipt;
 import com.bionische.biotech.account.model.GetLabReportPaymentForReceipt;
 import com.bionische.biotech.account.model.GetLabReportReceipt;
+import com.bionische.biotech.account.model.GetPharmacyPrescriptionPaymentForReceipt;
+import com.bionische.biotech.account.model.GetPharmacyPrescriptionReceipt;
 import com.bionische.biotech.account.model.LabBankAccountInfo;
 import com.bionische.biotech.account.model.LabReportReceipt;
 import com.bionische.biotech.account.model.LabSuscriptionReceipt;
+import com.bionische.biotech.account.model.PharmacyBankAccountInfo;
+import com.bionische.biotech.account.model.PharmacyPrescriptionReceipt;
+import com.bionische.biotech.account.model.PharmacySuscriptionReceipt;
 import com.bionische.biotech.account.model.UpdateReceiptStatusAndReceiptNo;
 import com.bionische.biotech.account.repository.BrokerageDetailsRepository;
 import com.bionische.biotech.account.repository.DoctorBankAccountInfoRepository;
@@ -31,11 +36,17 @@ import com.bionische.biotech.account.repository.GetDoctorConsultingPaymentForRec
 import com.bionische.biotech.account.repository.GetDoctorConsultingReceiptRepository;
 import com.bionische.biotech.account.repository.GetLabReportPaymentForReceiptRepository;
 import com.bionische.biotech.account.repository.GetLabReportReceiptRepository;
+import com.bionische.biotech.account.repository.GetPharmacyPrescriptionPaymentForReceiptRepository;
+import com.bionische.biotech.account.repository.GetPharmacyPrescriptionReceiptRepository;
 import com.bionische.biotech.account.repository.LabBankAccountInfoRepository;
 import com.bionische.biotech.account.repository.LabReportReceiptRepository;
 import com.bionische.biotech.account.repository.LabSuscriptionReceiptRepository;
+import com.bionische.biotech.account.repository.PharmacyBankAccountInfoRepository;
+import com.bionische.biotech.account.repository.PharmacyPrescriptionReceiptRepository;
+import com.bionische.biotech.account.repository.PharmacySuscriptionReceiptRepository;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.repository.AppointmentDetailsRepository;
+import com.bionische.biotech.repository.PrescriptionToMedicalRepository;
 import com.bionische.biotech.repository.TransactionDetailsRepository;
 
 @RestController
@@ -67,7 +78,19 @@ public class AccountingApiController {
 	TransactionDetailsRepository transactionDetailsRepository;
 	@Autowired
 	GetLabReportReceiptRepository getLabReportReceiptRepository;
-
+	@Autowired
+	PharmacyBankAccountInfoRepository pharmacyBankAccountInfoRepository;
+	@Autowired
+	PharmacySuscriptionReceiptRepository pharmacySuscriptionReceiptRepository;
+	@Autowired
+	GetPharmacyPrescriptionPaymentForReceiptRepository getPharmacyPrescriptionPaymentForReceiptRepository;
+	@Autowired
+	PharmacyPrescriptionReceiptRepository pharmacyPrescriptionReceiptRepository;
+	@Autowired
+	PrescriptionToMedicalRepository prescriptionToMedicalRepository;
+	@Autowired
+	GetPharmacyPrescriptionReceiptRepository getPharmacyPrescriptionReceiptRepository;
+	
 	@RequestMapping(value = { "/insertBrokerageDetails" }, method = RequestMethod.POST)
 	public @ResponseBody BrokerageDetails insertBrokerageDetails(@RequestBody BrokerageDetails brokerageDetails) {
  
@@ -156,7 +179,33 @@ public class AccountingApiController {
 		}
 	
 	
-
+	@RequestMapping(value = { "/insertPharmacyBankDetails" }, method = RequestMethod.POST)
+	public @ResponseBody PharmacyBankAccountInfo insertPharmacyBankDetails(@RequestBody PharmacyBankAccountInfo pharmacyBankAccountInfo) {
+ 
+		PharmacyBankAccountInfo pharmacyBankAccountInfoRes=new PharmacyBankAccountInfo();
+		try{
+			pharmacyBankAccountInfoRes=pharmacyBankAccountInfoRepository.save(pharmacyBankAccountInfo);
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+		
+		return pharmacyBankAccountInfoRes;
+		}
+	
+	@RequestMapping(value = { "/getPharmacyBankDetails" }, method = RequestMethod.POST)
+	public @ResponseBody PharmacyBankAccountInfo getPharmacyBankDetails(@RequestParam("medicalId")int medicalId) {
+ 
+		PharmacyBankAccountInfo pharmacyBankAccountInfo=new PharmacyBankAccountInfo();
+		try{
+			pharmacyBankAccountInfo=pharmacyBankAccountInfoRepository.findByMedicalIdAndDelStatus(medicalId, 0);
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+		
+		return pharmacyBankAccountInfo;
+		}
 	
 	
 	
@@ -366,6 +415,112 @@ public @ResponseBody List<GetLabReportReceipt> getLabReportReceipt(@RequestParam
 	try{
 		List<GetLabReportReceipt> getLabReportReceiptList=getLabReportReceiptRepository.getLabReportReceipt(fromDate, toDate, labId);
 		return getLabReportReceiptList;
+	}
+	catch (Exception e) {
+		System.out.println(e.getMessage());// TODO: handle exception
+	}
+	
+	return null;
+	}
+
+@RequestMapping(value = { "/getPharmacySuscriptionReceipt" }, method = RequestMethod.POST)
+public @ResponseBody List<PharmacySuscriptionReceipt> getPharmacySuscriptionReceipt(@RequestParam("medicalId")int medicalId) {
+
+	List<PharmacySuscriptionReceipt> pharmacySuscriptionReceiptList=new ArrayList<PharmacySuscriptionReceipt>();
+	try{
+		pharmacySuscriptionReceiptList=pharmacySuscriptionReceiptRepository.getPharmacySuscriptionReceipt(medicalId);
+	}
+	catch (Exception e) {
+		System.out.println(e.getMessage());// TODO: handle exception
+	}
+	
+	return pharmacySuscriptionReceiptList;
+	}
+
+@RequestMapping(value = { "/getPharmacyPrescriptionPaymentForReceipt" }, method = RequestMethod.POST)
+public @ResponseBody List<GetPharmacyPrescriptionPaymentForReceipt> getPharmacyPrescriptionPaymentForReceipt(@RequestParam("medicalId") int medicalId, @RequestParam("toDate") String toDate, @RequestParam("fromDate") String fromDate) {
+
+	 
+	try{
+		List<GetPharmacyPrescriptionPaymentForReceipt> getPharmacyPrescriptionPaymentForReceiptList=getPharmacyPrescriptionPaymentForReceiptRepository.getPharmacyPrescriptionPaymentForReceipt(medicalId, fromDate, toDate);
+		return getPharmacyPrescriptionPaymentForReceiptList;
+	}
+	catch (Exception e) {
+		System.out.println(e.getMessage());// TODO: handle exception
+	}
+	
+	return null;
+	}
+
+@RequestMapping(value = { "/getLastDateByMedicalId" }, method = RequestMethod.POST)
+public @ResponseBody Info getLastDateByMedicalId(@RequestParam("medicalId")int medicalId) {
+
+	 Info info=new Info();
+	 info.setError(true);
+	try{
+		 
+		String res=pharmacyPrescriptionReceiptRepository.getLastDateByMedicalId(medicalId);
+		System.out.println(res);
+		info.setMessage(res);
+		 info.setError(false);
+	}
+	catch (Exception e) {
+		System.out.println(e.getMessage());// TODO: handle exception
+	}
+	
+	return info;
+	}
+
+
+@RequestMapping(value = { "/savePharmacyPrescriptionReceipt" }, method = RequestMethod.POST)
+public @ResponseBody PharmacyPrescriptionReceipt savePharmacyPrescriptionReceipt(@RequestBody PharmacyPrescriptionReceipt pharmacyPrescriptionReceipt) {
+
+	 
+	try{
+		PharmacyPrescriptionReceipt pharmacyPrescriptionReceiptRes=pharmacyPrescriptionReceiptRepository.save(pharmacyPrescriptionReceipt);
+		return pharmacyPrescriptionReceiptRes;
+	}
+	catch (Exception e) {
+		System.out.println(e.getMessage());// TODO: handle exception
+	}
+	
+	return null;
+	}
+
+
+@RequestMapping(value = { "/updatePharmacyPrescriptionBillStatus" }, method = RequestMethod.POST)
+public @ResponseBody Info updatePharmacyPrescriptionBillStatus(@RequestBody UpdateReceiptStatusAndReceiptNo UpdateReceiptStatusAndReceiptNo) {
+
+	 Info info=new Info();
+	 info.setError(true);
+	try{
+		int res=prescriptionToMedicalRepository.updatePrescriptionReceiptStatusAndReceiptNo(UpdateReceiptStatusAndReceiptNo.getAppointmentId(),UpdateReceiptStatusAndReceiptNo.getReceiptNo());
+		if(res>0) {
+			
+			info.setError(false);
+			info.setMessage("Update successfully");
+		 
+		
+		}
+		else
+			info.setMessage("Failed to Update");
+	}
+	catch (Exception e) {
+		info.setMessage("Failed to Update");
+		System.out.println(e.getMessage());// TODO: handle exception
+	}
+	
+	return info;
+	}
+
+
+@RequestMapping(value = { "/getPharmacyPrescriptionReceipt" }, method = RequestMethod.POST)
+public @ResponseBody List<GetPharmacyPrescriptionReceipt> getPharmacyPrescriprionReceipt(@RequestParam("medicalId") int medicalId, @RequestParam("toDate") String toDate, @RequestParam("fromDate") String fromDate) {
+
+	 
+	try{
+		List<GetPharmacyPrescriptionReceipt> getPharmacyPrescriptionReceiptList=getPharmacyPrescriptionReceiptRepository.getPharmacyPrescriptionReceipt(fromDate, toDate, medicalId);
+		return getPharmacyPrescriptionReceiptList;
 	}
 	catch (Exception e) {
 		System.out.println(e.getMessage());// TODO: handle exception

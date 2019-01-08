@@ -17,11 +17,11 @@ public class GetLabReportReceipt {
 	@Column(name="receipt_no")
 	private int receiptNo;
 	
-	@Column(name="doctor_id")
-	private int doctorId;
+	@Column(name="lab_id")
+	private int labId;
 	
-	@Column(name="doctor_name")
-	private String doctorName;
+	@Column(name="lab_name")
+	private String labName;
 	
 	@Column(name="created_date")
 	private String createdDate;
@@ -72,15 +72,7 @@ public class GetLabReportReceipt {
 	private String companyName;
 
 	
-	
-	public int getDoctorId() {
-		return doctorId;
-	}
-
-	public void setDoctorId(int doctorId) {
-		this.doctorId = doctorId;
-	}
- 
+	 
 
 	public String getTxnId() {
 		return txnId;
@@ -213,13 +205,7 @@ public class GetLabReportReceipt {
 	}
 
 	 
-	public String getDoctorName() {
-		return doctorName;
-	}
-
-	public void setDoctorName(String doctorName) {
-		this.doctorName = doctorName;
-	}
+	 
 
 	public String getCompanyName() {
 		return companyName;
@@ -229,22 +215,31 @@ public class GetLabReportReceipt {
 		this.companyName = companyName;
 	}
 
-	@Override
-	public String toString() {
-		return "GetDoctorConsultingReceipt [receiptNo=" + receiptNo + ", doctorId=" + doctorId + ", doctorName="
-				+ doctorName + ", createdDate=" + createdDate + ", totAmount=" + totAmount + ", txnId=" + txnId
-				+ ", date=" + date + ", fromDate=" + fromDate + ", toDate=" + toDate + ", paidAmt=" + paidAmt
-				+ ", commissionAmt=" + commissionAmt + ", companyGstNo=" + companyGstNo + ", gstNo=" + gstNo
-				+ ", contactNo1=" + contactNo1 + ", contactNo2=" + contactNo2 + ", email=" + email + ", website="
-				+ website + ", address=" + address + ", companyName=" + companyName + "]";
+	public int getLabId() {
+		return labId;
 	}
 
-	 
+	public void setLabId(int labId) {
+		this.labId = labId;
+	}
 
-	 
+	public String getLabName() {
+		return labName;
+	}
 
-	 
-	 
+	public void setLabName(String labName) {
+		this.labName = labName;
+	}
+
+	@Override
+	public String toString() {
+		return "GetLabReportReceipt [receiptNo=" + receiptNo + ", labId=" + labId + ", labName=" + labName
+				+ ", createdDate=" + createdDate + ", totAmount=" + totAmount + ", txnId=" + txnId + ", date=" + date
+				+ ", fromDate=" + fromDate + ", toDate=" + toDate + ", paidAmt=" + paidAmt + ", commissionAmt="
+				+ commissionAmt + ", companyGstNo=" + companyGstNo + ", gstNo=" + gstNo + ", contactNo1=" + contactNo1
+				+ ", contactNo2=" + contactNo2 + ", email=" + email + ", website=" + website + ", address=" + address
+				+ ", companyName=" + companyName + "]";
+	}
 
 	 
 	
