@@ -69,7 +69,7 @@ public class VpsFileUploadApiController {
 		if (imageType == 1) {
 
 			path = Paths.get(ConstantFileUploadPath.DOCTOR_PATH + "/" + userId + "/profile/" + imageName);
-			// path = Paths.get("\\images\\");
+			 
 		} else if (imageType == 2) {
 
 			path = Paths.get(ConstantFileUploadPath.PATIENT_PATH + userId + "/profile/" + imageName);
@@ -104,7 +104,7 @@ public class VpsFileUploadApiController {
 			}
 		
 		try {
-			//path = Paths.get("F:\\sts-bundle\\sts-3.9.3.RELEASE\\images\\"+imageName);
+			
 			Files.write(path, bytes);
 			info.setError(false);
 			info.setMessage("File Upload Successfully");
