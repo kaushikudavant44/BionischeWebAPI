@@ -27,6 +27,7 @@ import com.bionische.biotech.insurance.repository.InsuranceReviewRepository;
 import com.bionische.biotech.model.AdminDetails;
 import com.bionische.biotech.model.AdminLogin;
 import com.bionische.biotech.model.DoctorCertificateDetails;
+import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.GetDocAvailableTimeDetails;
 import com.bionische.biotech.model.GetDoctorHospitalDetails;
 import com.bionische.biotech.model.GetLabRatingReview;
@@ -66,6 +67,7 @@ import com.bionische.biotech.repository.PharmacyCertificateDetailsRepository;
 import com.bionische.biotech.repository.RatingDetailsRepository;
 import com.bionische.biotech.repository.TermsAndConditionsRepository;
 import com.bionische.biotech.service.PrescriptionOrderService;
+import com.bionische.biotech.service.SendFcmNotificationService;
 import com.bionische.biotech.stemcell.model.GetStemCellsDetails;
 import com.bionische.biotech.stemcell.repository.GetStemCellsDetailsRepository;
 
@@ -150,6 +152,9 @@ public class AdminPanelController {
 	PackageDetailsRepository packageDetailsRepository;
 	@Autowired
 	GetPackageOffersRepository getPackageOffersRepository;
+	
+	@Autowired
+	SendFcmNotificationService sendFcmNotificationService;
 	/*
 	 * 
 	 * @RequestMapping(value = { "/getDoctorAppointmentDetailsByPatientId" }, method
@@ -737,10 +742,14 @@ public class AdminPanelController {
 		try {
 			int res = doctorDetailsRepository.updateDoctorDelStatus(doctorId, 0);
 			doctorCertificateDetailsRepository.updateCertificateDelStatus(doctorId,2, "Accepted");
+			DoctorDetails doctorDetails=doctorDetailsRepository.findByDoctorId(doctorId);
+			
+			
 			 if(res>0)
 			 {
 				 info.setError(false);
 				 info.setMessage("Doctor DelStatus Update Successfully");
+				 sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "Bionische", "Your Verification Completed. Welcome to Bionische", DateConverter.currentDateAndTime(),1);
 			 }
 			 else 
 			 {
@@ -758,10 +767,13 @@ public class AdminPanelController {
 		try {
 			int res = doctorDetailsRepository.updateDoctorDelStatus(doctorId, 3);
 			doctorCertificateDetailsRepository.updateCertificateDelStatus(doctorId, 1, message);
+			DoctorDetails doctorDetails=doctorDetailsRepository.findByDoctorId(doctorId);
+			String msg="Please re-submit your documents. Verification failed.";
 			 if(res>0)
 			 {
 				 info.setError(false);
 				 info.setMessage("Doctor DelStatus Update Successfully");
+				 sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "Bionische", msg, DateConverter.currentDateAndTime(),2);
 			 }
 			 else 
 			 {
@@ -890,6 +902,7 @@ public class AdminPanelController {
 			 {
 				 info.setError(false);
 				 info.setMessage("medical DelStatus Update Successfully");
+				 
 			 }
 			 else 
 			 {

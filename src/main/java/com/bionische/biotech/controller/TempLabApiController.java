@@ -1,4 +1,4 @@
-package com.bionische.biotech.controller;
+/*package com.bionische.biotech.controller;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -97,7 +97,7 @@ public class TempLabApiController {
 		return labList;
 	}
 
-/** insert patient Report*/
+*//** insert patient Report*//*
 	
 	@RequestMapping(value = { "/insertPatientReport" }, method = RequestMethod.POST)
 	public @ResponseBody Info insertPatientReport(@RequestBody ReportDetails reportDetails)
@@ -144,7 +144,7 @@ public class TempLabApiController {
 		return info;
 	}
 	
-/** get patient report by test*/
+*//** get patient report by test*//*
 	
 	
 		@RequestMapping(value = { "/getPatientReportsByTest" }, method = RequestMethod.POST)
@@ -164,7 +164,7 @@ public class TempLabApiController {
 		 
 		}
 	
-		/** get patient report by test*/
+		*//** get patient report by test*//*
 		
 		
 		@RequestMapping(value = { "/getPatientReportsByDate" }, method = RequestMethod.POST)
@@ -340,3 +340,4 @@ public class TempLabApiController {
 		
 		}
 }
+*/

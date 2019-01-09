@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.account.model.BrokerageDetails;
 import com.bionische.biotech.account.model.DoctorBankAccountInfo;
 import com.bionische.biotech.account.model.DoctorConsultingReceipt;
@@ -44,10 +45,13 @@ import com.bionische.biotech.account.repository.LabSuscriptionReceiptRepository;
 import com.bionische.biotech.account.repository.PharmacyBankAccountInfoRepository;
 import com.bionische.biotech.account.repository.PharmacyPrescriptionReceiptRepository;
 import com.bionische.biotech.account.repository.PharmacySuscriptionReceiptRepository;
+import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.repository.AppointmentDetailsRepository;
+import com.bionische.biotech.repository.DoctorDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionToMedicalRepository;
 import com.bionische.biotech.repository.TransactionDetailsRepository;
+import com.bionische.biotech.service.SendFcmNotificationService;
 
 @RestController
 public class AccountingApiController {
@@ -90,6 +94,12 @@ public class AccountingApiController {
 	PrescriptionToMedicalRepository prescriptionToMedicalRepository;
 	@Autowired
 	GetPharmacyPrescriptionReceiptRepository getPharmacyPrescriptionReceiptRepository;
+	
+	@Autowired
+	SendFcmNotificationService sendFcmNotificationService;
+	
+	@Autowired
+	DoctorDetailsRepository doctorDetailsRepository;
 	
 	@RequestMapping(value = { "/insertBrokerageDetails" }, method = RequestMethod.POST)
 	public @ResponseBody BrokerageDetails insertBrokerageDetails(@RequestBody BrokerageDetails brokerageDetails) {
@@ -265,6 +275,11 @@ public class AccountingApiController {
 		 
 		try{
 			DoctorConsultingReceipt doctorConsultingReceiptRes=doctorConsultingReceiptRepository.save(doctorConsultingReceipt);
+			
+			DoctorDetails doctorDetails=doctorDetailsRepository.findByDoctorId(doctorConsultingReceiptRes.getDoctorId());
+			
+			String paymentReceiveMessage="Dr. "+doctorDetails.getfName()+" "+doctorDetails.getlName()+" your consulting payment done.";
+			sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "BIONISCHE", paymentReceiveMessage, DateConverter.currentDateAndTime(),9);
 			return doctorConsultingReceiptRes;
 		}
 		catch (Exception e) {

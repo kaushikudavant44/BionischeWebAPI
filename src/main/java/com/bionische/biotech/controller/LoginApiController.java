@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.DoctorLogin;
 import com.bionische.biotech.model.DoctorSubscriptionDetails;
+import com.bionische.biotech.model.FCMNotificationDetails;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.LabLogin;
@@ -77,6 +79,9 @@ public class LoginApiController {
 				patientLogin.setPatientDetails(patientDetails);
 				info.setError(false);
 				info.setMessage("Login Successfull");
+				
+				
+				
 				patientLogin.setInfo(info);
 				Info suscriptionInfo=new Info();
 				suscriptionInfo.setError(true);
@@ -364,6 +369,28 @@ System.out.println(e.getMessage());
 	}
 	 return info;
 	 
+	}
+	
+	
+	@RequestMapping(value = { "/updateFCMToken" }, method = RequestMethod.POST)
+	public @ResponseBody Info updateFCMToken(@RequestBody FCMNotificationDetails fcmNotificationDetails) {
+		Info info=new Info();
+		
+		
+		/**
+		 * If userType=1 is for patient token update and 
+		 * userType=2 is for doctor token update.
+		 */
+				
+		
+		if(fcmNotificationDetails.getUserType()==1){
+		patientDetailsRepository.updateDoctorTokenAsString2ByPatientId(fcmNotificationDetails.getUserId(),fcmNotificationDetails.getToken());
+		}else {
+		doctorDetailsRepository.updateDoctorTokenAslocationByDoctorId(fcmNotificationDetails.getUserId(),fcmNotificationDetails.getToken());
+		}
+		return info;
+		
+		
 	}
 	
 	

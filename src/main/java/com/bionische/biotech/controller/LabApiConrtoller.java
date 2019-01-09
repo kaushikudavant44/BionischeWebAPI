@@ -38,6 +38,7 @@ import com.bionische.biotech.model.LabSubscriptionDetails;
 import com.bionische.biotech.model.LabTests;
 import com.bionische.biotech.model.LabTestsList;
 import com.bionische.biotech.model.PateintReportPaymentDetails;
+import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.PatientNotification;
 import com.bionische.biotech.model.ReportDetails;
 import com.bionische.biotech.model.SharingReportWithDoc;
@@ -60,16 +61,21 @@ import com.bionische.biotech.repository.LabNotificationRepository;
 import com.bionische.biotech.repository.LabSubscriptionDetailsRepository;
 import com.bionische.biotech.repository.LabTestsRepository;
 import com.bionische.biotech.repository.PateintReportPaymentDetailsRepository;
+import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.PatientNotificationRepository;
 import com.bionische.biotech.repository.ReportDetailsRepository;
 import com.bionische.biotech.repository.SharingReportWithDocRepository;
 import com.bionische.biotech.repository.TransactionDetailsRepository;
 import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.SendEMailService;
+import com.bionische.biotech.service.SendFcmNotificationService;
 
 @RestController
 public class LabApiConrtoller {
 
+	@Autowired
+	SendFcmNotificationService sendFcmNotificationService;
+	
 	@Autowired
 	LabDetailsRepository labDetailsRepository;
 	
@@ -117,6 +123,9 @@ public class LabApiConrtoller {
 
 	@Autowired
 	PateintReportPaymentDetailsRepository pateintReportPaymentDetailsRepository;
+	
+	@Autowired
+	PatientDetailsRepository patientDetailsRepository;
 
 @Autowired
 LabTestsRepository labTypesRepository;
@@ -455,7 +464,7 @@ CreateDirectoryService createDirectoryService;
 			GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByLabAppointId(appId);
 			 
 			sendEMailService.sendMail("Your Appointment Is edited!!", "Your Appointment edited!!" , getPatientContactDetailsById.getEmail());
-		
+			PatientDetails patientDetails=patientDetailsRepository.findByPatientId(getPatientContactDetailsById.getPatientId());
 			patientNotification.setPatientId(getPatientContactDetailsById.getPatientId());
 			patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been confirmed for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime());					
 			patientNotification.setStatus(0);
@@ -463,6 +472,12 @@ CreateDirectoryService createDirectoryService;
 			patientNotification.setString2("lab");
 			patientNotification.setInt1(getLabAppointment.getLabId());
 			patientNotificationRepository.save(patientNotification);
+			
+			String confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been confirmed for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
+			
+			System.out.println("token="+patientDetails.getString2());
+			sendFcmNotificationService.notifyUser(patientDetails.getString2(), "BIONISCHE", confirmAppointmentNotification, DateConverter.currentDateAndTime(),12);
+			System.out.println("Appointment edited Successfully");
 			info.setError(false);
 			info.setMessage("Appointment edited Successfully");
 		}
@@ -796,18 +811,20 @@ public @ResponseBody ReportDetails insertPatientReport(@RequestBody ReportDetail
 		patientReport=reportDetailsRepository.save(reportDetails);
 		
 	System.out.println(patientReport.toString());
-	
+	GetPatientContactDetailsById getPatientContactDetailsById=null;
+	LabTests labTests=null;
+	LabDetails labDetails=null;
 	if(patientReport!=null)
 	{
-		LabDetails LabDetails = labDetailsRepository.findByLabId(patientReport.getLabId());
-		LabTests LabTests = labTestsRepository.getTestDetailsByTestId(patientReport.getLabTestId());
+		 labDetails = labDetailsRepository.findByLabId(patientReport.getLabId());
+		labTests = labTestsRepository.getTestDetailsByTestId(patientReport.getLabTestId());
 		PatientNotification patientNotification = new PatientNotification();
-		GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsById(patientReport.getPatientId());
+		 getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsById(patientReport.getPatientId());
 		 
 			sendEMailService.sendMail("Your  Report has been Successfully Uploaded", "Your  Report has been Successfully Uploaded", getPatientContactDetailsById.getEmail());
 		
 			patientNotification.setPatientId(getPatientContactDetailsById.getPatientId());
-			patientNotification.setNotification(LabDetails.getLabName()+" has sent your "+LabTests.getLabTestName()+" report on DATE "+patientReport.getReportDate()+" and TIME "+patientReport.getReportTime());					
+			patientNotification.setNotification(labDetails.getLabName()+" has sent your "+labTests.getLabTestName()+" report on DATE "+patientReport.getReportDate()+" and TIME "+patientReport.getReportTime());					
 			patientNotification.setStatus(0);
 			patientNotification.setString1("Lab Report");
 			patientNotification.setString2("lrating");
@@ -820,6 +837,16 @@ public @ResponseBody ReportDetails insertPatientReport(@RequestBody ReportDetail
 		info.setError(true);
 		info.setMessage("Failed to insert");
 	}
+	PatientDetails patientDetails=patientDetailsRepository.findByPatientId(getPatientContactDetailsById.getPatientId());
+	if(patientReport.getInt2()==0) {
+		
+		String payReportChargeNot=patientDetails.getfName()+" "+patientDetails.getlName()+" payment request for lab report";
+		sendFcmNotificationService.notifyUser(patientDetails.getString2(), "BIONISCHE", payReportChargeNot, DateConverter.currentDateAndTime(),17);
+		}else if(patientReport.getInt2()==1){
+		
+			String reportReadyNot= patientDetails.getfName()+" "+patientDetails.getlName()+", "+labDetails.getLabName()+" has sent your "+labTests.getLabTestName()+" report on DATE "+patientReport.getReportDate()+" and TIME "+patientReport.getReportTime();
+			sendFcmNotificationService.notifyUser(patientDetails.getString2(), "BIONISCHE", reportReadyNot, DateConverter.currentDateAndTime(),19);
+		}
 }
 	
 	catch (Exception e) {

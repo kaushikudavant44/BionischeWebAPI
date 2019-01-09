@@ -12,9 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.adminpanel3d.model.VaccinationDetailss;
+import com.bionische.biotech.adminpanel3d.repository.VaccinationDetailssRepository;
 import com.bionische.biotech.model.SavePatientVaccination;
 import com.bionische.biotech.model.VaccinationAgeDetails;
 import com.bionische.biotech.model.VaccinationDetails;
+import com.bionische.biotech.model.VaccinationDisplay;
 import com.bionische.biotech.patientpasthistory.model.MenstrualObstetricHistory;
 import com.bionische.biotech.patientpasthistory.model.PatientAllPersonalHistory;
 import com.bionische.biotech.patientpasthistory.model.PatientFamilyHistory;
@@ -60,7 +63,9 @@ public class BabyVaxinationApiController {
 	@Autowired
 	private VaccinationAgeDetailsRepository vaccinationAgeDetailsRepository;
 	
- 
+	@Autowired
+	VaccinationDetailssRepository vaccinationDetailssRepository;
+	
 	@RequestMapping(value = { "/insertBabyVaxinationDetails" }, method = RequestMethod.POST)
 	public @ResponseBody VaxinationDetails insertBabyVaxinationDetails(@RequestBody VaxinationDetails vaxinationDetails)
 	{
@@ -208,5 +213,50 @@ public class BabyVaxinationApiController {
 	 
 	}
 	
+	
+	
+	@RequestMapping(value = { "/getVaccinationForMobileApplicationDoctor" }, method = RequestMethod.GET)
+	public @ResponseBody List<VaccinationDisplay> getVaccinationForMobile()
+	
+	{
+		VaccinationDisplay vaccinationDisplay = null;
+		List<VaccinationAgeDetails> vaccinationAgeDetailsList=new ArrayList<VaccinationAgeDetails>();
+		 List<VaccinationDetailss> vaccinationDetailsList=new ArrayList<>();
+		 List<VaccinationDisplay> vaccinationDisplayList=new ArrayList<>();
+	 try {
+		 vaccinationAgeDetailsList=vaccinationAgeDetailsRepository.findAll();
+		 for(int i=0;i<vaccinationAgeDetailsList.size();i++) {
+			 
+			 vaccinationDisplay=new VaccinationDisplay();
+			 
+			 vaccinationDisplay.setVaxinationAgeName(vaccinationAgeDetailsList.get(i).getVaxinationAgeName());
+			 vaccinationDisplay.setVaxinationAgeId(vaccinationAgeDetailsList.get(i).getVaxinationAgeId());
+			 vaccinationDisplay.setInt1(vaccinationAgeDetailsList.get(i).getInt1());
+			 vaccinationDisplay.setInt2(vaccinationAgeDetailsList.get(i).getInt2());
+			 vaccinationDisplay.setString1(vaccinationAgeDetailsList.get(i).getString1());
+			 vaccinationDisplay.setString2(vaccinationAgeDetailsList.get(i).getString2());
+			 
+			 if(vaccinationAgeDetailsList.get(i).getVaxinationAgeId()!=0) {
+				 
+				vaccinationDetailsList=vaccinationDetailssRepository.findByVaccinationAgeId(vaccinationAgeDetailsList.get(i).getVaxinationAgeId());
+				 
+				 vaccinationDisplay.setVaccinationDetailsList(vaccinationDetailsList);
+			 }
+			 
+			 
+			 vaccinationDisplayList.add(vaccinationDisplay);
+			
+			
+		 }
+		 
+		 System.out.println(vaccinationDisplayList.toString());
+		
+	 }
+	 catch (Exception e) {
+		 	System.out.println(e.getMessage());
+	}
+	 return vaccinationDisplayList;
+	 
+	}       
 	
 }

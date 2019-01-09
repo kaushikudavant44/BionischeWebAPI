@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.model.AppointmentDetails;
 import com.bionische.biotech.model.AppointmentList;
 import com.bionische.biotech.model.AppointmentTime;
@@ -111,12 +112,16 @@ import com.bionische.biotech.repository.StateRepository;
 import com.bionische.biotech.repository.TermsAndConditionsRepository;
 import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.SendEMailService;
+import com.bionische.biotech.service.SendFcmNotificationService;
 import com.bionische.biotech.service.SendTextMessageService;
 
  
 
 @RestController
 public class RestApiController {
+	
+	@Autowired
+	SendFcmNotificationService sendFcmNotificationService;
 	
 	@Autowired
 	FreequantlyUsedMedicinesRepository freequantlyUsedMedicinesRepository;
@@ -656,7 +661,9 @@ System.out.println(e.getMessage());
 				
 				
 				sendEMailService.sendMail("Appointment Notification", MESSAGE , getPatientContactDetailsById.getEmail());
-			
+				
+				String appointmentNotification=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+" is booked e-consult appointment on DATE "+appointmentDetailsRes.getDate()+" and TIME "+appointmentTime.getTime();
+				sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "BIONISCHE", appointmentNotification, DateConverter.currentDateAndTime(),4);
 				
 			}catch(Exception e) {
 				e.getMessage();
@@ -1003,6 +1010,11 @@ System.out.println(e.getMessage());
 		Info info=new Info();
 		try {
 			int res=appointmentDetailsRepository.cancelDoctorAppointmentByPatient(appId); 
+			
+			AppointmentDetails appointmentDetails=appointmentDetailsRepository.findByAppointId(appId);
+			
+			DoctorDetails doctorDetails=doctorDetailsRepository.findByDoctorId(appointmentDetails.getDoctorId());
+			
 			if(res>0)
 			{
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -1021,6 +1033,13 @@ System.out.println(e.getMessage());
 				doctorNotification.setString1("Appointment Canceled");
 				doctorNotification.setInt1(getPatientContactDetailsById.getPatientId());
 				doctorNotificationRepository.save(doctorNotification);
+				
+				
+				String mobileNotification="Appointment has been canceled by "+getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+" of date "
+						+appointmentDetails.getDate();
+				
+				
+				sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "BIONISCHE", mobileNotification, DateConverter.currentDateAndTime(),5);
 				
 				info.setMessage(MESSAGE);
 				info.setError(false);
@@ -1182,7 +1201,8 @@ System.out.println(e.getMessage());
 					MESSAGE="CONFIRMED Appointment ID: "+appId+" for date "+date+" at "+appointmentTime.getTime()+" with Dr. "+getDoctorDetails.getDoctorfName()+" "+getDoctorDetails.getDoctormName()+" "+getDoctorDetails.getDoctorlName()+". "+hospitalDetails.getHospitalName()+", "+hospitalDetails.getAddress()+", Ph: "+hospitalDetails.getContactNo();
 					sendTextMessageService.sendTextSms(MESSAGE, getPatientContactDetailsById.getContactNo());
 					sendEMailService.sendMail("Your Appointment Is edited!!",MESSAGE , getPatientContactDetailsById.getEmail());			
-
+					
+					PatientDetails patientDetails=patientDetailsRepository.findByPatientId(getPatientContactDetailsById.getPatientId());
 					patientNotification.setPatientId(getPatientContactDetailsById.getPatientId());
 					patientNotification.setNotification("Your Appointment has been confirmed by Dr."+getAppointmentDetails.getDoctorName()+" on DATE "+getAppointmentDetails.getDate()+" and TIME "+getAppointmentDetails.getTime());					
 					patientNotification.setStatus(0);
@@ -1191,6 +1211,9 @@ System.out.println(e.getMessage());
 					patientNotification.setInt1(getAppointmentDetails.getDoctorId());
 					patientNotificationRepository.save(patientNotification);
 					
+					String confirmAppointmentNotification="Your Appointment has been confirmed by Dr."+getAppointmentDetails.getDoctorName()+" on DATE "+getAppointmentDetails.getDate()+" and TIME "+getAppointmentDetails.getTime();
+					
+					sendFcmNotificationService.notifyUser(patientDetails.getString2(), "BIONISCHE", confirmAppointmentNotification, DateConverter.currentDateAndTime(),11);
 					info.setMessage("Your Appointment Change Successfully!!");
 					info.setError(false);
 				}
@@ -1444,6 +1467,7 @@ System.out.println(e.getMessage());
 						else
 						{
 						String reportId=","+sharingReportWithDoc.getReportId();	
+						DoctorDetails doctorDetails=doctorDetailsRepository.findByDoctorId(sharingReportWithDocRes.getDoctorId());
 					    int result=sharingReportWithDocRepository.updateReport(reportId,sharingReportWithDoc.getPatientId(),sharingReportWithDoc.getDoctorId());	
 					    if(result>0)
 						{
@@ -1455,6 +1479,8 @@ System.out.println(e.getMessage());
 							doctorNotification.setString1("Patient Shre Report");
 							doctorNotification.setInt1(sharingReportWithDocRes.getPatientId());
 							doctorNotificationRepository.save(doctorNotification);
+							String reportNotification="Pateint  id "+sharingReportWithDocRes.getPatientId()+" shared his/her reports with you.";
+							sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "BIONISCHE", reportNotification, DateConverter.currentDateAndTime(), 7);
 							info.setError(false);
 							info.setMessage("success");
 						}
