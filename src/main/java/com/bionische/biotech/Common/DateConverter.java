@@ -2,6 +2,7 @@ package com.bionische.biotech.Common;
 
  
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -81,6 +82,20 @@ public static java.sql.Date convertToSqlDate(String date) {
 
 	}
 
+public static String currentDateAndTime() {
+
+	DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	Date date = new Date();
+	
+	String currentDateAndTime=dateFormat.format(date);
+	System.out.println(dateFormat.format(date)); //2016/11/16 12:08:43
+
+	
+	return currentDateAndTime;
+	
+	
+	
+}
 	
 	
 
