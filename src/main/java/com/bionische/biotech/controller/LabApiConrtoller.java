@@ -73,7 +73,7 @@ import com.bionische.biotech.service.SendFcmNotificationService;
 @RestController
 public class LabApiConrtoller {
 
-	@Autowired
+
 	SendFcmNotificationService sendFcmNotificationService;
 	
 	@Autowired
@@ -476,7 +476,12 @@ CreateDirectoryService createDirectoryService;
 			String confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been confirmed for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
 			
 			System.out.println("token="+patientDetails.getString2());
+			if(patientDetails.getInt1()==0) {
 			sendFcmNotificationService.notifyUser(patientDetails.getString2(), "BIONISCHE", confirmAppointmentNotification, DateConverter.currentDateAndTime(),12);
+			}else if(patientDetails.getInt1()==1) {
+				
+				sendFcmNotificationService.notifyiOSUser(patientDetails.getString2(), "BIONISCHE", confirmAppointmentNotification, DateConverter.currentDateAndTime(),12);	
+			}
 			System.out.println("Appointment edited Successfully");
 			info.setError(false);
 			info.setMessage("Appointment edited Successfully");
@@ -841,12 +846,23 @@ public @ResponseBody ReportDetails insertPatientReport(@RequestBody ReportDetail
 	if(patientReport.getInt2()==0) {
 		
 		String payReportChargeNot=patientDetails.getfName()+" "+patientDetails.getlName()+" payment request for lab report";
+		if(patientDetails.getInt1()==0) {
 		sendFcmNotificationService.notifyUser(patientDetails.getString2(), "BIONISCHE", payReportChargeNot, DateConverter.currentDateAndTime(),17);
-		}else if(patientReport.getInt2()==1){
+		}else if(patientDetails.getInt1()==1) {
+			sendFcmNotificationService.notifyiOSUser(patientDetails.getString2(), "BIONISCHE", payReportChargeNot, DateConverter.currentDateAndTime(),17);	
+		}
+	
+	}else if(patientReport.getInt2()==1){
 		
 			String reportReadyNot= patientDetails.getfName()+" "+patientDetails.getlName()+", "+labDetails.getLabName()+" has sent your "+labTests.getLabTestName()+" report on DATE "+patientReport.getReportDate()+" and TIME "+patientReport.getReportTime();
+
+			if(patientDetails.getInt1()==0) {
 			sendFcmNotificationService.notifyUser(patientDetails.getString2(), "BIONISCHE", reportReadyNot, DateConverter.currentDateAndTime(),19);
-		}
+			}else if(patientDetails.getInt1()==1) {
+				sendFcmNotificationService.notifyiOSUser(patientDetails.getString2(), "BIONISCHE", reportReadyNot, DateConverter.currentDateAndTime(),19);
+			}
+			
+			}
 }
 	
 	catch (Exception e) {

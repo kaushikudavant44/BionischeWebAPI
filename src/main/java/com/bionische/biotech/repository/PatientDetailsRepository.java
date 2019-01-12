@@ -71,5 +71,10 @@ public interface PatientDetailsRepository extends JpaRepository<PatientDetails, 
 	@Query(value=" SELECT * from patient_details where email=:email AND del_status=0",nativeQuery=true)
 	PatientDetails getPatientEmail(@Param("email")String email);
 	
+	@Transactional
+	@Modifying
+	@Query("UPDATE PatientDetails a SET a.string2 =:token, a.int1=:deviceType WHERE a.patientId=:patientId")
+	int updatePatientTokenAsString2ByPatientId(@Param("patientId")int patientId,@Param("token")String token,@Param("deviceType")int deviceType);
+	
 	
 }

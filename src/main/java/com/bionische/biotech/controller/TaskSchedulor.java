@@ -37,7 +37,7 @@ public class TaskSchedulor {
 	@Autowired
 	DoctorDetailsRepository doctorDetailsRepository;
 
-	@Autowired
+	
 	SendFcmNotificationService sendFcmNotificationService;
 	
 	@Autowired
@@ -78,9 +78,15 @@ public class TaskSchedulor {
 				
 				String subscriptionNotification = "Dr " + doctorDetailsList.get(i).getfName() + " "
 						+ doctorDetailsList.get(i).getlName()+" your subscription is going to expire please subscribe again as early as possible if you already subscribe ignore notification.";
-
+				
+				if(doctorDetailsList.get(i).getInt1()==0) {
 				sendFcmNotificationService.notifyUser(doctorDetailsList.get(i).getLocation(), "BIONISCHE",
 						subscriptionNotification, DateConverter.currentDateAndTime(), 3);
+				}else if(doctorDetailsList.get(i).getInt1()==1) {
+				
+					sendFcmNotificationService.notifyiOSUser(doctorDetailsList.get(i).getLocation(), "BIONISCHE",
+							subscriptionNotification, DateConverter.currentDateAndTime(), 3);
+				}
 
 			}
 
@@ -118,11 +124,15 @@ public class TaskSchedulor {
 			
 		PatientDetails patientDetails=patientDetailsRepository.findByPatientId(appointmentDetailsList.get(i).getPatientId());
 		String remainderNotification=patientDetails.getfName()+" "+patientDetails.getlName()+" your doctor appointment is start is in some time. Please be on time.";
-		if(patientDetails!=null) {
+		if(patientDetails.getInt1()==0) {
 			
 			sendFcmNotificationService.notifyUser(patientDetails.getString2(), "BIONISCHE",
 					remainderNotification, DateConverter.currentDateAndTime(), 13);
 			
+		}else if(patientDetails.getInt1()==1) {
+			
+			sendFcmNotificationService.notifyiOSUser(patientDetails.getString2(), "BIONISCHE",
+					remainderNotification, DateConverter.currentDateAndTime(), 13);
 		}
 			
 		}
@@ -139,13 +149,17 @@ public class TaskSchedulor {
 				PatientDetails patientDetails=patientDetailsRepository.findByPatientId(getLabAppointmentList.get(i).getPatientId());
 				String remainderNotification=patientDetails.getfName()+" "+patientDetails.getlName()+" your lab appointment is start is in some time. Please be on time.";
 				
-				if(patientDetails!=null) {
+				if(patientDetails.getInt1()==0)  {
 					
 					sendFcmNotificationService.notifyUser(patientDetails.getString2(), "BIONISCHE",
 							remainderNotification, DateConverter.currentDateAndTime(), 14);
 					
-				}
+				}else if(patientDetails.getInt1()==1) {
 				
+					sendFcmNotificationService.notifyiOSUser(patientDetails.getString2(), "BIONISCHE",
+							remainderNotification, DateConverter.currentDateAndTime(), 14);
+				
+				}
 			}
 		}
 		

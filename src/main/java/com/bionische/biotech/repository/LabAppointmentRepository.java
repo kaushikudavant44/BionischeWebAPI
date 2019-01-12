@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bionische.biotech.model.GetLabAppointment;
 import com.bionische.biotech.model.LabAppointment;
 
 public interface LabAppointmentRepository extends JpaRepository<LabAppointment, Integer>{
@@ -44,5 +45,6 @@ public interface LabAppointmentRepository extends JpaRepository<LabAppointment, 
 	int finishedAppointments(@Param("appointId")int appointId);
 	
 	
-
+	@Query(value="SELECT a.*,t.time FROM lab_appointments a, appointment_time t WHERE a.int_1=1 AND a.lab_app_date = CURDATE() AND t.time_id IN (:timeIdList) GROUP BY lab_app_id",nativeQuery=true)
+	List<LabAppointment> findAppointmentofPatientByTimeIdList(@Param("timeIdList")List<Integer> timeIdList);
 }

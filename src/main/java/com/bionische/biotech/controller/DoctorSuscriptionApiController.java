@@ -22,7 +22,7 @@ import com.bionische.biotech.service.SendFcmNotificationService;
 @RequestMapping(value = { "/doctorSuscription" })
 public class DoctorSuscriptionApiController {
 
-	@Autowired
+
 	SendFcmNotificationService sendFcmNotificationService;
 
 	@Autowired
@@ -49,9 +49,16 @@ public class DoctorSuscriptionApiController {
 				info.setError(false);
 				info.setMessage("Doctor Suscription Insert Successfully");
 				if (doctorDetails != null) {
+					if(doctorDetails.getInt1()==0) {
 					sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "BIONISCHE",
 							subscriptionNotification, DateConverter.currentDateAndTime(), 3);
-				}
+					}else if(doctorDetails.getInt1()==1) {
+						
+						sendFcmNotificationService.notifyiOSUser(doctorDetails.getLocation(), "BIONISCHE",
+								subscriptionNotification, DateConverter.currentDateAndTime(), 3);	
+					}
+					
+					}
 			} else {
 				info.setError(true);
 				info.setMessage("Failed to insert Doctor Suscription details");

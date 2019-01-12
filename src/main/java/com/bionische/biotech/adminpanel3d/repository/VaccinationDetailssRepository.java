@@ -24,4 +24,6 @@ public interface VaccinationDetailssRepository extends JpaRepository<Vaccination
 	@Query("DELETE FROM VaccinationDetailss WHERE vaccinationId=:vaccinationId")
 	int deleteVaccinationById(@Param("vaccinationId")int vaccinationId);
 	
+	
+	List<VaccinationDetailss> findByVaccinationAgeId(@Param("vaccinationAgeId")int vaccinationAgeId);
 }

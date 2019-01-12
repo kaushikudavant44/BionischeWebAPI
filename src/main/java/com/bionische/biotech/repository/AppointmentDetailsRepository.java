@@ -22,6 +22,7 @@ List<AppointmentDetails> findByDoctorIdAndDate(int doctorId, String date);
 
 List<AppointmentDetails> findByDelStatus(int delStatus);
 
+AppointmentDetails findByAppointId(int appointId);
 
 @Query(value=" SELECT * from doctor_appointment where patient_id=:patientId AND date=:date AND del_status=0",nativeQuery=true)
 List<AppointmentDetails> getAppointmentDetailsByPatient(@Param("patientId")int patientId, @Param("date")String date);
@@ -56,6 +57,9 @@ int updateAppointmentPayment(@Param("appointId")int appointId,@Param("paymentSta
 @Modifying
 @Query("UPDATE AppointmentDetails  SET int_2 =:receiptNo WHERE appointId IN(:appointId)")
 int updateConsultingReceiptStatusAndReceiptNo(@Param("appointId")List<Integer> appointId,@Param("receiptNo")int receiptNo);
+
+@Query(value="SELECT a.*,t.time FROM doctor_appointment a, appointment_time t WHERE a.status=1 AND a.date = CURDATE() AND t.time_id IN (:timeIdList) GROUP BY a.appoint_id",nativeQuery=true)
+List<AppointmentDetails> findAppointmentsofPatients(@Param("timeIdList")List<Integer> timeIdList);
 
 
 }

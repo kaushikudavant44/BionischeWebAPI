@@ -1,7 +1,9 @@
 package com.bionische.biotech.service;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface SendFcmNotificationService {
 
 	/**
@@ -22,5 +24,7 @@ public interface SendFcmNotificationService {
 	 * @return
 	 */
 	public ResponseEntity<String> notifyUser(String deviceToken,String title, String message,String timeStamp, int notificationType);
+	
+	public ResponseEntity<String> notifyiOSUser(String deviceToken,String title, String message,String timeStamp, int notificationType);
 	
 }

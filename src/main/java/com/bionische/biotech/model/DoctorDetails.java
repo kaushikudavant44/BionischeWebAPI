@@ -113,6 +113,9 @@ public class DoctorDetails {
 	@Column(name="fees")
 	private float fees;
 	
+	@Column(name="location")
+	private String location;
+	
 	@Column(name = "create_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -127,6 +130,25 @@ public class DoctorDetails {
 	@Column(name="signature", nullable=true)
 	private String signature;
 	
+	
+	
+	
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+
 	public float getFees() {
 		return fees;
 	}
@@ -393,9 +415,12 @@ public class DoctorDetails {
 				+ profilePhoto + ", contactNo=" + contactNo + ", email=" + email + ", qualification=" + qualification
 				+ ", college=" + college + ", passingYear=" + passingYear + ", specId=" + specId + ", councilRegNo="
 				+ councilRegNo + ", councilName=" + councilName + ", delStatus=" + delStatus + ", string1=" + string1
-				+ ", string2=" + string2 + ", int1=" + int1 + ", int2=" + int2 + ", fees=" + fees + ", createDate="
-				+ createDate + ", lastModifiedDate=" + lastModifiedDate + ", signature=" + signature + "]";
+				+ ", string2=" + string2 + ", int1=" + int1 + ", int2=" + int2 + ", fees=" + fees + ", location="
+				+ location + ", createDate=" + createDate + ", lastModifiedDate=" + lastModifiedDate + ", signature="
+				+ signature + "]";
 	}
+
+	
 
 	  
 }

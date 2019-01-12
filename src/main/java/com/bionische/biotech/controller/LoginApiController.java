@@ -372,26 +372,174 @@ System.out.println(e.getMessage());
 	}
 	
 	
-	@RequestMapping(value = { "/updateFCMToken" }, method = RequestMethod.POST)
+/*	@RequestMapping(value = { "/updateFCMToken" }, method = RequestMethod.POST)
 	public @ResponseBody Info updateFCMToken(@RequestBody FCMNotificationDetails fcmNotificationDetails) {
 		Info info=new Info();
 		
 		
-		/**
+		*//**
 		 * If userType=1 is for patient token update and 
 		 * userType=2 is for doctor token update.
-		 */
+		 *//*
 				
 		
 		if(fcmNotificationDetails.getUserType()==1){
-		patientDetailsRepository.updateDoctorTokenAsString2ByPatientId(fcmNotificationDetails.getUserId(),fcmNotificationDetails.getToken());
+		//patientDetailsRepository.updateDoctorTokenAsString2ByPatientId(fcmNotificationDetails.getUserId(),fcmNotificationDetails.getToken());
 		}else {
-		doctorDetailsRepository.updateDoctorTokenAslocationByDoctorId(fcmNotificationDetails.getUserId(),fcmNotificationDetails.getToken());
+		//doctorDetailsRepository.updateDoctorTokenAslocationByDoctorId(fcmNotificationDetails.getUserId(),fcmNotificationDetails.getToken());
 		}
 		return info;
 		
 		
+	}*/
+	
+	
+	
+	@RequestMapping(value = { "/patientLoginProcessForMobileApp" }, method = RequestMethod.POST)
+	public @ResponseBody PatientLogin patientLoginProcessForMobileApp(@RequestParam("userName") String userName,@RequestParam("password") String password,@RequestParam("token") String token,@RequestParam("deviceType") int deviceType) {
+		
+		System.out.println("dttfy;"+userName);
+		PatientDetails patientDetails=new PatientDetails();
+		
+		PatientLogin patientLogin=new PatientLogin();
+		Info info=new Info();
+		
+		
+		patientDetails=patientDetailsRepository.getPatientLogin(userName);
+		if(patientDetails!=null)
+		{
+			 
+			 
+			 try {
+					MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+					messageDigest.update(password.getBytes(),0, password.length());  
+					String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+					if (hashedPass.length() < 32) {
+					   hashedPass = "0" + hashedPass; 
+					}
+					System.out.println(hashedPass);
+					System.out.println(patientDetails.getPassword());
+			if(patientDetails.getPassword().equals(hashedPass))
+			{
+				patientDetails.setPassword("");
+				patientLogin.setPatientDetails(patientDetails);
+				info.setError(false);
+				info.setMessage("Login Successfull");
+				int updatePatientTokenAndDevice=patientDetailsRepository.updatePatientTokenAsString2ByPatientId(patientDetails.getPatientId(),token,deviceType);
+				
+				
+				patientLogin.setInfo(info);
+				Info suscriptionInfo=new Info();
+				suscriptionInfo.setError(true);
+				 if(patientSuscriptionDetailsRepository.findByPatientIdAndStatus(patientDetails.getPatientId(), 1)!=null) {
+				
+					suscriptionInfo.setError(false);
+					suscriptionInfo.setMessage("Valid Patient");
+				 }
+				 else {
+					 suscriptionInfo.setError(true);
+						suscriptionInfo.setMessage("Patient payment Not Update yet");
+				 }
+			}
+			else{
+				info.setError(true);
+				info.setMessage("Please enter valid credential");
+				patientLogin.setInfo(info);
+			}
+			 }catch (Exception e) {
+				System.out.println(e.getMessage());// TODO: handle exception
+			}
+		}
+		else {
+			info.setError(true);
+			info.setMessage("Patient Not Register");
+			patientLogin.setInfo(info);
+		}
+ 
+		
+		
+		System.out.println("res "+patientLogin.toString());
+		return patientLogin;
 	}
 	
+	@RequestMapping(value = { "/doctorLoginProcessForMobileApp" }, method = RequestMethod.POST)
+	public @ResponseBody DoctorLogin doctorLoginProcessForMobileApp(@RequestParam("userName") String userName,@RequestParam("password") String password,@RequestParam("token")String token,@RequestParam("deviceType")int deviceType) {
+		System.out.println("hbd:"+userName);
+		
+		DoctorDetails doctorDetails=new DoctorDetails(); 
+		
+		DoctorLogin doctorLogin=new DoctorLogin();
+		Info info=new Info();
+		try {
+		doctorDetails=doctorDetailsRepository.getLoginUserName(userName);
+		System.out.println(userName+" Password  "+password+"   List  "+doctorDetails.toString());
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		System.out.println(e.getMessage());	// TODO: handle exception
+		}
+		if(doctorDetails!=null)
+		{
+			 
+			//patientDetails=patientDetailsRepository.findByUserNameAndPassword(userName, password);
+			System.out.println(userName+" Password  "+password+"   List  "+doctorDetails.toString());
+			 try {
+			MessageDigest messageDigest = MessageDigest.getInstance("MD5");  
+			messageDigest.update(password.getBytes(),0, password.length());  
+			String hashedPass = new BigInteger(1,messageDigest.digest()).toString(16);  
+			if (hashedPass.length() < 32) {
+			   hashedPass = "0" + hashedPass; 
+			}
+			System.out.println(hashedPass);
+			if(doctorDetails.getPassword().equals(hashedPass))
+			{
+				doctorDetails.setPassword("");
+				doctorLogin.setDoctorDetails(doctorDetails);
+				info.setError(false);
+				info.setMessage("Login Successfull");
+				
+				int updateTokenAndDevice=doctorDetailsRepository.updateDoctorTokenAslocationByDoctorId(doctorDetails.getDoctorId(),token,deviceType);
+				doctorLogin.setInfo(info);
+				Info doctorSuscriptionInfo =new Info();
+				doctorSuscriptionInfo.setError(true);
+				DoctorSubscriptionDetails doctorSubscriptionDetailsRes=doctorSubscriptionDetailsRepository.findByPackageExpDateGreaterThanEqualAndDoctorIdAndTxnStatus(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), doctorDetails.getDoctorId(),1);
+				if(doctorSubscriptionDetailsRes!=null)
+				{
+					doctorSuscriptionInfo.setError(false);
+					doctorSuscriptionInfo.setMessage(doctorSubscriptionDetailsRes.getPackageExpDate());
+					doctorLogin.setDoctorSuscriptionInfo(doctorSuscriptionInfo);
+				}
+				else
+				{
+					doctorSuscriptionInfo.setError(true);
+					doctorSuscriptionInfo.setMessage("Doctor Suscription is pendding");
+					doctorLogin.setDoctorSuscriptionInfo(doctorSuscriptionInfo);
+				}
+
+			
+			
+			
+			}
+			else{
+				info.setError(true);
+				info.setMessage("Please enter valid credential");
+				doctorLogin.setInfo(info);
+			}
+			 }
+			 catch (Exception e) {
+				System.out.println(e.getMessage());// TODO: handle exception
+			}
+		}
+		else {
+			info.setError(true);
+			info.setMessage("Doctor Not Register");
+			doctorLogin.setInfo(info);
+		}
+ 
+		
+		
+		
+		return doctorLogin;
+	}
 	
 }

@@ -153,7 +153,7 @@ public class AdminPanelController {
 	@Autowired
 	GetPackageOffersRepository getPackageOffersRepository;
 	
-	@Autowired
+	
 	SendFcmNotificationService sendFcmNotificationService;
 	/*
 	 * 
@@ -749,8 +749,18 @@ public class AdminPanelController {
 			 {
 				 info.setError(false);
 				 info.setMessage("Doctor DelStatus Update Successfully");
+				 
+				 if(doctorDetails.getInt1()==0) {
 				 sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "Bionische", "Your Verification Completed. Welcome to Bionische", DateConverter.currentDateAndTime(),1);
-			 }
+				 } else if(doctorDetails.getInt1()==1) {
+					 
+					 sendFcmNotificationService.notifyiOSUser(doctorDetails.getLocation(), "Bionische", "Your Verification Completed. Welcome to Bionische", DateConverter.currentDateAndTime(),1);
+					 
+				 }
+				 
+				 
+				 
+			}
 			 else 
 			 {
 				 info.setError(true);
@@ -773,8 +783,16 @@ public class AdminPanelController {
 			 {
 				 info.setError(false);
 				 info.setMessage("Doctor DelStatus Update Successfully");
+				 
+				 if(doctorDetails.getInt1()==0) {
 				 sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "Bionische", msg, DateConverter.currentDateAndTime(),2);
-			 }
+				 }else if(doctorDetails.getInt1()==1) {
+					 
+					 sendFcmNotificationService.notifyiOSUser(doctorDetails.getLocation(), "Bionische", msg, DateConverter.currentDateAndTime(),2); 
+				 }
+				 
+				 
+				}
 			 else 
 			 {
 				 info.setError(true);

@@ -42,5 +42,8 @@ int updateAvailableTime(@Param("docAvailableId")int docAvailableId, @Param("date
 
 	DocAvailableTime findByDoctorIdAndDateAndHospitalId(int doctorId, String date, int hospitalId);
 	
+	@Query(value="SELECT d.doc_available_time_id, d.doctor_id,d.del_status,d.hospital_id,d.available_time,d.no_of_patient,h.hospital_name AS DATE FROM doc_available_time d, hospital_details h, doctor_hospital_details dh " + 
+			"WHERE d.doctor_id=dh.doctor_id AND DATE=CURDATE() AND h.hospital_id=d.hospital_id GROUP BY d.doc_available_time_id",nativeQuery=true)
+	List<DocAvailableTime> getAvailableTimeofDoctorByCurDate();
 	
 }

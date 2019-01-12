@@ -120,7 +120,7 @@ import com.bionische.biotech.service.SendTextMessageService;
 @RestController
 public class RestApiController {
 	
-	@Autowired
+
 	SendFcmNotificationService sendFcmNotificationService;
 	
 	@Autowired
@@ -663,8 +663,14 @@ System.out.println(e.getMessage());
 				sendEMailService.sendMail("Appointment Notification", MESSAGE , getPatientContactDetailsById.getEmail());
 				
 				String appointmentNotification=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+" is booked e-consult appointment on DATE "+appointmentDetailsRes.getDate()+" and TIME "+appointmentTime.getTime();
-				sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "BIONISCHE", appointmentNotification, DateConverter.currentDateAndTime(),4);
 				
+				if(doctorDetails.getInt1()==0) {
+				sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "BIONISCHE", appointmentNotification, DateConverter.currentDateAndTime(),4);
+				}else if(doctorDetails.getInt1()==0) {
+				
+					sendFcmNotificationService.notifyiOSUser(doctorDetails.getLocation(), "BIONISCHE", appointmentNotification, DateConverter.currentDateAndTime(),4);
+					
+				}
 			}catch(Exception e) {
 				e.getMessage();
 			}				
@@ -1038,9 +1044,13 @@ System.out.println(e.getMessage());
 				String mobileNotification="Appointment has been canceled by "+getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+" of date "
 						+appointmentDetails.getDate();
 				
-				
+				if(doctorDetails.getInt1()==0) {
 				sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "BIONISCHE", mobileNotification, DateConverter.currentDateAndTime(),5);
+				}else if(doctorDetails.getInt1()==1) {
 				
+					sendFcmNotificationService.notifyiOSUser(doctorDetails.getLocation(), "BIONISCHE", mobileNotification, DateConverter.currentDateAndTime(),5);
+					
+				}
 				info.setMessage(MESSAGE);
 				info.setError(false);
 			}
@@ -1212,8 +1222,13 @@ System.out.println(e.getMessage());
 					patientNotificationRepository.save(patientNotification);
 					
 					String confirmAppointmentNotification="Your Appointment has been confirmed by Dr."+getAppointmentDetails.getDoctorName()+" on DATE "+getAppointmentDetails.getDate()+" and TIME "+getAppointmentDetails.getTime();
-					
+					if(patientDetails.getInt1()==0) {
 					sendFcmNotificationService.notifyUser(patientDetails.getString2(), "BIONISCHE", confirmAppointmentNotification, DateConverter.currentDateAndTime(),11);
+					}else if(patientDetails.getInt1()==1) {
+					
+						sendFcmNotificationService.notifyiOSUser(patientDetails.getString2(), "BIONISCHE", confirmAppointmentNotification, DateConverter.currentDateAndTime(),11);
+					}
+					
 					info.setMessage("Your Appointment Change Successfully!!");
 					info.setError(false);
 				}
@@ -1480,7 +1495,13 @@ System.out.println(e.getMessage());
 							doctorNotification.setInt1(sharingReportWithDocRes.getPatientId());
 							doctorNotificationRepository.save(doctorNotification);
 							String reportNotification="Pateint  id "+sharingReportWithDocRes.getPatientId()+" shared his/her reports with you.";
+							
+							if(doctorDetails.getInt1()==0) {
 							sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "BIONISCHE", reportNotification, DateConverter.currentDateAndTime(), 7);
+							}else if(doctorDetails.getInt1()==1) {
+								
+								sendFcmNotificationService.notifyiOSUser(doctorDetails.getLocation(), "BIONISCHE", reportNotification, DateConverter.currentDateAndTime(), 7);
+							}
 							info.setError(false);
 							info.setMessage("success");
 						}

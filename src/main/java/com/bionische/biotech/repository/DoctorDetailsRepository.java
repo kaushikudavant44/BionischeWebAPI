@@ -9,8 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bionische.biotech.model.DoctorDetails;
-import com.bionische.biotech.model.DoctorDetailsInformation;
-import com.bionische.biotech.model.PatientDetails;
 
  
 
@@ -69,6 +67,13 @@ public interface DoctorDetailsRepository extends JpaRepository<DoctorDetails, Lo
 	@Query(value=" SELECT doctor_id from doctor_appointment where appoint_id=:appointId",nativeQuery=true)
 	int getDoctorId( @Param("appointId")int appointId);
 	
+	@Transactional
+	@Modifying
+	@Query("UPDATE DoctorDetails a SET a.location =:token, a.int1=:deviceType WHERE a.doctorId=:doctorId")
+	int updateDoctorTokenAslocationByDoctorId(@Param("doctorId")int doctorId,@Param("token")String token,@Param("deviceType")int deviceType);
 	
+	
+	@Query(value="SELECT d.* FROM doctor_details d, t_doctor_subscription_details t WHERE t.package_exp_date BETWEEN CURDATE() AND CURDATE()+5 AND d.doctor_id=t.doctor_id",nativeQuery=true)
+	List<DoctorDetails> getDoctorOfExpiringSubscription();
 	
 }

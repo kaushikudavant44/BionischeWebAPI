@@ -95,7 +95,7 @@ public class AccountingApiController {
 	@Autowired
 	GetPharmacyPrescriptionReceiptRepository getPharmacyPrescriptionReceiptRepository;
 	
-	@Autowired
+
 	SendFcmNotificationService sendFcmNotificationService;
 	
 	@Autowired
@@ -279,7 +279,14 @@ public class AccountingApiController {
 			DoctorDetails doctorDetails=doctorDetailsRepository.findByDoctorId(doctorConsultingReceiptRes.getDoctorId());
 			
 			String paymentReceiveMessage="Dr. "+doctorDetails.getfName()+" "+doctorDetails.getlName()+" your consulting payment done.";
+			
+			if(doctorDetails.getInt1()==0) {
 			sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "BIONISCHE", paymentReceiveMessage, DateConverter.currentDateAndTime(),9);
+			}else if(doctorDetails.getInt1()==1){
+				
+				sendFcmNotificationService.notifyiOSUser(doctorDetails.getLocation(), "BIONISCHE", paymentReceiveMessage, DateConverter.currentDateAndTime(),9);
+			}
+			
 			return doctorConsultingReceiptRes;
 		}
 		catch (Exception e) {
