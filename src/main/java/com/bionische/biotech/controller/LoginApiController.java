@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.DoctorLogin;
 import com.bionische.biotech.model.DoctorSubscriptionDetails;
-import com.bionische.biotech.model.FCMNotificationDetails;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.LabLogin;
