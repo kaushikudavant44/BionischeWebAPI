@@ -6,12 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bionische.biotech.model.DoctorDetails;
 
  
-
+@Repository
 public interface DoctorDetailsRepository extends JpaRepository<DoctorDetails, Long>{
 
 	DoctorDetails save(DoctorDetails doctorDetails);
@@ -69,7 +70,7 @@ public interface DoctorDetailsRepository extends JpaRepository<DoctorDetails, Lo
 	
 	@Transactional
 	@Modifying
-	@Query("UPDATE DoctorDetails a SET a.location =:token, a.int1=:deviceType WHERE a.doctorId=:doctorId")
+	@Query("UPDATE DoctorDetails  SET  location =:token,  int1=:deviceType WHERE  doctorId=:doctorId")
 	int updateDoctorTokenAslocationByDoctorId(@Param("doctorId")int doctorId,@Param("token")String token,@Param("deviceType")int deviceType);
 	
 	
