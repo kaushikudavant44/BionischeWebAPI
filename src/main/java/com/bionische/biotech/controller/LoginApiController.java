@@ -447,13 +447,18 @@ public class LoginApiController {
 				}
 
 				if (doctorDetails.getPassword().equals(hashedPass)) {
-					doctorDetails.setPassword("");
-					doctorLogin.setDoctorDetails(doctorDetails);
-					System.out.println("doctorLogin sdfghjk");
-					info.setError(false);
-					info.setMessage("Login Successfull");
+					
 					updateTokenAndDeviceTypeService.updateDoctorTokenAslocationByDoctorId(doctorDetails.getDoctorId(),
 							token, deviceType);
+					doctorDetails.setPassword("");
+					doctorLogin.setDoctorDetails(doctorDetails);
+					
+					info.setError(false);
+					info.setMessage("Login Successfull");
+					//System.out.println("doctorLogin kaushik");
+					
+					
+					//System.out.println("doctorLoginxscsc ram");
 					doctorLogin.setInfo(info);
 					Info doctorSuscriptionInfo = new Info();
 					doctorSuscriptionInfo.setError(true);
