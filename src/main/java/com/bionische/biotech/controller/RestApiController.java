@@ -43,6 +43,7 @@ import com.bionische.biotech.model.GetHospitalClinicByDoctorIdAndAvailDate;
 import com.bionische.biotech.model.GetLabAppointment;
 import com.bionische.biotech.model.GetLabRatingReview;
 import com.bionische.biotech.model.GetPatientContactDetailsById;
+import com.bionische.biotech.model.GetPatientDetailsForEdit;
 import com.bionische.biotech.model.GetPatientReviews;
 import com.bionische.biotech.model.GetRatingCount;
 import com.bionische.biotech.model.GetUsersCount;
@@ -89,6 +90,7 @@ import com.bionische.biotech.repository.GetHospitalClinicByDoctorIdAndAvailDateR
 import com.bionische.biotech.repository.GetLabAppointmentRrepository;
 import com.bionische.biotech.repository.GetLabRatingReviewRepository;
 import com.bionische.biotech.repository.GetPatientContactDetailsByIdRepository;
+import com.bionische.biotech.repository.GetPatientDetailsForEditRepository;
 import com.bionische.biotech.repository.GetRatingCountRepository;
 import com.bionische.biotech.repository.GetUsersCountRepository;
 import com.bionische.biotech.repository.HospitalDetailsRepository;
@@ -120,7 +122,9 @@ import com.bionische.biotech.service.SendTextMessageService;
 @RestController
 public class RestApiController {
 	
-
+	@Autowired
+	GetPatientDetailsForEditRepository getPatientDetailsForEditRepository;
+	
 	SendFcmNotificationService sendFcmNotificationService;
 	
 	@Autowired
@@ -2898,4 +2902,11 @@ System.out.println(e.getMessage());
 						}
 						return info;
 					}
+					
+					@RequestMapping(value = { "/getPatientDetailsForEdit"}, method = RequestMethod.POST)
+					public @ResponseBody GetPatientDetailsForEdit getPatientDetailsForEdit(@RequestParam("patientId") int patientId) {
+					
+						return getPatientDetailsForEditRepository.getPatientDetailsByPatientId(patientId);
+					}
+					
 }
