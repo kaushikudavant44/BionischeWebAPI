@@ -106,7 +106,7 @@ public class DoctorPatientMeetingApiConrtoller {
 		{  			
 			count = count + patientCartRepository.getPatientCartCount(list.getPatientId());
 		}
-		
+		System.out.println("countcountcount:"+count);
 	    return  count;
 	}
 	
