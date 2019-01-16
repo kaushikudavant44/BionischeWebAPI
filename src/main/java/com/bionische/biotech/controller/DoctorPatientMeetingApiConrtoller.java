@@ -89,7 +89,7 @@ public class DoctorPatientMeetingApiConrtoller {
 				getCartProductsListFinal.addAll(getCartProductsList);
 				}
 			}
-			
+			System.out.println("getCartProductsListFinal:"+getCartProductsListFinal.toString());
 		}catch (Exception e) {
 			System.out.println(e.getMessage());
 					}
