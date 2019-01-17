@@ -1053,19 +1053,19 @@ System.out.println(e.getMessage());
 		
 	    sharingReportWithDocRes=sharingReportWithDocRepository.getSharingInfo(patientId,doctorId);	
 	    
-	    System.out.println("sharingReportWithDocRes   "+sharingReportWithDocRes.toString());
+	   
 	    
 	    GetPatientReports getPatientReports = new GetPatientReports();
 	    
 		 
-		
+		if(sharingReportWithDocRes!=null) {
 		List<String> reportIdList = Arrays.asList(sharingReportWithDocRes.getReportId().split(","));
 		
 		  
         
 		getPatientReportListByreportId=getPatientReportsRepository.getPatientReport(reportIdList);
 		 	
-		
+		}
 	return getPatientReportListByreportId;
 	
 	}
