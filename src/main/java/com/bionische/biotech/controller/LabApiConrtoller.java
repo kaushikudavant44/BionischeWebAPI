@@ -476,11 +476,17 @@ CreateDirectoryService createDirectoryService;
 			String confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been confirmed for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
 			
 			System.out.println("token="+patientDetails.getString2());
+			try {
 			if(patientDetails.getInt1()==0) {
+			
 			sendFcmNotificationService.notifyUser(patientDetails.getString2(), "BIONISCHE", confirmAppointmentNotification, DateConverter.currentDateAndTime(),12);
 			}else if(patientDetails.getInt1()==1) {
 				
 				sendFcmNotificationService.notifyiOSUser(patientDetails.getString2(), "BIONISCHE", confirmAppointmentNotification, DateConverter.currentDateAndTime(),12);	
+			}
+			}
+			catch (Exception e) {
+				System.out.println(e.getMessage());// TODO: handle exception
 			}
 			System.out.println("Appointment edited Successfully");
 			info.setError(false);
