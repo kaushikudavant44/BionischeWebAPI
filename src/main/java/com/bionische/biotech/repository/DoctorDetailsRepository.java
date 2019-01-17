@@ -59,7 +59,7 @@ public interface DoctorDetailsRepository extends JpaRepository<DoctorDetails, Lo
 	@Query("UPDATE DoctorDetails a SET a.delStatus =:delStatus  WHERE a.doctorId=:doctorId")
 	int updateDoctorDelStatus(@Param("doctorId")int doctorId,@Param("delStatus")int delStatus);
 	
-	@Query(value="SELECT * FROM doctor_details WHERE contact=:contactNo;",nativeQuery=true)
+	@Query(value="SELECT * FROM doctor_details WHERE contact=:contactNo",nativeQuery=true)
 	DoctorDetails getContactNumbers(@Param("contactNo") String contactNo);
 	
 	@Query(value="SELECT * FROM doctor_details WHERE email=:email;",nativeQuery=true)
