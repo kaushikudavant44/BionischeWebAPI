@@ -988,6 +988,8 @@ System.out.println(e.getMessage());
 				
 				sendEMailService.sendMail("APPOINTMENT CANCEL", MESSAGE , getPatientContactDetailsById.getEmail());
 			
+				if(status==3)
+				{
 				patientNotification.setPatientId(getPatientContactDetailsById.getPatientId());
 				patientNotification.setNotification("Your Appointment has been cancelled by Dr."+getAppointmentDetails.getDoctorName()+" on DATE "+getAppointmentDetails.getDate()+" and TIME "+getAppointmentDetails.getTime());					
 				patientNotification.setStatus(0);
@@ -995,7 +997,7 @@ System.out.println(e.getMessage());
 				patientNotification.setString2("doctor");
 				patientNotification.setInt1(getAppointmentDetails.getDoctorId());
 				patientNotificationRepository.save(patientNotification);
-				 
+				}
 				info.setMessage("Your Appointment Delete Successfully!!");
 				info.setError(false);
 			}
