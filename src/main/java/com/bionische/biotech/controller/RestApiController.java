@@ -2911,4 +2911,31 @@ System.out.println(e.getMessage());
 						return getPatientDetailsForEditRepository.getPatientDetailsByPatientId(patientId);
 					}
 					
+					@RequestMapping(value = { "/updatePatientProfilePic" }, method = RequestMethod.POST)
+					public @ResponseBody Info updatePatientProfilePic(@RequestParam("patientId") int patientId,@RequestParam("profilePhotoName") String profilePhotoName)
+					
+					{
+						int res=0;
+						Info info=new Info();
+					 try {
+						 res=	patientDetailsRepository.updatePatientProfile(patientId,profilePhotoName);
+						 
+						 if(res>0)
+							{
+								
+								info.setError(false);
+								info.setMessage("Success");
+							}
+							else {
+								info.setError(true);
+								info.setMessage("failed");
+							}
+						
+					 }
+					 catch (Exception e) {
+				System.out.println(e.getMessage());
+					}
+					 return info;
+					 
+					}
 }

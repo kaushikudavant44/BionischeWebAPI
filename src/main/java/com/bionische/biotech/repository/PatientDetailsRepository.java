@@ -17,13 +17,9 @@ import com.bionische.biotech.radiology.model.PndtPatientBasicDetails;
 
 public interface PatientDetailsRepository extends JpaRepository<PatientDetails, Integer>{
 	
-	PatientDetails save(PatientDetails patientDetails);
-	
+	PatientDetails save(PatientDetails patientDetails);	
 	
 	PatientDetails findByPatientId(int patientId);	
-	
-	
-	
 	
 	@Query(value=" SELECT * from patient_details where uname=:userName AND del_status=0",nativeQuery=true)
 	PatientDetails getPatientLogin(@Param("userName")String userName);
@@ -76,5 +72,9 @@ public interface PatientDetailsRepository extends JpaRepository<PatientDetails, 
 	@Query("UPDATE PatientDetails a SET a.string2 =:token, a.int1=:deviceType WHERE a.patientId=:patientId")
 	int updatePatientTokenAsString2ByPatientId(@Param("patientId")int patientId,@Param("token")String token,@Param("deviceType")int deviceType);
 	
+	@Transactional
+	@Modifying
+	@Query("UPDATE PatientDetails a SET a.profilePhoto =:profilePhotoName  WHERE a.patientId=:patientId")
+	int updatePatientProfile(@Param("patientId")int patientId,@Param("profilePhotoName")String profilePhotoName);
 	
 }
