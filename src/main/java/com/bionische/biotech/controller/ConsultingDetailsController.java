@@ -235,7 +235,7 @@ public class ConsultingDetailsController {
 
 	// medicals by pincode
 	@RequestMapping(value = { "/getPharmacyByPincode" }, method = RequestMethod.POST)
-	public @ResponseBody List<MedicalDetails> getPharmacyByPincode(@RequestParam("pincode") int pincode)
+	public @ResponseBody List<MedicalDetails> getPharmacyByPincode(@RequestParam("pincode") int pincode,@RequestParam("deliveryStatus") int deliveryStatus)
 
 	{
 
@@ -243,7 +243,7 @@ public class ConsultingDetailsController {
 		System.out.println("pincode:" + pincode);
 		try {
 
-			medicalsInfo = medicalDetailsRepository.getPharmacyByPincode(pincode);
+			medicalsInfo = medicalDetailsRepository.getPharmacyByPincode(pincode,deliveryStatus);
 
 			System.out.println("medicalsInfo list " + medicalsInfo.toString());
 

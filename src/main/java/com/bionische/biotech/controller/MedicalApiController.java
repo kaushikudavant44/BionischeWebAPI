@@ -79,7 +79,7 @@ public class MedicalApiController {
 		MedicalDetails MedicalDetailsRes=new MedicalDetails();
 		 
 		try {
-			MedicalDetailsRes=medicalDetailsRepository.findByMedicalId(medicalId); 
+			MedicalDetailsRes=medicalDetailsRepository.getMedicalsDetailsByMedicalId(medicalId); 
 		System.out.println(MedicalDetailsRes.toString());
 		 
 		}

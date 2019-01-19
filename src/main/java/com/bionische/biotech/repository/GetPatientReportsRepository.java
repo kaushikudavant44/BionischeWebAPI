@@ -34,9 +34,9 @@ public interface GetPatientReportsRepository extends JpaRepository<GetPatientRep
 	List<GetPatientReports> getPatientReportBTest(@Param("patientId")int patientId,@Param("testId")int testId);
 
 
-	@Query(value=" SELECT r.patient_id, r.lab_test_id, r.report_id, t.lab_test_name, r.lab_id, l.lab_name,r.report_file_name,"
-			+ " r.report_date, r.int_1 FROM patient_reports r, lab_tests t, lab_details l WHERE r.report_id IN(:reportIdList) AND "
-			+ "r.lab_test_id=t.lab_test_id AND r.lab_id=l.lab_id",nativeQuery=true)
+	@Query(value=" SELECT r.patient_id, r.lab_test_id, r.report_id, t.lab_test_name, (CASE WHEN r.lab_id = 0 THEN 0 ELSE r.lab_id END) AS lab_id, (CASE WHEN r.lab_id = 0 THEN 'self' ELSE l.lab_name END) AS lab_name,r.report_file_name," + 
+			" r.report_date, r.int_1 FROM patient_reports r, lab_tests t, lab_details l WHERE r.report_id IN(:reportIdList) AND " + 
+			"r.lab_test_id=t.lab_test_id AND (CASE WHEN r.lab_id != 0 THEN r.lab_id=l.lab_id ELSE r.lab_id=0 END) GROUP BY r.report_id",nativeQuery=true)
 	List<GetPatientReports> getPatientReport(@Param("reportIdList")List<String> reportIdList);
 	
 	
