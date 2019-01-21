@@ -52,7 +52,7 @@ public class PaymentHistoryApiController {
 	@RequestMapping(value = { "/getConsultingPaymentDetailsByPatientId" }, method = RequestMethod.POST)
 	public @ResponseBody List<GetConsultingPaymentDetails> getConsultingPaymentDetailsByPatientId(@RequestParam("patientId")int patientId, @RequestParam("fromDate")String fromDate, @RequestParam("toDate")String toDate) {
  
-		return getConsultingPaymentDetailsRepository.getConsultingPaymentDetailsByDoctorId(patientId, fromDate, toDate);
+		return getConsultingPaymentDetailsRepository.getConsultingPaymentDetailsByPatientId(patientId, fromDate, toDate);
 	}
 	
 	
