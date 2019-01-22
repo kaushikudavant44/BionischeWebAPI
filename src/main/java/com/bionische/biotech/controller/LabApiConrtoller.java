@@ -1072,7 +1072,7 @@ System.out.println(e.getMessage());
 		List<String> reportIdList = Arrays.asList(sharingReportWithDocRes.getReportId().split(","));
 		
 		  
-        
+         
 		getPatientReportListByreportId=getPatientReportsRepository.getPatientReport(reportIdList);
 		 	
 		}
