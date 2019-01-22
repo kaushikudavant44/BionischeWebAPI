@@ -2,8 +2,10 @@ package com.bionische.biotech.controller;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,6 @@ import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.AppointmentTimeList;
 import com.bionische.biotech.model.DoctorDetails;
-import com.bionische.biotech.model.DoctorSubscriptionDetails;
 import com.bionische.biotech.model.GetDoctorRatingReviewCount;
 import com.bionische.biotech.model.GetLabAppointment;
 import com.bionische.biotech.model.GetLabForAppointment;
@@ -69,11 +70,14 @@ import com.bionische.biotech.repository.TransactionDetailsRepository;
 import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.SendEMailService;
 import com.bionische.biotech.service.SendFcmNotificationService;
+import com.bionische.biotech.service.SharingReportToDoctorService;
 
 @RestController
 public class LabApiConrtoller {
 
-
+	@Autowired
+	SharingReportToDoctorService sharingReportToDoctorService;
+	
 	SendFcmNotificationService sendFcmNotificationService;
 	
 	@Autowired
@@ -1111,15 +1115,38 @@ System.out.println(e.getMessage());
 	
 	}
 	@RequestMapping(value = { "/updateLabAppointmentCompleteStatus" }, method = RequestMethod.POST)
-	public @ResponseBody Info updateLabAppointmentCompleteStatus(@RequestParam("appointId") int appointId)
+	public @ResponseBody Info updateLabAppointmentCompleteStatus(@RequestParam("appointId") int appointId, @RequestParam("reportIdList")String reportIdList)
 	{
 		Info info=new Info();
 		try {
 			
 		int res=labAppointmentRepository.finishedAppointments(appointId);
 		
+		
+		
 		if(res!=0) {
 			info.setMessage("Report submitted successfully");
+			LabAppointment labAppointment=labAppointmentRepository.findByLabAppId(appointId);
+			int doctorId=Integer.parseInt(labAppointment.getString1());
+			if(doctorId!=0)
+			{
+			//	reportIdList
+				//labAppointment
+				SharingReportWithDoc sharingReportWithDoc=new SharingReportWithDoc();
+				sharingReportWithDoc.setDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+				sharingReportWithDoc.setPatientId(labAppointment.getPatientId());
+				sharingReportWithDoc.setDoctorId(doctorId);
+				sharingReportWithDoc.setReportId(reportIdList);
+				sharingReportWithDoc.setDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+				sharingReportWithDoc.setDelStatus(0);
+				sharingReportWithDoc.setString1("1");
+				sharingReportWithDoc.setString2("1");
+				sharingReportWithDoc.setInt1(0);
+				sharingReportWithDoc.setInt2(0);
+				
+				sharingReportToDoctorService.shareReportToDoctor(sharingReportWithDoc);
+			}
 		}else {
 			info.setError(true);
 		}

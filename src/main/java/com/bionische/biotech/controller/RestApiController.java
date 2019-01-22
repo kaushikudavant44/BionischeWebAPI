@@ -116,12 +116,15 @@ import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.SendEMailService;
 import com.bionische.biotech.service.SendFcmNotificationService;
 import com.bionische.biotech.service.SendTextMessageService;
+import com.bionische.biotech.service.SharingReportToDoctorService;
 
  
 
 @RestController
 public class RestApiController {
 	
+	@Autowired
+	SharingReportToDoctorService sharingReportToDoctorService;
 	@Autowired
 	GetPatientDetailsForEditRepository getPatientDetailsForEditRepository;
 	
@@ -1460,72 +1463,8 @@ System.out.println(e.getMessage());
 				public @ResponseBody Info submitSharingReportWithDoc(@RequestBody SharingReportWithDoc sharingReportWithDoc)
 					
 				{
-					System.out.println("Comming List "+sharingReportWithDoc.toString());
-					SharingReportWithDoc sharingReportWithDocRes=new SharingReportWithDoc();
-					
-					sharingReportWithDocRes=sharingReportWithDocRepository.getSharingInfo(sharingReportWithDoc.getPatientId(),sharingReportWithDoc.getDoctorId());
 					 
-					Info info=new Info(); 
-							
-							try {
-						
-						if(sharingReportWithDocRes==null)
-						{
-						
-						sharingReportWithDocRes=sharingReportWithDocRepository.save(sharingReportWithDoc); 
-						
-						 if(sharingReportWithDocRes!=null)
-							{
-								
-								info.setError(false);
-								info.setMessage("success");
-							}
-							else {
-								info.setError(true);
-								info.setMessage("failed");
-							}
-						}
-						else
-						{
-						String reportId=","+sharingReportWithDoc.getReportId();	
-						DoctorDetails doctorDetails=doctorDetailsRepository.findByDoctorId(sharingReportWithDocRes.getDoctorId());
-					    int result=sharingReportWithDocRepository.updateReport(reportId,sharingReportWithDoc.getPatientId(),sharingReportWithDoc.getDoctorId());	
-					    if(result>0)
-						{
-					    	DoctorNotification doctorNotification=new DoctorNotification();
-							doctorNotification.setNotification("Pateint  id "+sharingReportWithDocRes.getPatientId()+" Shared His/her Reports.");
-							doctorNotification.setDoctorId(sharingReportWithDocRes.getDoctorId());
-							doctorNotification.setFcmNo(" ");
-							doctorNotification.setStatus(0);
-							doctorNotification.setString1("Patient Shre Report");
-							doctorNotification.setInt1(sharingReportWithDocRes.getPatientId());
-							doctorNotificationRepository.save(doctorNotification);
-							String reportNotification="Pateint  id "+sharingReportWithDocRes.getPatientId()+" shared his/her reports with you.";
-							
-							if(doctorDetails.getInt1()==0) {
-							sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "BIONISCHE", reportNotification, DateConverter.currentDateAndTime(), 7);
-							}else if(doctorDetails.getInt1()==1) {
-								
-								sendFcmNotificationService.notifyiOSUser(doctorDetails.getLocation(), "BIONISCHE", reportNotification, DateConverter.currentDateAndTime(), 7);
-							}
-							info.setError(false);
-							info.setMessage("success");
-						}
-						else {
-							info.setError(true);
-							info.setMessage("failed");
-						}
-						}
-						
-					 
-					}
-					
-					catch (Exception e) {
-						System.out.println(e.getMessage());
-						 
-					}
-				
-					return info;
+					return sharingReportToDoctorService.shareReportToDoctor(sharingReportWithDoc);
 				}
 			
 				//change patient password

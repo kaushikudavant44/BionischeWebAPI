@@ -16,6 +16,8 @@ public interface LabAppointmentRepository extends JpaRepository<LabAppointment, 
 	@Query(value=" SELECT * from lab_appointments where lab_test_id=:labTestId AND lab_id=:labId AND del_status=0",nativeQuery=true)
 	List<LabAppointment> appointmentDetailsOfLab(@Param("labTestId")int testId, @Param("labId")int labTestId);
 	
+	LabAppointment findByLabAppId(int labAppId);
+	
 	@Query(value=" SELECT * from lab_appointments where lab_app_id=:appointmentId",nativeQuery=true)
 	LabAppointment appointmentDetailsOfLabByAppId(@Param("appointmentId")int appointmentId);
 	
