@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.model.AppointmentDetails;
 import com.bionische.biotech.model.ConsultingDetails;
 import com.bionische.biotech.model.DoctorPatientMeeting;
 import com.bionische.biotech.model.GetCartProducts;
@@ -26,6 +27,7 @@ import com.bionische.biotech.model.LabTestsList;
 import com.bionische.biotech.model.PatientAddressList;
 import com.bionische.biotech.model.PatientCart;
 import com.bionische.biotech.model.PatientDetails;
+import com.bionische.biotech.repository.AppointmentDetailsRepository;
 import com.bionische.biotech.repository.ConsultingDetailsRepository;
 import com.bionische.biotech.repository.GetCartProductsRepository;
 import com.bionische.biotech.repository.GetMedicalOrderDetailsRepository;
@@ -62,6 +64,9 @@ public class DoctorPatientMeetingApiConrtoller {
 	
 	@Autowired
 	GetMedicalOrderDetailsRepository getMedicalOrderDetailsRepository;
+	
+	@Autowired
+	AppointmentDetailsRepository appointmentDetailsRepository;
 	
 	// insert specialization
 	@RequestMapping(value = { "/insertDoctoPatientMeeting" }, method = RequestMethod.POST)
@@ -268,6 +273,22 @@ public class DoctorPatientMeetingApiConrtoller {
   
 		
 		return getMedicalOrderDetailsRepository.getPatientOrderDetailsByRequestId(requestId);
+	}
+	
+	
+	
+	
+	@RequestMapping(value = { "/getPatientPaymentConcultingDetails" }, method = RequestMethod.POST)
+	public @ResponseBody Info getPatientPaymentConcultingDetails(@RequestParam("appointId")int appointId) {
+		
+		AppointmentDetails appointmentDetails=appointmentDetailsRepository.findByAppointId(appointId);
+		Info info=new Info();
+		if(appointmentDetails.getPaymentStatus()==1) {
+			
+			info.setMessage("Payment Successfull");
+		}
+		
+		return info;
 	}
 	
 }

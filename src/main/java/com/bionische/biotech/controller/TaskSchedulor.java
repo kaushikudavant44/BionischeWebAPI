@@ -94,6 +94,10 @@ public class TaskSchedulor {
 
 	}
 	
+	/**
+	 * This schedular is used to give doctor consult appointment and lab appointment remainder to patient.
+	 * Cron is execute every after half hour. 
+	 */
 	@Scheduled(cron = "0 0 * * * *")
 	public void appointmentRemainder() {
 
