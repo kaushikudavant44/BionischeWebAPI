@@ -345,4 +345,17 @@ public class DoctorPatientMeetingApiConrtoller {
 		
 		return pharmacyDayOrderDetailsRepository.getPharmacyOrderDetails(medicald, appDate);
 	}
+	
+	@RequestMapping(value = { "/getPatientDoctorConsultDetails" }, method = RequestMethod.POST)
+	public @ResponseBody ConsultingDetails getPatientDoctorConsultDetails(@RequestParam("meetId")int meetId) {
+  
+		
+		return consultingDetailsRepository.getPatientDoctorConsultedDetails(meetId);
+	}
+	@RequestMapping(value = { "/getAppointmentDetailsByAppointId" }, method = RequestMethod.POST)
+	public @ResponseBody AppointmentDetails getAppointmentDetailsByAppointId(@RequestParam("appointId")int appointId) {
+  
+		
+		return appointmentDetailsRepository.findByAppointId(appointId);
+	}
 }

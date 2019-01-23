@@ -44,6 +44,66 @@ public class ConsultingDetails {
 	@Column(name="patient_name")
 	private String patientName;
 	
+	//This is appointmentId
+	@Column(name="int_2")
+	private int int2;
+	
+	@Column(name="address")
+	private String address;
+	
+	//hospital con no.
+	@Column(name="contact_no")
+	private String contactNo;
+	
+	//hospital email
+	@Column(name="email_id")
+	private String emailId;
+	
+	//patient email
+	@Column(name="email")
+	private String email;
+	
+	
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getContactNo() {
+		return contactNo;
+	}
+
+	public void setContactNo(String contactNo) {
+		this.contactNo = contactNo;
+	}
+
+	public String getEmailId() {
+		return emailId;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public int getInt2() {
+		return int2;
+	}
+
+	public void setInt2(int int2) {
+		this.int2 = int2;
+	}
 
 	public String getPatientName() {
 		return patientName;
@@ -141,7 +201,15 @@ public class ConsultingDetails {
 		return "ConsultingDetails [meetId=" + meetId + ", doctorId=" + doctorId + ", patintId=" + patintId
 				+ ", hospitalName=" + hospitalName + ", doctorName=" + doctorName + ", date=" + date + ", time=" + time
 				+ ", patientProblem=" + patientProblem + ", discussion=" + discussion + ", note=" + note
-				+ ", patientName=" + patientName + "]";
+				+ ", patientName=" + patientName + ", int2=" + int2 + ", address=" + address + ", contactNo="
+				+ contactNo + ", emailId=" + emailId + ", email=" + email + "]";
 	}
+
+	
+
+	
+
+	
+
 	
 }
