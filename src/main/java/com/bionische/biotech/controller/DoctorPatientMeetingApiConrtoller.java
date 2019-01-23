@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bionische.biotech.model.AppointmentDetails;
 import com.bionische.biotech.model.ConsultingDetails;
+import com.bionische.biotech.model.DoctorAppOfLastThirtyDays;
+import com.bionische.biotech.model.DoctorAppointmentCount;
+import com.bionische.biotech.model.DoctorCollectionAndReportDetail;
 import com.bionische.biotech.model.DoctorPatientMeeting;
 import com.bionische.biotech.model.GetCartProducts;
 import com.bionische.biotech.model.GetMedicalOrderDetails;
@@ -27,13 +30,18 @@ import com.bionische.biotech.model.LabTestsList;
 import com.bionische.biotech.model.PatientAddressList;
 import com.bionische.biotech.model.PatientCart;
 import com.bionische.biotech.model.PatientDetails;
+import com.bionische.biotech.model.PharmacyDayOrderDetails;
 import com.bionische.biotech.repository.AppointmentDetailsRepository;
 import com.bionische.biotech.repository.ConsultingDetailsRepository;
+import com.bionische.biotech.repository.DoctorAppOfLastThirtyDaysRepository;
+import com.bionische.biotech.repository.DoctorAppointmentCountRepository;
+import com.bionische.biotech.repository.DoctorCollectionAndReportDetailRepository;
 import com.bionische.biotech.repository.GetCartProductsRepository;
 import com.bionische.biotech.repository.GetMedicalOrderDetailsRepository;
 import com.bionische.biotech.repository.PatientAddressListRepository;
 import com.bionische.biotech.repository.PatientCartRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
+import com.bionische.biotech.repository.PharmacyDayOrderDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionToMedicalRepository;
 import com.bionische.biotech.service.DoctorPatientMeetingService;
 import com.bionische.biotech.service.PrescriptionOrderService;
@@ -67,6 +75,18 @@ public class DoctorPatientMeetingApiConrtoller {
 	
 	@Autowired
 	AppointmentDetailsRepository appointmentDetailsRepository;
+	
+	@Autowired
+	DoctorAppointmentCountRepository doctorAppointmentCountRepository;
+	
+	@Autowired
+	DoctorCollectionAndReportDetailRepository doctorCollectionAndReportDetailRepository;
+	
+	@Autowired
+	DoctorAppOfLastThirtyDaysRepository doctorAppOfLastThirtyDaysRepository;
+	
+	@Autowired
+	PharmacyDayOrderDetailsRepository pharmacyDayOrderDetailsRepository;
 	
 	// insert specialization
 	@RequestMapping(value = { "/insertDoctoPatientMeeting" }, method = RequestMethod.POST)
@@ -291,4 +311,38 @@ public class DoctorPatientMeetingApiConrtoller {
 		return info;
 	}
 	
+	@RequestMapping(value = { "/getDoctorAppointmentCountDetails" }, method = RequestMethod.POST)
+	public @ResponseBody DoctorAppointmentCount getDoctorAppointmentCountDetails(@RequestParam("doctorId")int doctorId,@RequestParam("appDate")String appDate) {
+  
+		
+		return doctorAppointmentCountRepository.getAppointmentCount(doctorId, appDate);
+	}
+	
+	
+	@RequestMapping(value = { "/getDoctorCollectionAndReportDetails" }, method = RequestMethod.POST)
+	public @ResponseBody DoctorCollectionAndReportDetail getDoctorCollectionAndReportDetails(@RequestParam("doctorId")int doctorId,@RequestParam("appDate")String appDate) {
+  
+		
+		return doctorCollectionAndReportDetailRepository.getCollectionAndReportDetail(doctorId, appDate);
+	}
+	
+	
+	@RequestMapping(value = { "/getLastThirtyDaysAppointment" }, method = RequestMethod.POST)
+	public @ResponseBody DoctorAppOfLastThirtyDays getLastThirtyDaysAppointment(@RequestParam("doctorId")int doctorId) {
+  
+		int month=1;
+		Date date = new Date(0);
+		
+		date = java.sql.Date.valueOf(LocalDate.now().minus(month, ChronoUnit.MONTHS));
+		
+		return doctorAppOfLastThirtyDaysRepository.getLastThirtyDaysAppointment(doctorId,date);
+	}
+	
+	
+	@RequestMapping(value = { "/getPharmacyDayOrderDetails" }, method = RequestMethod.POST)
+	public @ResponseBody PharmacyDayOrderDetails getPharmacyDayOrderDetails(@RequestParam("medicald")int medicald,@RequestParam("appDate")String appDate) {
+  
+		
+		return pharmacyDayOrderDetailsRepository.getPharmacyOrderDetails(medicald, appDate);
+	}
 }

@@ -3,6 +3,8 @@ package com.bionische.biotech.controller;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.AppointmentTimeList;
+import com.bionische.biotech.model.DoctorAppOfLastThirtyDays;
+import com.bionische.biotech.model.DoctorCollectionAndReportDetail;
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.GetDoctorRatingReviewCount;
 import com.bionische.biotech.model.GetLabAppointment;
@@ -32,7 +36,9 @@ import com.bionische.biotech.model.GetPatientUploadedReport;
 import com.bionische.biotech.model.GetRatingCount;
 import com.bionische.biotech.model.GetReportDetailsForLab;
 import com.bionische.biotech.model.Info;
+import com.bionische.biotech.model.LabAppOfLastThirtyDays;
 import com.bionische.biotech.model.LabAppointment;
+import com.bionische.biotech.model.LabAppointmentCount;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.LabNotification;
 import com.bionische.biotech.model.LabSubscriptionDetails;
@@ -56,6 +62,8 @@ import com.bionische.biotech.repository.GetPatientReportsRepository;
 import com.bionische.biotech.repository.GetPatientUploadedReportsRepository;
 import com.bionische.biotech.repository.GetRatingCountRepository;
 import com.bionische.biotech.repository.GetReportDetailsForLabRepository;
+import com.bionische.biotech.repository.LabAppOfLastThirtyDaysRepository;
+import com.bionische.biotech.repository.LabAppointmentCountRepository;
 import com.bionische.biotech.repository.LabAppointmentRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.LabNotificationRepository;
@@ -130,6 +138,9 @@ public class LabApiConrtoller {
 	
 	@Autowired
 	PatientDetailsRepository patientDetailsRepository;
+	
+	@Autowired
+	LabAppointmentCountRepository labAppointmentCountRepository;
 
 @Autowired
 LabTestsRepository labTypesRepository;
@@ -159,6 +170,9 @@ LabSubscriptionDetailsRepository labSubscriptionDetailsRepository;
 
 @Autowired
 CreateDirectoryService createDirectoryService;
+
+@Autowired
+LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 
 
 	
@@ -1256,5 +1270,23 @@ System.out.println(e.getMessage());
 		}
 		
 		return labSubscriptionDetailsRes;
+	}
+	
+	@RequestMapping(value = { "/getLabAppointmentCount" }, method = RequestMethod.POST)
+	public @ResponseBody LabAppointmentCount getLabAppointmentCount(@RequestParam("labId")int labId,@RequestParam("appDate")String appDate) {
+  
+		
+		return labAppointmentCountRepository.getAppointmentCount(labId, appDate);
+	}
+	
+	@RequestMapping(value = { "/getLastThirtyDaysAppointmentOfLab" }, method = RequestMethod.POST)
+	public @ResponseBody LabAppOfLastThirtyDays getLastThirtyDaysAppointmentOfLab(@RequestParam("labId")int labId) {
+  
+		int month=1;
+		Date date = new Date(0);
+		
+		date = java.sql.Date.valueOf(LocalDate.now().minus(month, ChronoUnit.MONTHS));
+		
+		return labAppOfLastThirtyDaysRepository.getLastThirtyDaysAppointment(labId,date);
 	}
 }
