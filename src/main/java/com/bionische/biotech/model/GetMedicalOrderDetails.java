@@ -71,6 +71,30 @@ public class GetMedicalOrderDetails {
 	
 	@Column(name="email")
 	private String email;
+	
+	@Column(name="contact")
+	private String contact;
+	
+	@Column(name="payment_date")
+	private String paymentDate;
+	
+	
+	
+	public String getPaymentDate() {
+		return paymentDate;
+	}
+
+	public void setPaymentDate(String paymentDate) {
+		this.paymentDate = paymentDate;
+	}
+
+	public String getContact() {
+		return contact;
+	}
+
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
 
 	public int getRequestToMedicalId() {
 		return requestToMedicalId;
@@ -246,8 +270,13 @@ public class GetMedicalOrderDetails {
 				+ ", doctorId=" + doctorId + ", doctorName=" + doctorName + ", doctorContact=" + doctorContact
 				+ ", deliveryType=" + deliveryType + ", totalAmt=" + totalAmt + ", pincode=" + pincode
 				+ ", patientContact=" + patientContact + ", paymentStatus=" + paymentStatus + ", delStatus=" + delStatus
-				+ ", status=" + status + ", address=" + address + ", email=" + email + "]";
+				+ ", status=" + status + ", address=" + address + ", email=" + email + ", contact=" + contact
+				+ ", paymentDate=" + paymentDate + "]";
 	}
+
+	
+
+	
 	
 	
 }
