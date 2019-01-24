@@ -114,9 +114,9 @@ public class PaymentHistoryApiController {
 	
 	
 	@RequestMapping(value = { "/getLabTransactionDetailsById" }, method = RequestMethod.POST)
-	public @ResponseBody GetLabBillDetails getLabTransactionDetailsById(@RequestParam("labId")int labId, @RequestParam("id")int id) {
+	public @ResponseBody GetLabBillDetails getLabTransactionDetailsById( @RequestParam("id")int id) {
  
-		return getLabBillDetailsRepository.getLabBillDetailsRepository(labId, id);
+		return getLabBillDetailsRepository.getLabBillDetailsRepository(id);
 	}
 	
 }

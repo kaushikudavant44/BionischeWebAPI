@@ -1219,7 +1219,22 @@ System.out.println(e.getMessage());
 	 
 	}
 	
+	@RequestMapping(value = { "/getPaidLabPaymentInvoice" }, method = RequestMethod.POST)
+	public @ResponseBody List<PateintReportPaymentDetails> getPaidLabPaymentInvoice(@RequestParam("patientId") int patientId)
 	
+	{
+		 List<PateintReportPaymentDetails>  reportDetailsRes=new ArrayList<>();
+	 try {
+		  reportDetailsRes=pateintReportPaymentDetailsRepository.findByPatientIdAndPaymentStatus(patientId,1);
+		
+	 }
+	 catch (Exception e) {
+System.out.println(e.getMessage());
+	}
+	 return reportDetailsRes;
+	 
+	 
+	}
 	
 	@RequestMapping(value = { "/updateLabReportsPayment" }, method = RequestMethod.POST)
 	public @ResponseBody Info updateLabReportsPayment(@RequestParam("amountType") int amountType,@RequestParam("reportId") int reportId,@RequestParam("txnTableId") int txnTableId,@RequestParam("txnStatus") int txnStatus,@RequestParam("txnId") String txnId,@RequestParam("orderId") String orderId,@RequestParam("txnAmt") float txnAmt)
