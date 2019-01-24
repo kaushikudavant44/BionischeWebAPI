@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bionische.biotech.model.DoctorSubscriptionDetails;
+import com.bionische.biotech.model.GetLabBillDetails;
 import com.bionische.biotech.model.LabSubscriptionDetails;
 import com.bionische.biotech.model.PatientSuscriptionDetails;
 import com.bionische.biotech.model.PharmacySubscriptionDetails;
@@ -20,6 +21,7 @@ import com.bionische.biotech.paymenthistory.repository.GetConsultingPaymentDetai
 import com.bionische.biotech.paymenthistory.repository.GetLabPaymentDetailsRepository;
 import com.bionische.biotech.paymenthistory.repository.GetPharmacyPaymentDetailsRepository;
 import com.bionische.biotech.repository.DoctorSubscriptionDetailsRepository;
+import com.bionische.biotech.repository.GetLabBillDetailsRepository;
 import com.bionische.biotech.repository.LabSubscriptionDetailsRepository;
 import com.bionische.biotech.repository.PatientSuscriptionDetailsRepository;
 import com.bionische.biotech.repository.PharmacySubscriptionDetailsRepository;
@@ -42,6 +44,9 @@ public class PaymentHistoryApiController {
 	GetLabPaymentDetailsRepository getLabPaymentDetailsRepository;
 	@Autowired
 	GetPharmacyPaymentDetailsRepository getPharmacyPaymentDetailsRepository;
+	
+	@Autowired
+	GetLabBillDetailsRepository getLabBillDetailsRepository;
 	
 	@RequestMapping(value = { "/getConsultingPaymentDetailsByDoctorId" }, method = RequestMethod.POST)
 	public @ResponseBody List<GetConsultingPaymentDetails> getConsultingPaymentDetailsByDoctorId(@RequestParam("doctorId")int doctorId, @RequestParam("fromDate")String fromDate, @RequestParam("toDate")String toDate) {
@@ -105,6 +110,13 @@ public class PaymentHistoryApiController {
 	public @ResponseBody List<GetPharmacyPaymentDetails> gePharmacysPaymentDetailsByMedicalId(@RequestParam("medicalId")int medicalId, @RequestParam("fromDate")String fromDate, @RequestParam("toDate")String toDate) {
  
 		return getPharmacyPaymentDetailsRepository.getPharmacyPaymentDetailsByMedicalId(fromDate, toDate, medicalId);
+	}
+	
+	
+	@RequestMapping(value = { "/getLabTransactionDetailsById" }, method = RequestMethod.POST)
+	public @ResponseBody GetLabBillDetails getLabTransactionDetailsById(@RequestParam("labId")int labId, @RequestParam("id")int id) {
+ 
+		return getLabBillDetailsRepository.getLabBillDetailsRepository(labId, id);
 	}
 	
 }
