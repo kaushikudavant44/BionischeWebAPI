@@ -57,6 +57,9 @@ public class PharmacySuscriptionReceipt {
 	@Column(name="address")
 	private String address;
 	 
+	@Column(name="pharmacy_name")
+	private String pharmacyName;
+	
 	@Column(name="company_name")
 	private String companyName;
 
@@ -181,17 +184,24 @@ public class PharmacySuscriptionReceipt {
 		this.companyName = companyName;
 	}
 
+	public String getPharmacyName() {
+		return pharmacyName;
+	}
+
+	public void setPharmacyName(String pharmacyName) {
+		this.pharmacyName = pharmacyName;
+	}
+
 	@Override
 	public String toString() {
 		return "PharmacySuscriptionReceipt [suscriptionId=" + suscriptionId + ", medicalId=" + medicalId + ", amount="
 				+ amount + ", orderId=" + orderId + ", createdDate=" + createdDate + ", txnId=" + txnId
 				+ ", packageAmt=" + packageAmt + ", companyGstNo=" + companyGstNo + ", gstNo=" + gstNo + ", contactNo1="
 				+ contactNo1 + ", contactNo2=" + contactNo2 + ", email=" + email + ", website=" + website + ", address="
-				+ address + ", companyName=" + companyName + "]";
+				+ address + ", pharmacyName=" + pharmacyName + ", companyName=" + companyName + "]";
 	}
 
 	 
-	
 	
 	
 }

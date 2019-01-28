@@ -54,6 +54,9 @@ public class DoctorSuscriptionReceipt {
 	@Column(name="website")
 	private String website;
 	
+	@Column(name="doctor_name")
+	private String doctorName;
+	
 	@Column(name="address")
 	private String address;
 	 
@@ -180,17 +183,21 @@ public class DoctorSuscriptionReceipt {
 		this.companyName = companyName;
 	}
 
+	public String getDoctorName() {
+		return doctorName;
+	}
+
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
+	}
+
 	@Override
 	public String toString() {
 		return "DoctorSuscriptionReceipt [suscriptionId=" + suscriptionId + ", doctorId=" + doctorId + ", amount="
 				+ amount + ", orderId=" + orderId + ", createdDate=" + createdDate + ", txnId=" + txnId
 				+ ", packageAmt=" + packageAmt + ", companyGstNo=" + companyGstNo + ", gstNo=" + gstNo + ", contactNo1="
-				+ contactNo1 + ", contactNo2=" + contactNo2 + ", email=" + email + ", website=" + website + ", address="
-				+ address + ", companyName=" + companyName + "]";
+				+ contactNo1 + ", contactNo2=" + contactNo2 + ", email=" + email + ", website=" + website
+				+ ", doctorName=" + doctorName + ", address=" + address + ", companyName=" + companyName + "]";
 	}
-
-	 
-	
-	
-	
+ 
 }

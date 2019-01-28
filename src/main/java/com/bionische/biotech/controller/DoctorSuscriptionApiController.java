@@ -43,19 +43,30 @@ public class DoctorSuscriptionApiController {
 					.save(doctorSubscriptionDetails);
 			DoctorDetails doctorDetails = doctorDetailsRepository
 					.findByDoctorId(doctorSubscriptionDetailsRes.getDoctorId());
-
+System.out.println("doctorSubscriptionDetailsRes "+doctorSubscriptionDetailsRes.toString());
 			String subscriptionNotification = "Dr. "+doctorDetails.getfName()+" "+doctorDetails.getlName()+" you subscribe with bionische successfully.";
 			if (doctorSubscriptionDetailsRes != null) {
 				info.setError(false);
 				info.setMessage("Doctor Suscription Insert Successfully");
 				if (doctorDetails != null) {
+				
 					if(doctorDetails.getInt1()==0) {
+						try {
 					sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "BIONISCHE",
 							subscriptionNotification, DateConverter.currentDateAndTime(), 3);
+					System.out.println("doctorDetails "+doctorDetails.toString());
+						}
+						catch (Exception e) {
+							System.out.println("FMC problem");// TODO: handle exception
+						}
 					}else if(doctorDetails.getInt1()==1) {
-						
+						try {
 						sendFcmNotificationService.notifyiOSUser(doctorDetails.getLocation(), "BIONISCHE",
 								subscriptionNotification, DateConverter.currentDateAndTime(), 3);	
+						}
+						catch (Exception e) {
+							System.out.println("FMC problem");// TODO: handle exception
+						}
 					}
 					
 					}

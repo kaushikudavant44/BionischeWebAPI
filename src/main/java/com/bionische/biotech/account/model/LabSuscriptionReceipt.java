@@ -57,6 +57,9 @@ public class LabSuscriptionReceipt {
 	@Column(name="address")
 	private String address;
 	 
+	@Column(name="lab_name")
+	private String labName;
+	
 	@Column(name="company_name")
 	private String companyName;
 
@@ -181,19 +184,22 @@ public class LabSuscriptionReceipt {
 		this.companyName = companyName;
 	}
 
+	public String getLabName() {
+		return labName;
+	}
+
+	public void setLabName(String labName) {
+		this.labName = labName;
+	}
+
 	@Override
 	public String toString() {
 		return "LabSuscriptionReceipt [suscriptionId=" + suscriptionId + ", labId=" + labId + ", amount=" + amount
 				+ ", orderId=" + orderId + ", createdDate=" + createdDate + ", txnId=" + txnId + ", packageAmt="
 				+ packageAmt + ", companyGstNo=" + companyGstNo + ", gstNo=" + gstNo + ", contactNo1=" + contactNo1
 				+ ", contactNo2=" + contactNo2 + ", email=" + email + ", website=" + website + ", address=" + address
-				+ ", companyName=" + companyName + "]";
+				+ ", labName=" + labName + ", companyName=" + companyName + "]";
 	}
 
 	 
-
-	 
-	
-	
-	
 }
