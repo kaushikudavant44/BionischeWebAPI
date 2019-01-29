@@ -12,16 +12,16 @@ public class LabAppOfLastThirtyDays {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="app_date")
-	private int appDate;
+	private String appDate;
 	
 	@Column(name="total_app")
 	private int totalApp;
 
-	public int getAppDate() {
+	public String getAppDate() {
 		return appDate;
 	}
 
-	public void setAppDate(int appDate) {
+	public void setAppDate(String appDate) {
 		this.appDate = appDate;
 	}
 

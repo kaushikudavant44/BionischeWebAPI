@@ -328,7 +328,7 @@ public class DoctorPatientMeetingApiConrtoller {
 	
 	
 	@RequestMapping(value = { "/getLastThirtyDaysAppointment" }, method = RequestMethod.POST)
-	public @ResponseBody DoctorAppOfLastThirtyDays getLastThirtyDaysAppointment(@RequestParam("doctorId")int doctorId) {
+	public @ResponseBody List<DoctorAppOfLastThirtyDays> getLastThirtyDaysAppointment(@RequestParam("doctorId")int doctorId) {
   
 		int month=1;
 		Date date = new Date(0);

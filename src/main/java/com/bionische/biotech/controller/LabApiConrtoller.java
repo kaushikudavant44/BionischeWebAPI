@@ -1295,7 +1295,7 @@ System.out.println(e.getMessage());
 	}
 	
 	@RequestMapping(value = { "/getLastThirtyDaysAppointmentOfLab" }, method = RequestMethod.POST)
-	public @ResponseBody LabAppOfLastThirtyDays getLastThirtyDaysAppointmentOfLab(@RequestParam("labId")int labId) {
+	public @ResponseBody List<LabAppOfLastThirtyDays> getLastThirtyDaysAppointmentOfLab(@RequestParam("labId")int labId) {
   
 		int month=1;
 		Date date = new Date(0);
