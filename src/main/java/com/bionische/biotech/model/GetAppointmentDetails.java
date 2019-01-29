@@ -63,7 +63,8 @@ public class GetAppointmentDetails {
 	@Column(name="int_1")
 	private int int_1;
 	
-	
+	@Column(name="payment_status")
+	private int paymentStatus;
 
 	public String getProfilePhoto() {
 		return profilePhoto;
@@ -194,14 +195,25 @@ public class GetAppointmentDetails {
 		this.amount = amount;
 	}
 
+	public int getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(int paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+
 	@Override
 	public String toString() {
 		return "GetAppointmentDetails [appointId=" + appointId + ", doctorId=" + doctorId + ", timeId=" + timeId
 				+ ", patientId=" + patientId + ", time=" + time + ", amount=" + amount + ", date=" + date
 				+ ", hospitalId=" + hospitalId + ", hospitalName=" + hospitalName + ", hospitalAddress="
 				+ hospitalAddress + ", doctorName=" + doctorName + ", patientName=" + patientName + ", profilePhoto="
-				+ profilePhoto + ", delStatus=" + delStatus + ", status=" + status + ", int_1=" + int_1 + "]";
+				+ profilePhoto + ", delStatus=" + delStatus + ", status=" + status + ", int_1=" + int_1
+				+ ", paymentStatus=" + paymentStatus + "]";
 	}
+
+	 
 
 	 
 	

@@ -51,7 +51,30 @@ import com.itextpdf.layout.property.TextAlignment;
 /**
  
  * @author Ganesh
+ * 
+ * 
+<dependency>
+    <groupId>com.itextpdf</groupId>
+    <artifactId>itextpdf</artifactId>
+    <version>5.0.6</version>
+</dependency>
+<dependency>
+    <groupId>com.itextpdf</groupId>
+    <artifactId>layout</artifactId>
+    <version>7.0.0</version>
+</dependency>
+<dependency>
+    <groupId>com.itextpdf</groupId>
+    <artifactId>kernel</artifactId>
+    <version>7.0.0</version>
+</dependency>
+<dependency>
+    <groupId>com.itextpdf</groupId>
+    <artifactId>zugferd</artifactId>
+    <version>2.0.1</version>
+</dependency>
  */
+
 @RestController
 public class PdfInvoicesApiController {
 

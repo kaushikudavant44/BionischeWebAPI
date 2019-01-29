@@ -952,14 +952,13 @@ System.out.println(e.getMessage());
 				}
 				
 			 
-	@RequestMapping(value = { "/getAppmtDetailsByPatientIdAndDate"}, method = RequestMethod.POST)
-				public @ResponseBody List<GetAppointmentDetails> getAppmtDetailsByPatientIdAndDate(@RequestParam("patientId") int patientId,@RequestParam("fromDate") String fromDate,@RequestParam("toDate") String toDate) {
-					System.out.println("patientId "+fromDate+toDate);
-					
+	@RequestMapping(value = { "/getAppmtDetailsByAppointmentId"}, method = RequestMethod.POST)
+				public @ResponseBody List<GetAppointmentDetails> getAppmtDetailsByAppointmentId(@RequestParam("appointmentId") int appointmentId) {
+					 
 					
 					List<GetAppointmentDetails> appointmentDetailsList=new ArrayList<>();
 					try {
-						appointmentDetailsList=getAppointmentDetailsRepository.getAppointmentDetails(fromDate, toDate,patientId);
+						appointmentDetailsList=getAppointmentDetailsRepository.getAppointmentDetailsByAppointmentid(appointmentId);
 						
 						 
 					}
@@ -969,6 +968,25 @@ System.out.println(e.getMessage());
 			        return appointmentDetailsList;
 				}
 	
+	
+	
+	@RequestMapping(value = { "/getAppmtDetailsByPatientIdAndDate"}, method = RequestMethod.POST)
+	public @ResponseBody List<GetAppointmentDetails> getAppmtDetailsByPatientIdAndDate(@RequestParam("patientId") int patientId,@RequestParam("fromDate") String fromDate,@RequestParam("toDate") String toDate) {
+		System.out.println("patientId "+fromDate+toDate);
+		
+		
+		List<GetAppointmentDetails> appointmentDetailsList=new ArrayList<>();
+		try {
+			appointmentDetailsList=getAppointmentDetailsRepository.getAppointmentDetails(fromDate, toDate,patientId);
+			
+			 
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+		}
+        return appointmentDetailsList;
+	}
+
 	
 	@RequestMapping(value = { "/updateDoctorAppointmentStatus"}, method = RequestMethod.POST)
 	public @ResponseBody Info updateDoctorAppointmentStatus(@RequestParam("appId") int appId, @RequestParam("status") int status) {
@@ -2876,5 +2894,30 @@ System.out.println(e.getMessage());
 					}
 					 return info;
 					 
+					}
+					@RequestMapping(value = { "/sendConsultingPaymentRequest"}, method = RequestMethod.POST)
+					public @ResponseBody Info sendConsultingPaymentRequest(@RequestParam("patientId") int patientId,@RequestParam("appointmentId") int appointmentId) {
+					
+						  
+						PatientNotification patientNotification=new PatientNotification();
+					patientNotification.setPatientId(patientId);
+					patientNotification.setNotification("Your Appointment payment is pending Please make a payment to consult with doctor");					
+					patientNotification.setStatus(0);
+					patientNotification.setString1("Appointment Status");
+					patientNotification.setString2("cpayment");
+					patientNotification.setInt1(appointmentId);
+					try {
+					patientNotificationRepository.save(patientNotification);
+					Info info=new Info();
+					info.setError(false);
+					info.setMessage("Payment Request sent successfully!");
+					
+				 
+					
+					}
+					catch (Exception e) {
+						// TODO: handle exception
+					}
+					return null;
 					}
 }
