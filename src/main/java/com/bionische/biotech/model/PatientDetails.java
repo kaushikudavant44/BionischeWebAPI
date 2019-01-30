@@ -88,6 +88,20 @@ public class PatientDetails {
 	
 	@Column(name="country_id")
 	private int countryId;
+	
+	@Column(name="refferal_code")
+	private String refferalCode;
+
+	
+	
+	
+	public String getRefferalCode() {
+		return refferalCode;
+	}
+
+	public void setRefferalCode(String refferalCode) {
+		this.refferalCode = refferalCode;
+	}
 
 	public int getPatientId() {
 		return patientId;
@@ -301,8 +315,11 @@ public class PatientDetails {
 				+ bloodGroup + ", regDate=" + regDate + ", cityId=" + cityId + ", birthDate=" + birthDate
 				+ ", delStatus=" + delStatus + ", age=" + age + ", int1=" + int1 + ", int2=" + int2 + ", string1="
 				+ string1 + ", string2=" + string2 + ", stateId=" + stateId + ", qualification=" + qualification
-				+ ", profilePhoto=" + profilePhoto + ", countryId=" + countryId + "]";
+				+ ", profilePhoto=" + profilePhoto + ", countryId=" + countryId + ", refferalCode=" + refferalCode
+				+ "]";
 	}
+
+	
 
 	 
 

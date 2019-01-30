@@ -3,6 +3,7 @@ package com.bionische.biotech.controller;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -122,6 +123,8 @@ import com.bionische.biotech.service.SharingReportToDoctorService;
 
 @RestController
 public class RestApiController {
+	
+	private static final char[] CHARSET_AZ_09 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
 	
 	@Autowired
 	SharingReportToDoctorService sharingReportToDoctorService;
@@ -292,6 +295,22 @@ public class RestApiController {
 				}
 				doctorDetails.setPassword(hashedPass);
 				}
+			
+			//Create refferal code for doctor
+			char[] characterSet=CHARSET_AZ_09;
+			  Random random = new SecureRandom();
+		        char[] result = new char[8];
+		        for (int i = 0; i < result.length; i++) {
+		            // picks a random index out of character set > random character
+		            int randomCharIndex = random.nextInt(characterSet.length);
+		            result[i] = characterSet[randomCharIndex];
+		        }
+			
+		     String reffCode= new String(result);
+		     doctorDetails.setRefferalCode(reffCode);
+		     System.out.println("Refferal Code is= "+reffCode);
+		     
+
 			doctorDetailsRes=doctorDetailsRepository.save(doctorDetails); 
 			if(doctorDetails.getDoctorId()!=0)
 			{
@@ -373,7 +392,26 @@ System.out.println(e.getMessage());
 			 
 				FamilyDetails familyDetailsRes=familyDetailsRepository.save(familyDetails);
 				patientDetails.setFamilyId(familyDetailsRes.getFamilyId());
+				//Create refferal code for patient
+				char[] characterSet=CHARSET_AZ_09;
+				  Random random = new SecureRandom();
+			        char[] result = new char[6];
+			        for (int i = 0; i < result.length; i++) {
+			            // picks a random index out of character set > random character
+			            int randomCharIndex = random.nextInt(characterSet.length);
+			            result[i] = characterSet[randomCharIndex];
+			        }
+				
+			     String reffCode= new String(result);
+			     
+			     System.out.println("Refferal Code is= "+reffCode);
+			     patientDetails.setRefferalCode(reffCode+""+familyDetailsRes.getFamilyId());
+				
 			}
+			
+			
+			
+			
 			patientDetailsRes=patientDetailsRepository.save(patientDetails); 
 		if(patientDetails.getPatientId()!=0)
 			createDirectoryService.createNewDirectorForPatient(patientDetailsRes.getPatientId()+"");

@@ -116,6 +116,9 @@ public class DoctorDetails {
 	@Column(name="location")
 	private String location;
 	
+	@Column(name="refferal_code")
+	private String refferalCode;
+	
 	@Column(name = "create_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -133,6 +136,14 @@ public class DoctorDetails {
 	
 	
 	
+	public String getRefferalCode() {
+		return refferalCode;
+	}
+
+	public void setRefferalCode(String refferalCode) {
+		this.refferalCode = refferalCode;
+	}
+
 	public String getLocation() {
 		return location;
 	}
@@ -416,9 +427,11 @@ public class DoctorDetails {
 				+ ", college=" + college + ", passingYear=" + passingYear + ", specId=" + specId + ", councilRegNo="
 				+ councilRegNo + ", councilName=" + councilName + ", delStatus=" + delStatus + ", string1=" + string1
 				+ ", string2=" + string2 + ", int1=" + int1 + ", int2=" + int2 + ", fees=" + fees + ", location="
-				+ location + ", createDate=" + createDate + ", lastModifiedDate=" + lastModifiedDate + ", signature="
-				+ signature + "]";
+				+ location + ", refferalCode=" + refferalCode + ", createDate=" + createDate + ", lastModifiedDate="
+				+ lastModifiedDate + ", signature=" + signature + "]";
 	}
+
+	
 
 	
 
