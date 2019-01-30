@@ -1037,6 +1037,23 @@ public class AdminPanelController {
 		return getPackageOffersList; 
 	} 
 	
+	@RequestMapping(value = { "/getCurrentActivePackageOffersByUserType" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetPackageOffers> getCurrentActivePackageOffersByUserType(@RequestParam("userType")int userType) {
+	 
+		List<GetPackageOffers> getPackageOffersList=new ArrayList<GetPackageOffers>();
+		
+		try {
+			getPackageOffersList= getPackageOffersRepository.getCurrentActivePackageOffersByUserType(userType);
+			
+			 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		 
+		}
+		return getPackageOffersList; 
+	} 
+	
+	
 	@RequestMapping(value = { "/deletePackageOffer" }, method = RequestMethod.POST)
 	public @ResponseBody Info deletePackageOffer(@RequestParam("offerId")int offerId) {
 	 
