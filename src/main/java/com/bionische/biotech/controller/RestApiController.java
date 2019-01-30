@@ -1870,8 +1870,8 @@ System.out.println(e.getMessage());
 				}
 			
 				
-				@RequestMapping(value = { "/getDoctorsListByCityId" }, method = RequestMethod.POST)
-				public @ResponseBody List<DoctorDetailsInformation> getDoctorsListByCityId(@RequestParam("cityId") int cityId)
+				@RequestMapping(value = { "/getDoctorsListByCityName" }, method = RequestMethod.POST)
+				public @ResponseBody List<DoctorDetailsInformation> getDoctorsListByCityId(@RequestParam("cityName") String cityName)
 				
 				{
 					List<DoctorDetailsInformation> doctorDetailsInformationList = doctorDetailsInformationList=new ArrayList<DoctorDetailsInformation>();;
@@ -1880,7 +1880,7 @@ System.out.println(e.getMessage());
 					
 					
 				 try {
-					 doctorDetailsInformationList=getDoctorDetailsInformationRepository.findByCityIdAndDelStatus(cityId);
+					 doctorDetailsInformationList=getDoctorDetailsInformationRepository.findByCityIdAndDelStatus(cityName);
 					 
 					 for(int i=0;i<doctorDetailsInformationList.size();i++) {
 						 
@@ -1913,13 +1913,13 @@ System.out.println(e.getMessage());
 				
 				
 				@RequestMapping(value = { "/getDoctorsListByCityIdAndSpecId"}, method = RequestMethod.POST)
-				public @ResponseBody List<DoctorDetailsInformation> getDoctorsListByCityIdAndSpecId(@RequestParam("cityId") int cityId, @RequestParam("specId") int specId)
+				public @ResponseBody List<DoctorDetailsInformation> getDoctorsListByCityIdAndSpecId(@RequestParam("cityName") String cityName, @RequestParam("specId") int specId)
 				
 				{
 					List<DoctorDetailsInformation> doctorDetailsInformationList = doctorDetailsInformationList=new ArrayList<DoctorDetailsInformation>();
 					
 				 try {
-					 doctorDetailsInformationList=getDoctorDetailsInformationRepository.findBySpecIdAndCityIdAndDelStatus(specId,cityId);
+					 doctorDetailsInformationList=getDoctorDetailsInformationRepository.findBySpecIdAndCityIdAndDelStatus(specId,cityName);
 					
 					 for(int i=0;i<doctorDetailsInformationList.size();i++) {
 						 
