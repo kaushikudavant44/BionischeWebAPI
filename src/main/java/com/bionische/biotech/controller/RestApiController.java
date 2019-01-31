@@ -827,6 +827,34 @@ System.out.println(e.getMessage());
 		
 		
 		
+		@RequestMapping(value = { "/deleteByCityId" }, method = RequestMethod.POST)
+		public @ResponseBody Info deleteByCityId(@RequestParam("cityId") int cityId)
+		{
+		
+			
+		 try {
+			 Info info=new Info();
+			int res=cityRepository.deleteByCityId(cityId);
+			if(res>0 )
+			{
+				info.setError(false);
+				info.setMessage("Insert SuccessFully");
+			}
+			else
+				
+			{
+				info.setError(true);
+				info.setMessage("Failed to Insert");
+			}
+			return info;
+		 }
+		 catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+			
+			
+			return null;
+		}
 		
 		@RequestMapping(value = { "/insertState" }, method = RequestMethod.POST)
 		public @ResponseBody Info insertState(@RequestBody State state)
