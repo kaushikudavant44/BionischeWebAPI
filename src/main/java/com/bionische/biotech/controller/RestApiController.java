@@ -1183,6 +1183,28 @@ System.out.println(e.getMessage());
 		}
         return appointmentDetailsList;
 	}
+	
+	@RequestMapping(value = { "/getAppointmentDetailsByDoctorForAdmin"}, method = RequestMethod.POST)
+	public @ResponseBody List<GetAppointmentDetails> getAppointmentDetailsByDoctorForAdmin(@RequestParam("doctorId") int doctorId,@RequestParam("fromDate") String fromDate,@RequestParam("toDate") String toDate) {
+		System.out.println("Doctor "+doctorId);
+		
+	/*	fromDate=DateConverter.convertToYMD(fromDate);
+		toDate=DateConverter.convertToYMD(toDate);*/
+		System.out.println("fromDate:-"+fromDate+"to date"+toDate);
+		List<GetAppointmentDetails> appointmentDetailsList=new ArrayList<>();
+		try {
+			appointmentDetailsList=getAppointmentDetailsRepository.getAppointmentDetailsByDoctorForAdmin(fromDate, toDate,doctorId);
+			System.out.println("qhjdahbd:"+appointmentDetailsList.toString());
+			
+			 
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+		}
+        return appointmentDetailsList;
+	}
+	
+	
 	@RequestMapping(value = { "/getAppmtDetailsByDoctorIdPatName"}, method = RequestMethod.POST)
 	public @ResponseBody List<GetAppointmentDetails> getAppmtDetailsByDoctorIdPatName(@RequestParam("doctorId") int doctorId,@RequestParam("fullName") String fullName) {
 		System.out.println("Doctor "+doctorId);
