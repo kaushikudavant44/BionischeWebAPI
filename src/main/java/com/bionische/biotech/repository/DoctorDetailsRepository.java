@@ -77,4 +77,8 @@ public interface DoctorDetailsRepository extends JpaRepository<DoctorDetails, Lo
 	@Query(value="SELECT d.* FROM doctor_details d, t_doctor_subscription_details t WHERE t.package_exp_date BETWEEN CURDATE() AND CURDATE()+5 AND d.doctor_id=t.doctor_id",nativeQuery=true)
 	List<DoctorDetails> getDoctorOfExpiringSubscription();
 	
+	@Query(value="SELECT d.* FROM doctor_details d WHERE d.refferal_code=:referal",nativeQuery=true)
+	DoctorDetails findByReferal(@Param("referal")String referal);
+	
+	
 }

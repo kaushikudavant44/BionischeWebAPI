@@ -77,4 +77,7 @@ public interface PatientDetailsRepository extends JpaRepository<PatientDetails, 
 	@Query("UPDATE PatientDetails a SET a.profilePhoto =:profilePhotoName  WHERE a.patientId=:patientId")
 	int updatePatientProfile(@Param("patientId")int patientId,@Param("profilePhotoName")String profilePhotoName);
 	
+
+	@Query(value="SELECT p.* FROM patient_details p WHERE p.refferal_code=:referal",nativeQuery=true)
+	PatientDetails findByReferal(@Param("referal")String referal);
 }
