@@ -130,7 +130,7 @@ public class RestApiController {
 	SharingReportToDoctorService sharingReportToDoctorService;
 	@Autowired
 	GetPatientDetailsForEditRepository getPatientDetailsForEditRepository;
-	
+	@Autowired
 	SendFcmNotificationService sendFcmNotificationService;
 	
 	@Autowired
@@ -711,7 +711,7 @@ System.out.println(e.getMessage());
 				
 				if(doctorDetails.getInt1()==0) {
 				sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "BIONISCHE", appointmentNotification, DateConverter.currentDateAndTime(),4);
-				}else if(doctorDetails.getInt1()==0) {
+				}else if(doctorDetails.getInt1()==1) {
 				
 					sendFcmNotificationService.notifyiOSUser(doctorDetails.getLocation(), "BIONISCHE", appointmentNotification, DateConverter.currentDateAndTime(),4);
 					

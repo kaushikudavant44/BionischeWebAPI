@@ -24,13 +24,17 @@ import com.notnoop.apns.ApnsNotification;
 import com.notnoop.apns.ApnsService;
 
 @Service
-public abstract class SendFcmNotificationServiceImpl implements SendFcmNotificationService{
+public class SendFcmNotificationServiceImpl implements SendFcmNotificationService{
 
 	@Autowired
 	Environment env;
 	
 	@Override
 	public ResponseEntity<String> notifyUser(String deviceToken, String title, String message, String timeStamp,int notificationType) {
+		
+		
+		
+		
 		
 		 String response;
 			try {
