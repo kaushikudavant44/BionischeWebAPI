@@ -81,4 +81,7 @@ public interface LabDetailsRepository extends JpaRepository<LabDetails, Integer>
 	@Query("UPDATE LabDetails a SET a.delStatus =:delStatus  WHERE a.labId=:labId")
 	int updateLabDelStatus(@Param("labId")int labId, @Param("delStatus")int delStatus);
 	
+	@Query(value="SELECT p.* FROM lab_details p WHERE p.string3=:referal",nativeQuery=true)
+	LabDetails findByString3(int referal);
+	
 }
