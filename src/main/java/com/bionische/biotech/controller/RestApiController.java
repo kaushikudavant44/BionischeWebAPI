@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -710,14 +711,16 @@ System.out.println(e.getMessage());
 				String appointmentNotification=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+" is booked e-consult appointment on DATE "+appointmentDetailsRes.getDate()+" and TIME "+appointmentTime.getTime();
 				
 				if(doctorDetails.getInt1()==0) {
-				sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "BIONISCHE", appointmentNotification, DateConverter.currentDateAndTime(),4);
+					System.out.println("FCM"+doctorDetails.toString()+"Date"+ DateConverter.currentDateAndTime());
+					ResponseEntity<String> s=	sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "BIONISCHE", appointmentNotification, "cdcd",4);
+						System.out.println("Details="+s);
 				}else if(doctorDetails.getInt1()==1) {
 				
 					sendFcmNotificationService.notifyiOSUser(doctorDetails.getLocation(), "BIONISCHE", appointmentNotification, DateConverter.currentDateAndTime(),4);
 					
 				}
 			}catch(Exception e) {
-				e.getMessage();
+				e.printStackTrace();
 			}				
 				
 				
@@ -827,34 +830,6 @@ System.out.println(e.getMessage());
 		
 		
 		
-		@RequestMapping(value = { "/deleteByCityId" }, method = RequestMethod.POST)
-		public @ResponseBody Info deleteByCityId(@RequestParam("cityId") int cityId)
-		{
-		
-			
-		 try {
-			 Info info=new Info();
-			int res=cityRepository.deleteByCityId(cityId);
-			if(res>0 )
-			{
-				info.setError(false);
-				info.setMessage("Insert SuccessFully");
-			}
-			else
-				
-			{
-				info.setError(true);
-				info.setMessage("Failed to Insert");
-			}
-			return info;
-		 }
-		 catch (Exception e) {
-			System.out.println(e.getMessage());// TODO: handle exception
-		}
-			
-			
-			return null;
-		}
 		
 		@RequestMapping(value = { "/insertState" }, method = RequestMethod.POST)
 		public @ResponseBody Info insertState(@RequestBody State state)
@@ -1183,28 +1158,6 @@ System.out.println(e.getMessage());
 		}
         return appointmentDetailsList;
 	}
-	
-	@RequestMapping(value = { "/getAppointmentDetailsByDoctorForAdmin"}, method = RequestMethod.POST)
-	public @ResponseBody List<GetAppointmentDetails> getAppointmentDetailsByDoctorForAdmin(@RequestParam("doctorId") int doctorId,@RequestParam("fromDate") String fromDate,@RequestParam("toDate") String toDate) {
-		System.out.println("Doctor "+doctorId);
-		
-	/*	fromDate=DateConverter.convertToYMD(fromDate);
-		toDate=DateConverter.convertToYMD(toDate);*/
-		System.out.println("fromDate:-"+fromDate+"to date"+toDate);
-		List<GetAppointmentDetails> appointmentDetailsList=new ArrayList<>();
-		try {
-			appointmentDetailsList=getAppointmentDetailsRepository.getAppointmentDetailsByDoctorForAdmin(fromDate, toDate,doctorId);
-			System.out.println("qhjdahbd:"+appointmentDetailsList.toString());
-			
-			 
-		}
-		catch (Exception e) {
-		e.printStackTrace();
-		}
-        return appointmentDetailsList;
-	}
-	
-	
 	@RequestMapping(value = { "/getAppmtDetailsByDoctorIdPatName"}, method = RequestMethod.POST)
 	public @ResponseBody List<GetAppointmentDetails> getAppmtDetailsByDoctorIdPatName(@RequestParam("doctorId") int doctorId,@RequestParam("fullName") String fullName) {
 		System.out.println("Doctor "+doctorId);
@@ -3007,5 +2960,38 @@ System.out.println(e.getMessage());
 						// TODO: handle exception
 					}
 					return null;
+					}
+					
+					@RequestMapping(value = { "/isDoctorReferalCorrect"}, method = RequestMethod.POST)
+					public @ResponseBody DoctorDetails isReferalCorrect(@RequestParam("referal") String referal) {
+					
+						DoctorDetails doctorDetails=new DoctorDetails();
+						
+					try {
+					
+					
+						doctorDetails=doctorDetailsRepository.findByReferal(referal);
+							
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+					return doctorDetails;
+					}
+					@RequestMapping(value = { "/isPatientReferalCorrect"}, method = RequestMethod.POST)
+					public @ResponseBody PatientDetails isPatientReferalCorrect(@RequestParam("referal") String referal) {
+					
+						PatientDetails patientDetails=new PatientDetails();
+						
+					try {
+					
+					
+						patientDetails=patientDetailsRepository.findByReferal(referal);
+							
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+					return patientDetails;
 					}
 }
