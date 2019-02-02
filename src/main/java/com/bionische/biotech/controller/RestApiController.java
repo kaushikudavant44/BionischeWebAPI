@@ -829,7 +829,34 @@ System.out.println(e.getMessage());
 		}
 		
 		
-		
+		@RequestMapping(value = { "/deleteByCityId" }, method = RequestMethod.POST)
+		public @ResponseBody Info deleteByCityId(@RequestParam("cityId") int cityId)
+		{
+
+
+ 		 try {
+			 Info info=new Info();
+			int res=cityRepository.deleteByCityId(cityId);
+			if(res>0 )
+			{
+				info.setError(false);
+				info.setMessage("Insert SuccessFully");
+			}
+			else
+
+ 			{
+				info.setError(true);
+				info.setMessage("Failed to Insert");
+			}
+			return info;
+		 }
+		 catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+
+
+ 			return null;
+		}	
 		
 		@RequestMapping(value = { "/insertState" }, method = RequestMethod.POST)
 		public @ResponseBody Info insertState(@RequestBody State state)
@@ -900,7 +927,7 @@ System.out.println(e.getMessage());
 			List<GetDoctorListForAppointment> getDoctorListForAppointmentLsit=new ArrayList<GetDoctorListForAppointment>();
 			try {
 				getDoctorListForAppointmentLsit=getDoctorListForAppointmentRepository.getDoctorListForAppointment(specId,cityId, date);
-			
+				
 				for(int i=0;i<getDoctorListForAppointmentLsit.size();i++) {
 				List<String> availableTimeList = Arrays.asList(getDoctorListForAppointmentLsit.get(i).getAvailableTime().split(","));
 				 
@@ -1158,6 +1185,28 @@ System.out.println(e.getMessage());
 		}
         return appointmentDetailsList;
 	}
+	
+	@RequestMapping(value = { "/getAppointmentDetailsByDoctorForAdmin"}, method = RequestMethod.POST)
+	public @ResponseBody List<GetAppointmentDetails> getAppointmentDetailsByDoctorForAdmin(@RequestParam("doctorId") int doctorId,@RequestParam("fromDate") String fromDate,@RequestParam("toDate") String toDate) {
+		System.out.println("Doctor "+doctorId);
+
+ 	/*	fromDate=DateConverter.convertToYMD(fromDate);
+		toDate=DateConverter.convertToYMD(toDate);*/
+		System.out.println("fromDate:-"+fromDate+"to date"+toDate);
+		List<GetAppointmentDetails> appointmentDetailsList=new ArrayList<>();
+		try {
+			appointmentDetailsList=getAppointmentDetailsRepository.getAppointmentDetailsByDoctorForAdmin(fromDate, toDate,doctorId);
+			System.out.println("qhjdahbd:"+appointmentDetailsList.toString());
+
+
+ 		}
+		catch (Exception e) {
+		e.printStackTrace();
+		}
+        return appointmentDetailsList;
+	}
+
+	
 	@RequestMapping(value = { "/getAppmtDetailsByDoctorIdPatName"}, method = RequestMethod.POST)
 	public @ResponseBody List<GetAppointmentDetails> getAppmtDetailsByDoctorIdPatName(@RequestParam("doctorId") int doctorId,@RequestParam("fullName") String fullName) {
 		System.out.println("Doctor "+doctorId);
