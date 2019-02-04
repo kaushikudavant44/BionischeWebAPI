@@ -3,7 +3,7 @@ package com.bionische.biotech.service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-@Service
+
 public interface SendFcmNotificationService {
 
 	/**

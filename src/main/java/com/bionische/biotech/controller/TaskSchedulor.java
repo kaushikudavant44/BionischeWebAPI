@@ -37,7 +37,7 @@ public class TaskSchedulor {
 	@Autowired
 	DoctorDetailsRepository doctorDetailsRepository;
 
-	
+	@Autowired
 	SendFcmNotificationService sendFcmNotificationService;
 	
 	@Autowired

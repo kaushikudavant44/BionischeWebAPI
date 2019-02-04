@@ -14,7 +14,9 @@ import com.bionische.biotech.ewallet.repository.GetWalletTransactionDetailsRepos
 import com.bionische.biotech.ewallet.repository.UserWalletDetailsRepository;
 import com.bionische.biotech.ewallet.repository.UserWalletTransactionRepository;
 import com.bionische.biotech.model.LabDetails;
+import com.bionische.biotech.model.MedicalDetails;
 import com.bionische.biotech.repository.LabDetailsRepository;
+import com.bionische.biotech.repository.MedicalDetailsRepository;
 import com.bionische.biotech.repository.TransactionWalletDetailsRepository;
 import com.bionische.biotech.repository.WalletDetailsRepository;
 
@@ -38,6 +40,10 @@ public class UserWalletApiController {
 	
 	@Autowired
 	LabDetailsRepository labDetailsRepository;
+	
+	@Autowired
+	MedicalDetailsRepository medicalDetailsRepository;
+	
 	/*
 	 * @author Ganesh
 	 * get user All wallet  details 
@@ -167,4 +173,22 @@ public class UserWalletApiController {
 	}
 	return labDetails;
 	}
+	@RequestMapping(value = { "/isMedicalReferalCorrect"}, method = RequestMethod.POST)
+	public @ResponseBody MedicalDetails isMedicalReferalCorrect(@RequestParam("referal") String referal) {
+	
+		MedicalDetails medicalDetails=new MedicalDetails();
+		
+	try {
+	
+	
+		medicalDetails=medicalDetailsRepository.findByString3(referal);
+			
+	}
+	catch (Exception e) {
+		e.printStackTrace();
+	}
+	return medicalDetails;
+	}
+	
+	
 }

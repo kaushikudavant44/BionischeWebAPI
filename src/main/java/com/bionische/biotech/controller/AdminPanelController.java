@@ -153,7 +153,7 @@ public class AdminPanelController {
 	@Autowired
 	GetPackageOffersRepository getPackageOffersRepository;
 	
-	
+	@Autowired
 	SendFcmNotificationService sendFcmNotificationService;
 	/*
 	 * 

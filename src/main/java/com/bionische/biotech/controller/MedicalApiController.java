@@ -2,8 +2,10 @@ package com.bionische.biotech.controller;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +37,8 @@ public class MedicalApiController {
 	@Autowired
 	PharmacySubscriptionDetailsRepository pharmacySubscriptionDetailsRepository;
 	
+	private static final char[] CHARSET_AZ_09 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
+	
 	@RequestMapping(value = { "/insertMedicalDetails" }, method = RequestMethod.POST)
 	public @ResponseBody MedicalDetails insertMedicalDetails(@RequestBody MedicalDetails medicalDetails)
 	{
@@ -55,6 +59,20 @@ public class MedicalApiController {
 			catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
+		
+		//Create refferal code for doctor
+		char[] characterSet=CHARSET_AZ_09;
+		  Random random = new SecureRandom();
+	        char[] result = new char[8];
+	        for (int i = 0; i < result.length; i++) {
+	            // picks a random index out of character set > random character
+	            int randomCharIndex = random.nextInt(characterSet.length);
+	            result[i] = characterSet[randomCharIndex];
+	        }
+		
+	     String reffCode= new String(result);
+	     medicalDetails.setString3(reffCode);
+	     System.out.println("Refferal Code is= "+reffCode);
 		
 		try {
 			medicalDetailsRes=medicalDetailsRepository.save(medicalDetails); 

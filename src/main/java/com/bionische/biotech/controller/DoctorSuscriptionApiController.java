@@ -22,7 +22,7 @@ import com.bionische.biotech.service.SendFcmNotificationService;
 @RequestMapping(value = { "/doctorSuscription" })
 public class DoctorSuscriptionApiController {
 
-
+	@Autowired
 	SendFcmNotificationService sendFcmNotificationService;
 
 	@Autowired

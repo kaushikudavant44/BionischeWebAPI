@@ -95,7 +95,7 @@ public class AccountingApiController {
 	@Autowired
 	GetPharmacyPrescriptionReceiptRepository getPharmacyPrescriptionReceiptRepository;
 	
-
+	@Autowired
 	SendFcmNotificationService sendFcmNotificationService;
 	
 	@Autowired

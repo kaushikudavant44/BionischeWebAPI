@@ -2,6 +2,7 @@ package com.bionische.biotech.controller;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -82,10 +84,13 @@ import com.bionische.biotech.service.SharingReportToDoctorService;
 
 @RestController
 public class LabApiConrtoller {
+	
+	private static final char[] CHARSET_AZ_09 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
 
 	@Autowired
 	SharingReportToDoctorService sharingReportToDoctorService;
 	
+	@Autowired
 	SendFcmNotificationService sendFcmNotificationService;
 	
 	@Autowired
@@ -990,6 +995,19 @@ System.out.println(e.getMessage());
 			}
 			labDetails.setPassword(hashedPass);
 			}
+			//Create refferal code for doctor
+			char[] characterSet=CHARSET_AZ_09;
+			  Random random = new SecureRandom();
+		        char[] result = new char[8];
+		        for (int i = 0; i < result.length; i++) {
+		            // picks a random index out of character set > random character
+		            int randomCharIndex = random.nextInt(characterSet.length);
+		            result[i] = characterSet[randomCharIndex];
+		        }
+			
+		     String reffCode= new String(result);
+		     labDetails.setString3(reffCode);
+		     System.out.println("Refferal Code is= "+reffCode);
 			}
 			catch (Exception e) {
 				System.out.println(e.getMessage());
