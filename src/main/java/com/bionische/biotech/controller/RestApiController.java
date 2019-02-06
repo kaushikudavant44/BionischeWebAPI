@@ -115,10 +115,13 @@ import com.bionische.biotech.repository.SpecializationDetailsRepository;
 import com.bionische.biotech.repository.StateRepository;
 import com.bionische.biotech.repository.TermsAndConditionsRepository;
 import com.bionische.biotech.service.CreateDirectoryService;
+import com.bionische.biotech.service.FixDoctorScheduleService;
 import com.bionische.biotech.service.SendEMailService;
 import com.bionische.biotech.service.SendFcmNotificationService;
 import com.bionische.biotech.service.SendTextMessageService;
 import com.bionische.biotech.service.SharingReportToDoctorService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
  
 
@@ -267,7 +270,8 @@ public class RestApiController {
 	PharmacyCertificateDetailsRepository pharmacyCertificateDetailsRepository;
 	@Autowired
 	PatientSuscriptionDetailsRepository patientSuscriptionDetailsRepository;
-	
+	@Autowired
+	FixDoctorScheduleService fixDoctorScheduleService;
 	String MESSAGE;
 	
 	
@@ -924,11 +928,56 @@ System.out.println(e.getMessage());
 		@RequestMapping(value = { "/getDoctorsBySpecialistId" }, method = RequestMethod.POST)
 		public @ResponseBody List<GetDoctorListForAppointment> getDoctorsBySpecialistId(@RequestParam("cityId") int cityId,@RequestParam("specId") int specId ,@RequestParam("date") String date) {
 			System.out.println("cccity "+cityId);
-			List<GetDoctorListForAppointment> getDoctorListForAppointmentLsit=new ArrayList<GetDoctorListForAppointment>();
+			 
 			try {
-				getDoctorListForAppointmentLsit=getDoctorListForAppointmentRepository.getDoctorListForAppointment(specId,cityId, date);
-				
+				List<GetDoctorListForAppointment> getDoctorListForAppointmentLsit=getDoctorListForAppointmentRepository.getDoctorListForAppointment(specId,cityId, date);
+				 System.out.println(getDoctorListForAppointmentLsit.toString());
+				 
+				 List<Integer> doctorIdList=new ArrayList<Integer>();
 				for(int i=0;i<getDoctorListForAppointmentLsit.size();i++) {
+					doctorIdList.add(getDoctorListForAppointmentLsit.get(i).getDoctorId());
+				}
+				 
+				 List<GetDoctorListForAppointment> getDoctorListForAppointmentLsitRes=new ArrayList<GetDoctorListForAppointment>();
+				  getDoctorListForAppointmentLsitRes=fixDoctorScheduleService.getDoctorListForAppointment(specId, cityId,doctorIdList);
+					System.out.println("fix Schedule "+getDoctorListForAppointmentLsitRes.toString());
+				  
+				
+					ObjectMapper mapper = new ObjectMapper();
+					
+					
+			   
+					
+					for(int ii=0;ii<getDoctorListForAppointmentLsitRes.size();ii++)
+					{
+						//if(getDoctorListForAppointmentLsit.get(i).getDoctorId()==getDoctorListForAppointmentLsitRes.get(ii).getDoctorId()) {
+							
+						//}else
+						//{
+							
+						   List<AppointmentTime> appointmentTimeList = mapper.readValue(getDoctorListForAppointmentLsitRes.get(ii).getAvailableTime(),new TypeReference<List<AppointmentTime>>() { });
+						 
+						for(int jj=0;jj<appointmentTimeList.size();jj++)
+						{
+						//	System.out.println("fix Schedule appointmentTime" +appointmentTime.toString());
+							getDoctorListForAppointmentLsitRes.get(ii).setFromTime(appointmentTimeList.get(jj).getTime());
+							getDoctorListForAppointmentLsitRes.get(ii).setToTime(appointmentTimeList.get(appointmentTimeList.size()-1).getTime());
+							break;
+						}
+						getDoctorListForAppointmentLsitRes.get(ii).setAvailableTime(null); //from Fix schedule time why available time=111
+						//getDoctorListForAppointmentLsitRes.set(ii, getDoctorListForAppointmentLsit.get(i));
+						
+					//	}
+					}
+				for(int i=0;i<getDoctorListForAppointmentLsit.size();i++) {
+					
+					
+				
+					
+					
+					
+					
+					
 				List<String> availableTimeList = Arrays.asList(getDoctorListForAppointmentLsit.get(i).getAvailableTime().split(","));
 				 
 				for(int j=0;j<availableTimeList.size();j++)
@@ -947,11 +996,14 @@ System.out.println(e.getMessage());
 				
 				}
 				}
+				for(GetDoctorListForAppointment getDoctorListForAppointment : getDoctorListForAppointmentLsit)
+				getDoctorListForAppointmentLsitRes.add(getDoctorListForAppointment);
+				return getDoctorListForAppointmentLsitRes;
 			}
 			catch (Exception e) {
 			e.printStackTrace();
 			}
-			return getDoctorListForAppointmentLsit;
+			return null;
 		}
 		
 		@RequestMapping(value = { "/getTimeByDoctorId" }, method = RequestMethod.POST)

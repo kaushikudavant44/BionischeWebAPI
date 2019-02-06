@@ -13,11 +13,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.DocAvailableTime;
+import com.bionische.biotech.model.FixDoctorAppointSchedule;
 import com.bionische.biotech.model.GetDoctorHospitalDetails;
+import com.bionische.biotech.model.GetHospitalClinicByDoctorIdAndAvailDate;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.repository.AppointmentTimeRepository;
 import com.bionische.biotech.repository.DocAvailableTimeRepository;
+import com.bionische.biotech.repository.FixDoctorAppointScheduleRepository;
 import com.bionische.biotech.repository.GetDoctorHospitalDetailsRepository;
+import com.bionische.biotech.repository.GetHospitalClinicByDoctorIdAndAvailDateRepository;
+import com.bionische.biotech.service.FixDoctorScheduleService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping(value = { "/doctorAvailableTime"})
@@ -31,6 +38,13 @@ public class DoctorAvailableTimeApiController {
 	
 	@Autowired
 	DocAvailableTimeRepository docAvailableTimeRepository;
+	@Autowired
+	FixDoctorAppointScheduleRepository fixDoctorAppointScheduleRepository;
+	@Autowired
+	FixDoctorScheduleService fixDoctorScheduleService;
+	
+	@Autowired
+	GetHospitalClinicByDoctorIdAndAvailDateRepository getHospitalClinicByDoctorIdAndAvailDateRepository;
 	
 	@RequestMapping(value = { "/getDoctorHospitalDetails"}, method = RequestMethod.POST)
 	public  List<GetDoctorHospitalDetails> getDoctorHospitalDetails(@RequestParam("doctorId") int doctorId) {
@@ -127,4 +141,106 @@ public  List<AppointmentTime> getClinicAvailabledTimeForAppointment(@RequestPara
 	return appointmentTimeList;
 }
 
+
+@RequestMapping(value = { "/insertDoctorFixSchedule"}, method = RequestMethod.POST)
+public  Info insertDoctorFixSchedule(@RequestBody List<FixDoctorAppointSchedule> fixDoctorAppointScheduleList) {
+	 
+	Info info=new Info();
+	info.setError(true);
+	try {
+		
+		
+		 for(int i=0;i<fixDoctorAppointScheduleList.size();i++) {
+			 if(i==0)
+			 fixDoctorAppointScheduleRepository.updateDelStatus(fixDoctorAppointScheduleList.get(i).getDoctorId());
+			 fixDoctorScheduleService.insertFixDoctorAppointSchedule(fixDoctorAppointScheduleList.get(i));
+		
+		info.setError(false);
+		info.setMessage("Insert Schedule Successfully");
+		
+		 }
+	}catch (Exception e) {
+		System.out.println(e.getMessage());// TODO: handle exception
+		info.setError(true);
+		info.setMessage("failed Insert Schedule");
+	}
+	
+	
+	return info;
+}
+
+
+@RequestMapping(value = { "/getDoctorFixSchedule"}, method = RequestMethod.POST)
+public  String getDoctorFixSchedule(@RequestParam("doctorId")int doctorId, @RequestParam("clinicId")int clinicId) {
+	 
+ 
+	try { 
+		FixDoctorAppointSchedule fixDoctorAppointSchedule=fixDoctorAppointScheduleRepository.findByDoctorIdAndClinicIdAndDelStatus(doctorId, clinicId,0);
+		 
+		return fixDoctorAppointSchedule.getTimeJson();
+	}catch (Exception e) {
+		System.out.println(e.getMessage());// TODO: handle exception
+		 
+	}
+	
+	
+	return null;
+}
+
+@RequestMapping(value = { "/getDoctorAppointmentTimeByDateAndClinicId"}, method = RequestMethod.POST)
+public  List<AppointmentTime> getDoctorAppointmentTimeByDateAndClinicId(@RequestParam("doctorId")int doctorId, @RequestParam("hospitalId")int hospitalId, @RequestParam("date")String date) {
+	 
+ int noOfPatient=0;
+ List<String> availableTimeList=new ArrayList<String>();
+	try { 
+		FixDoctorAppointSchedule fixDoctorAppointSchedule=fixDoctorAppointScheduleRepository.findByDoctorIdAndClinicIdAndDelStatus(doctorId, hospitalId,0);
+		noOfPatient=fixDoctorAppointSchedule.getNoOfPatient();
+		ObjectMapper mapper = new ObjectMapper();
+		
+		List<AppointmentTime> appointmentTimeList = mapper.readValue(fixDoctorAppointSchedule.getTimeJson(),new TypeReference<List<AppointmentTime>>() { });
+		 
+		 for(AppointmentTime appointmentTime :appointmentTimeList)
+			 availableTimeList.add(appointmentTime.getTimeId()+"");
+	
+	try {
+		return appointmentTimeRepository.getClinicAvailabledAppointTime(doctorId, hospitalId, date, availableTimeList, noOfPatient);
+	}
+	catch (Exception e) {
+		System.out.println(e.getMessage());// TODO: handle exception
+	}
+	}catch (Exception e) {
+		System.out.println(e.getMessage());// TODO: handle exception
+		 
+	}
+	return null;
+}
+
+
+
+@RequestMapping(value = { "/getHospitalClinicByDoctorIdWithFixSchedule"}, method = RequestMethod.POST)
+public  List<GetHospitalClinicByDoctorIdAndAvailDate> getHospitalClinicByDoctorIdWithFixSchedule(@RequestParam("doctorId")int doctorId, @RequestParam("clinicId")int clinicId ) {
+
+	
+	try {
+	List<GetHospitalClinicByDoctorIdAndAvailDate> getHospitalClinicByDoctorIdAndAvailDateList=getHospitalClinicByDoctorIdAndAvailDateRepository.getHospitalClinicByDoctorIdWithFixSchedule(doctorId, clinicId);
+	ObjectMapper mapper = new ObjectMapper();
+	for(int ii=0;ii<getHospitalClinicByDoctorIdAndAvailDateList.size();ii++) {
+	 List<AppointmentTime> appointmentTimeList = mapper.readValue(getHospitalClinicByDoctorIdAndAvailDateList.get(ii).getAvailableTime(),new TypeReference<List<AppointmentTime>>() { });
+	 
+
+		for(int jj=0;jj<appointmentTimeList.size();jj++)
+		{
+		//	System.out.println("fix Schedule appointmentTime" +appointmentTime.toString());
+			getHospitalClinicByDoctorIdAndAvailDateList.get(ii).setFromTime(appointmentTimeList.get(jj).getTime());
+			getHospitalClinicByDoctorIdAndAvailDateList.get(ii).setToTime(appointmentTimeList.get(appointmentTimeList.size()-1).getTime());
+			break;
+		}
+	}
+	return getHospitalClinicByDoctorIdAndAvailDateList;
+	}
+	catch (Exception e) {
+		System.out.println(e.getMessage());// TODO: handle exception
+	}
+	return null;
+}
 }
