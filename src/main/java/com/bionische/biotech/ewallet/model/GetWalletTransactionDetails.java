@@ -12,7 +12,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -23,69 +25,57 @@ public class GetWalletTransactionDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "transaction_id")
-	private long transactionId;
+	int transactionId;
 	
-	@Column(name = "txn_type")
-	private int txnType;
+	@Column(name = "from_user_id")
+	int fromUserId;
 	
+	@Column(name = "user_type")
+	int userType;
 	
-	@Column(name="user_id")
-	private int userId;
+	@Column(name = "wallet_id")
+	int walletId;
 	
-	
-	@Column(name="user_type")
-	private int userType;
-
-	@Column(name = "from_to")
-	private int fromTo;
-	
-	 
-	@Column(name = "from_to_name")
-	private String fromToName;
-	
-
-
-	@Column(name = "from_to_user_type")
-	private int fromToUserType;
+	@Column(name = "transaction_type")
+	int transactionType;
 	
 	@Column(name = "amount")
-	private float amount;
+	float amount;
 	
+	@Column(name = "to_user_id")
+	int toUserId;
 	
-	@Column(name = "date_time")
-	private String dateTime;
+	@Column(name="created_date",updatable=false)
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreatedDate
+	private Date createDate;
+	
+	@Column(name="last_modified_date")
+	@LastModifiedDate
+	@Temporal(TemporalType.TIMESTAMP)
+	@UpdateTimestamp
+	private Date lastModifiedDate;
+	
+	@Column(name="to_user_type")
+	private int toUserType;
 
-	@Column(name = "amount_type")
-	private int amountType;
-	
-	@Column(name = "comment")
-	private String comment;
-	
-	@Column(name = "status")
-	private int status;
+	@Column(name="to_user_name")
+	private String toUserName;
 
-	public long getTransactionId() {
+	public int getTransactionId() {
 		return transactionId;
 	}
 
-	public void setTransactionId(long transactionId) {
+	public void setTransactionId(int transactionId) {
 		this.transactionId = transactionId;
 	}
 
-	public int getTxnType() {
-		return txnType;
+	public int getFromUserId() {
+		return fromUserId;
 	}
 
-	public void setTxnType(int txnType) {
-		this.txnType = txnType;
-	}
-
-	public int getUserId() {
-		return userId;
-	}
-
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setFromUserId(int fromUserId) {
+		this.fromUserId = fromUserId;
 	}
 
 	public int getUserType() {
@@ -96,28 +86,20 @@ public class GetWalletTransactionDetails {
 		this.userType = userType;
 	}
 
-	public int getFromTo() {
-		return fromTo;
+	public int getWalletId() {
+		return walletId;
 	}
 
-	public void setFromTo(int fromTo) {
-		this.fromTo = fromTo;
+	public void setWalletId(int walletId) {
+		this.walletId = walletId;
 	}
 
-	public String getFromToName() {
-		return fromToName;
+	public int getTransactionType() {
+		return transactionType;
 	}
 
-	public void setFromToName(String fromToName) {
-		this.fromToName = fromToName;
-	}
-
-	public int getFromToUserType() {
-		return fromToUserType;
-	}
-
-	public void setFromToUserType(int fromToUserType) {
-		this.fromToUserType = fromToUserType;
+	public void setTransactionType(int transactionType) {
+		this.transactionType = transactionType;
 	}
 
 	public float getAmount() {
@@ -128,47 +110,55 @@ public class GetWalletTransactionDetails {
 		this.amount = amount;
 	}
 
-	 
-
-	public String getDateTime() {
-		return dateTime;
+	public int getToUserId() {
+		return toUserId;
 	}
 
-	public void setDateTime(String dateTime) {
-		this.dateTime = dateTime;
+	public void setToUserId(int toUserId) {
+		this.toUserId = toUserId;
 	}
 
-	public int getAmountType() {
-		return amountType;
+	public Date getCreateDate() {
+		return createDate;
 	}
 
-	public void setAmountType(int amountType) {
-		this.amountType = amountType;
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
 	}
 
-	public String getComment() {
-		return comment;
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
 	}
 
-	public void setComment(String comment) {
-		this.comment = comment;
+	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
 	}
 
-	public int getStatus() {
-		return status;
+	public int getToUserType() {
+		return toUserType;
 	}
 
-	public void setStatus(int status) {
-		this.status = status;
+	public void setToUserType(int toUserType) {
+		this.toUserType = toUserType;
+	}
+
+	public String getToUserName() {
+		return toUserName;
+	}
+
+	public void setToUserName(String toUserName) {
+		this.toUserName = toUserName;
 	}
 
 	@Override
 	public String toString() {
-		return "GetWalletTransactionDetails [transactionId=" + transactionId + ", txnType=" + txnType + ", userId="
-				+ userId + ", userType=" + userType + ", fromTo=" + fromTo + ", fromToName=" + fromToName
-				+ ", fromToUserType=" + fromToUserType + ", amount=" + amount + ", dateTime=" + dateTime
-				+ ", amountType=" + amountType + ", comment=" + comment + ", status=" + status + "]";
+		return "GetWalletTransactionDetails [transactionId=" + transactionId + ", fromUserId=" + fromUserId
+				+ ", userType=" + userType + ", walletId=" + walletId + ", transactionType=" + transactionType
+				+ ", amount=" + amount + ", toUserId=" + toUserId + ", createDate=" + createDate + ", lastModifiedDate="
+				+ lastModifiedDate + ", toUserType=" + toUserType + ", toUserName=" + toUserName + "]";
 	}
+
+	
 
 	
 	

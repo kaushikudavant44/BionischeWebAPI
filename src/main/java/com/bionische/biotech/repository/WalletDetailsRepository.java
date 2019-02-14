@@ -8,4 +8,6 @@ public interface WalletDetailsRepository extends JpaRepository<WalletDetails, In
 
 	WalletDetails save(WalletDetails walletDetails);
 	
+	WalletDetails findByUserIdAndUserType(int userId, int userType);
+	
 }

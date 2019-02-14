@@ -55,7 +55,18 @@ public class TransactionWalletDetails {
 	@UpdateTimestamp
 	private Date lastModifiedDate;
 	
+	@Column(name="to_user_type")
+	private int toUserType;
+
 	
+	
+	public int getToUserType() {
+		return toUserType;
+	}
+
+	public void setToUserType(int toUserType) {
+		this.toUserType = toUserType;
+	}
 
 	public Date getCreateDate() {
 		return createDate;
@@ -134,8 +145,10 @@ public class TransactionWalletDetails {
 		return "TransactionWalletDetails [transactionId=" + transactionId + ", fromUserId=" + fromUserId + ", userType="
 				+ userType + ", walletId=" + walletId + ", transactionType=" + transactionType + ", amount=" + amount
 				+ ", toUserId=" + toUserId + ", createDate=" + createDate + ", lastModifiedDate=" + lastModifiedDate
-				+ "]";
+				+ ", toUserType=" + toUserType + "]";
 	}
+
+	
 
 	
 	

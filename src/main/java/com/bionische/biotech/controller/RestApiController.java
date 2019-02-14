@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bionische.biotech.Common.DateConverter;
+import com.bionische.biotech.ewallet.model.ReferalDetails;
+import com.bionische.biotech.ewallet.model.WalletDetails;
 import com.bionische.biotech.model.AppointmentDetails;
 import com.bionische.biotech.model.AppointmentList;
 import com.bionische.biotech.model.AppointmentTime;
@@ -110,10 +112,12 @@ import com.bionische.biotech.repository.PatientSuscriptionDetailsRepository;
 import com.bionische.biotech.repository.PharmacyCertificateDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionDetailsRepository;
 import com.bionische.biotech.repository.RatingDetailsRepository;
+import com.bionische.biotech.repository.ReferalDetailsRepository;
 import com.bionische.biotech.repository.SharingReportWithDocRepository;
 import com.bionische.biotech.repository.SpecializationDetailsRepository;
 import com.bionische.biotech.repository.StateRepository;
 import com.bionische.biotech.repository.TermsAndConditionsRepository;
+import com.bionische.biotech.repository.WalletDetailsRepository;
 import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.FixDoctorScheduleService;
 import com.bionische.biotech.service.SendEMailService;
@@ -272,6 +276,11 @@ public class RestApiController {
 	PatientSuscriptionDetailsRepository patientSuscriptionDetailsRepository;
 	@Autowired
 	FixDoctorScheduleService fixDoctorScheduleService;
+	
+	@Autowired
+	ReferalDetailsRepository referalDetailsRepository;
+	@Autowired
+	WalletDetailsRepository walletDetailsRepository;
 	String MESSAGE;
 	
 	
@@ -3063,21 +3072,21 @@ System.out.println(e.getMessage());
 					return null;
 					}
 					
-					@RequestMapping(value = { "/isDoctorReferalCorrect"}, method = RequestMethod.POST)
-					public @ResponseBody DoctorDetails isReferalCorrect(@RequestParam("referal") String referal) {
+					@RequestMapping(value = { "/isReferalCorrect"}, method = RequestMethod.POST)
+					public @ResponseBody ReferalDetails isReferalCorrect(@RequestParam("referal") String referal) {
 					
-						DoctorDetails doctorDetails=new DoctorDetails();
+						ReferalDetails referalDetails=new ReferalDetails();
 						
 					try {
 					
 					
-						doctorDetails=doctorDetailsRepository.findByReferal(referal);
+						referalDetails=referalDetailsRepository.findByReferal(referal);
 							
 					}
 					catch (Exception e) {
 						e.printStackTrace();
 					}
-					return doctorDetails;
+					return referalDetails;
 					}
 					@RequestMapping(value = { "/isPatientReferalCorrect"}, method = RequestMethod.POST)
 					public @ResponseBody PatientDetails isPatientReferalCorrect(@RequestParam("referal") String referal) {
@@ -3094,5 +3103,22 @@ System.out.println(e.getMessage());
 						e.printStackTrace();
 					}
 					return patientDetails;
+					}
+					
+					@RequestMapping(value = { "/getUserWalletDetails"}, method = RequestMethod.POST)
+					public @ResponseBody WalletDetails getUserWalletDetails(@RequestParam("userId") int userId,@RequestParam("userType") int userType) {
+					
+						WalletDetails walletDetails=new WalletDetails();
+						
+					try {
+					
+					
+						walletDetails=walletDetailsRepository.findByUserIdAndUserType(userId,userType);
+							
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+					return walletDetails;
 					}
 }

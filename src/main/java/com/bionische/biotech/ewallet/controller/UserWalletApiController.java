@@ -1,5 +1,8 @@
 package com.bionische.biotech.ewallet.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.ewallet.model.GetWalletTransactionDetails;
 import com.bionische.biotech.ewallet.model.TransactionWalletDetails;
 import com.bionische.biotech.ewallet.model.WalletDetails;
 import com.bionische.biotech.ewallet.repository.GetWalletTransactionDetailsRepository;
@@ -26,9 +30,6 @@ public class UserWalletApiController {
 	@Autowired
 	private UserWalletTransactionRepository userWalletTransactionRepository;
 	
-	@Autowired 
-	private GetWalletTransactionDetailsRepository getWalletTransactionDetailsRepository;
-	
 	@Autowired
 	private UserWalletDetailsRepository userWalletDetailsRepository;
 
@@ -43,7 +44,9 @@ public class UserWalletApiController {
 	
 	@Autowired
 	MedicalDetailsRepository medicalDetailsRepository;
-	
+
+	@Autowired
+	private GetWalletTransactionDetailsRepository getWalletTransactionDetailsRepository;
 	/*
 	 * @author Ganesh
 	 * get user All wallet  details 
@@ -188,6 +191,23 @@ public class UserWalletApiController {
 		e.printStackTrace();
 	}
 	return medicalDetails;
+	}
+	
+@RequestMapping(value = { "/getWalletTransactionDetails"}, method = RequestMethod.POST)
+	public @ResponseBody List<GetWalletTransactionDetails> getWalletTransactionDetails(@RequestParam("userId") int userId,@RequestParam("userType") int userType) {
+	
+		List<GetWalletTransactionDetails> getWalletTransactionDetailsList=new ArrayList<GetWalletTransactionDetails>();
+		
+	try {
+	System.out.println(userId+" And "+userType);
+	
+		getWalletTransactionDetailsList=getWalletTransactionDetailsRepository.getWalletTransactionDetails(userId,userType);
+			System.out.println("wallet details ="+getWalletTransactionDetailsList.toString());
+	}
+	catch (Exception e) {
+		e.printStackTrace();
+	}
+	return getWalletTransactionDetailsList;
 	}
 	
 	
