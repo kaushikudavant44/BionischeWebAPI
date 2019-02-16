@@ -943,6 +943,7 @@ System.out.println(e.getMessage());
 				 System.out.println(getDoctorListForAppointmentLsit.toString());
 				 
 				 List<Integer> doctorIdList=new ArrayList<Integer>();
+				 doctorIdList.add(0);
 				for(int i=0;i<getDoctorListForAppointmentLsit.size();i++) {
 					doctorIdList.add(getDoctorListForAppointmentLsit.get(i).getDoctorId());
 				}
@@ -1141,7 +1142,7 @@ System.out.println(e.getMessage());
 				if(status==3)
 				{
 				patientNotification.setPatientId(getPatientContactDetailsById.getPatientId());
-				patientNotification.setNotification("Your Appointment has been cancelled by Dr."+getAppointmentDetails.getDoctorName()+" on DATE "+getAppointmentDetails.getDate()+" and TIME "+getAppointmentDetails.getTime());					
+				patientNotification.setNotification(getPatientContactDetailsById.getfName()+" your appointment has been cancelled by Dr."+getAppointmentDetails.getDoctorName()+" on DATE "+getAppointmentDetails.getDate()+" and TIME "+getAppointmentDetails.getTime());					
 				patientNotification.setStatus(0);
 				patientNotification.setString1("Appointment Status");
 				patientNotification.setString2("doctor");
@@ -1392,7 +1393,7 @@ System.out.println(e.getMessage());
 					
 					PatientDetails patientDetails=patientDetailsRepository.findByPatientId(getPatientContactDetailsById.getPatientId());
 					patientNotification.setPatientId(getPatientContactDetailsById.getPatientId());
-					patientNotification.setNotification("Your Appointment has been confirmed by Dr."+getAppointmentDetails.getDoctorName()+" on DATE "+getAppointmentDetails.getDate()+" and TIME "+getAppointmentDetails.getTime());					
+					patientNotification.setNotification(getPatientContactDetailsById.getfName()+" Your Appointment has been confirmed by Dr."+getAppointmentDetails.getDoctorName()+" on DATE "+getAppointmentDetails.getDate()+" and TIME "+getAppointmentDetails.getTime());					
 					patientNotification.setStatus(0);
 					patientNotification.setString1("Appointment Confirmed");
 					patientNotification.setString2("doctor");
