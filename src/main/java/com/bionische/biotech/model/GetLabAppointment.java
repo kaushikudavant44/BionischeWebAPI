@@ -16,8 +16,8 @@ public class GetLabAppointment {
 	private int appointId;
 	
 	
-	@Column(name="lab_test_id")
-	private int labTestId;
+	@Column(name="test_id_list")
+	private String testIdList;
 	
 	@Column(name="lab_test_name")
 	private String labTestName;
@@ -54,19 +54,24 @@ public class GetLabAppointment {
 
 	@Column(name="patient_email")
 	private String patientEmail;
+	
+	@Column(name="doctor_id")
+    private int doctorId;
+	
+	@Column(name="refference")
+    private int refference;
 
-	@Column(name="int_1")
-	private int int1;
+	@Column(name="doctor_name")
+	private String doctorName;
 
-	public int getInt1() {
-		return int1;
-	}
+	@Column(name="status")
+	private int status;
 
-	public void setInt1(int int1) {
-		this.int1 = int1;
-	}
+	@Column(name="payment_status")
+	private int paymentStatus;
 
-
+	@Column(name="total_amount")
+	private float totalAmount;
 
 	public int getTimeId() {
 		return timeId;
@@ -209,20 +214,7 @@ public class GetLabAppointment {
 	public void setLabId(int labId) {
 		this.labId = labId;
 	}
-
-
-
-	public int getLabTestId() {
-		return labTestId;
-	}
-
-
-
-	public void setLabTestId(int labTestId) {
-		this.labTestId = labTestId;
-	}
-
-
+ 
 
 	public String getLabTestName() {
 		return labTestName;
@@ -234,17 +226,97 @@ public class GetLabAppointment {
 		this.labTestName = labTestName;
 	}
 
+	public String getTestIdList() {
+		return testIdList;
+	}
+
+	public void setTestIdList(String testIdList) {
+		this.testIdList = testIdList;
+	}
+
+
+
+	public int getStatus() {
+		return status;
+	}
+
+
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+
+ 
+	public float getTotalAmount() {
+		return totalAmount;
+	}
+
+
+
+	public void setTotalAmount(float totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+
+
+	public int getPaymentStatus() {
+		return paymentStatus;
+	}
+
+
+
+	public void setPaymentStatus(int paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+
+
+
+	public int getDoctorId() {
+		return doctorId;
+	}
+
+
+
+	public void setDoctorId(int doctorId) {
+		this.doctorId = doctorId;
+	}
+
+
+
+	public String getDoctorName() {
+		return doctorName;
+	}
+
+
+
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
+	}
+
+
+
+	public int getRefference() {
+		return refference;
+	}
+
+
+
+	public void setRefference(int refference) {
+		this.refference = refference;
+	}
+
 
 
 	@Override
 	public String toString() {
-		return "GetLabAppointment [appointId=" + appointId + ", labTestId=" + labTestId + ", labTestName=" + labTestName
-				+ ", labId=" + labId + ", labName=" + labName + ", patientId=" + patientId + ", time=" + time
-				+ ", timeId=" + timeId + ", date=" + date + ", labAddress=" + labAddress + ", patientName="
+		return "GetLabAppointment [appointId=" + appointId + ", testIdList=" + testIdList + ", labTestName="
+				+ labTestName + ", labId=" + labId + ", labName=" + labName + ", patientId=" + patientId + ", time="
+				+ time + ", timeId=" + timeId + ", date=" + date + ", labAddress=" + labAddress + ", patientName="
 				+ patientName + ", patientContact=" + patientContact + ", delStatus=" + delStatus + ", patientEmail="
-				+ patientEmail + "]";
+				+ patientEmail + ", doctorId=" + doctorId + ", refference=" + refference + ", doctorName=" + doctorName
+				+ ", status=" + status + ", paymentStatus=" + paymentStatus + ", totalAmount=" + totalAmount + "]";
 	}
-
-
-	
+ 
+ 
 }

@@ -25,6 +25,6 @@ public interface GetHospitalClinicByDoctorIdAndAvailDateRepository extends JpaRe
 	
 	@Query(value="SELECT h.hospital_id, h.hospital_name, h.type, h.contact_no, h.email_id, h.address, h.cityid,c.city_name, h.lat, h.longitude, dt.time_json as available_time " + 
 			"FROM hospital_details h, city c, doctor_hospital_details dh, fix_doctor_schedule dt WHERE dh.doctor_id=:doctorId AND dh.hospital_id=h.hospital_id AND " + 
-			"h.del_status=0 AND dt.doctor_id=:doctorId AND  dt.hospital_id=h.hospital_id AND c.city_id=h.cityid AND dt.hospital_id!=:clinicId",nativeQuery=true)
+			"h.del_status=0 AND dt.doctor_id=:doctorId AND  dt.hospital_id=h.hospital_id AND c.city_id=h.cityid AND dt.hospital_id!=:clinicId AND dt.del_status=0",nativeQuery=true)
 	List<GetHospitalClinicByDoctorIdAndAvailDate> getHospitalClinicByDoctorIdWithFixSchedule(@Param("doctorId") int doctorId, @Param("clinicId") int clinicId);
 }

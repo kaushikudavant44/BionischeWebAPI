@@ -54,6 +54,10 @@ public class GetLabForAppointment {
 	
 	@Column(name="tests_types")
 	private String teststypes;
+	
+	@Column(name="tests_name")
+	private String testName;
+	
 
 	public int getLabId() {
 		return labId;
@@ -176,17 +180,23 @@ public class GetLabForAppointment {
 		this.teststypes = teststypes;
 	}
 
+	public String getTestName() {
+		return testName;
+	}
+
+	public void setTestName(String testName) {
+		this.testName = testName;
+	}
+
 	@Override
 	public String toString() {
 		return "GetLabForAppointment [labId=" + labId + ", cityId=" + cityId + ", cityName=" + cityName + ", labName="
 				+ labName + ", address=" + address + ", fromTime=" + fromTime + ", toTime=" + toTime + ", licenceNo="
 				+ licenceNo + ", photo=" + photo + ", rating=" + rating + ", contact=" + contact + ", email=" + email
-				+ ", lat=" + lat + ", longitude=" + longitude + ", teststypes=" + teststypes + "]";
+				+ ", lat=" + lat + ", longitude=" + longitude + ", teststypes=" + teststypes + ", testName=" + testName
+				+ "]";
 	}
 
-	 
-	 
-
-	
+ 
 	
 }

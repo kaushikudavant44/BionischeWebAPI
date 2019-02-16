@@ -33,7 +33,6 @@ import com.bionische.biotech.model.GetDoctorHospitalDetails;
 import com.bionische.biotech.model.GetLabRatingReview;
 import com.bionische.biotech.model.GetMedicalOrderDetails;
 import com.bionische.biotech.model.GetPackageOffers;
-import com.bionische.biotech.model.GetPatientReports;
 import com.bionische.biotech.model.GetVerificationPendingCount;
 import com.bionische.biotech.model.HospitalDetails;
 import com.bionische.biotech.model.Info;
@@ -54,7 +53,6 @@ import com.bionische.biotech.repository.GetDocAvailableTimeDetailsRepository;
 import com.bionische.biotech.repository.GetDoctorHospitalDetailsRepository;
 import com.bionische.biotech.repository.GetLabRatingReviewRepository;
 import com.bionische.biotech.repository.GetPackageOffersRepository;
-import com.bionische.biotech.repository.GetPatientReportsRepository;
 import com.bionische.biotech.repository.GetVerificationPendingCountRepository;
 import com.bionische.biotech.repository.HospitalDetailsRepository;
 import com.bionische.biotech.repository.LabCertificateDetailsRepository;
@@ -86,8 +84,8 @@ public class AdminPanelController {
 	@Autowired
 	LabDetailsRepository labDetailsRepository;
 
-	@Autowired
-	GetPatientReportsRepository getPatientReportsRepository;
+	/*@Autowired
+	GetPatientReportsRepository getPatientReportsRepository;*/
 
 	@Autowired
 	GetLabRatingReviewRepository getLabRatingReviewRepository;
@@ -249,7 +247,7 @@ public class AdminPanelController {
 
 	}
 
-	@RequestMapping(value = { "/getReportsDetailLabId" }, method = RequestMethod.POST)
+/*	@RequestMapping(value = { "/getReportsDetailLabId" }, method = RequestMethod.POST)
 	public @ResponseBody List<GetPatientReports> getReportsDetailLabId(@RequestParam("labId") int labId,
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
 		System.out.println("fromDate " + fromDate + " toDate " + toDate);
@@ -264,7 +262,7 @@ public class AdminPanelController {
 		return GetPatientReportsList;
 
 	}
-
+*/
 	@RequestMapping(value = { "/getLabRatingReviewByLabId" }, method = RequestMethod.POST)
 	public @ResponseBody List<GetLabRatingReview> getLabRatingReviewByLabId(@RequestParam("labId") int labId) {
 

@@ -23,18 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.AppointmentTimeList;
-import com.bionische.biotech.model.DoctorAppOfLastThirtyDays;
-import com.bionische.biotech.model.DoctorCollectionAndReportDetail;
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.GetDoctorRatingReviewCount;
 import com.bionische.biotech.model.GetLabAppointment;
 import com.bionische.biotech.model.GetLabForAppointment;
 import com.bionische.biotech.model.GetLabRatingReview;
-import com.bionische.biotech.model.GetPatientBornReport;
 import com.bionische.biotech.model.GetPatientContactDetailsById;
-import com.bionische.biotech.model.GetPatientLabReportAndBornReports;
-import com.bionische.biotech.model.GetPatientReports;
-import com.bionische.biotech.model.GetPatientUploadedReport;
 import com.bionische.biotech.model.GetRatingCount;
 import com.bionische.biotech.model.GetReportDetailsForLab;
 import com.bionische.biotech.model.Info;
@@ -60,7 +54,6 @@ import com.bionische.biotech.repository.GetLabForAppointmentRepository;
 import com.bionische.biotech.repository.GetLabRatingReviewRepository;
 import com.bionische.biotech.repository.GetPatientBornReportRepository;
 import com.bionische.biotech.repository.GetPatientContactDetailsByIdRepository;
-import com.bionische.biotech.repository.GetPatientReportsRepository;
 import com.bionische.biotech.repository.GetPatientUploadedReportsRepository;
 import com.bionische.biotech.repository.GetRatingCountRepository;
 import com.bionische.biotech.repository.GetReportDetailsForLabRepository;
@@ -154,9 +147,9 @@ LabTestsRepository labTypesRepository;
 ReportDetailsRepository reportDetailsRepository;
 
 
-
+/*
 @Autowired
-GetPatientReportsRepository getPatientReportsRepository;
+GetPatientReportsRepository getPatientReportsRepository;*/
 
 @Autowired
 BabyBornReportsRepository babyBornReportsRepository;
@@ -1046,7 +1039,7 @@ System.out.println(e.getMessage());
 	 
 	}
 	  
-	@RequestMapping(value = { "/getPatientReportByPatient" }, method = RequestMethod.POST)
+	/*@RequestMapping(value = { "/getPatientReportByPatient" }, method = RequestMethod.POST)
 	public @ResponseBody GetPatientLabReportAndBornReports getPatientReportByPatient(@RequestParam("patientId") int patientId,@RequestParam("startDate") String startDate,@RequestParam("toDate") String toDate)
 	{
 		System.out.println("patientId "+patientId);
@@ -1087,7 +1080,7 @@ System.out.println(e.getMessage());
 	 
 	
 	
-	@RequestMapping(value = { "/getPatientReportByPatientAndDocId" }, method = RequestMethod.POST)
+@RequestMapping(value = { "/getPatientReportByPatientAndDocId" }, method = RequestMethod.POST)
 	public @ResponseBody List<GetPatientReports> getPatientReportByPatientAndDocId(@RequestParam("patientId") int patientId,@RequestParam("doctorId") int doctorId)
 	{
 		List<GetPatientReports> getPatientReportListByreportId=new ArrayList<GetPatientReports>();
@@ -1145,7 +1138,7 @@ System.out.println(e.getMessage());
 	
 	
 	
-	}
+	}*/
 	@RequestMapping(value = { "/updateLabAppointmentCompleteStatus" }, method = RequestMethod.POST)
 	public @ResponseBody Info updateLabAppointmentCompleteStatus(@RequestParam("appointId") int appointId, @RequestParam("reportIdList")String reportIdList)
 	{
