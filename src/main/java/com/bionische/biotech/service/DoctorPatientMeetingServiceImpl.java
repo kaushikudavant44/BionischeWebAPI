@@ -36,7 +36,7 @@ public class DoctorPatientMeetingServiceImpl implements DoctorPatientMeetingServ
 	PatientDetailsRepository patientDetailsRepository;
 	
 	@Override
-	public Info insertDoctorPatientMeeting(DoctorPatientMeeting doctorPatientMeeting) {
+	public DoctorPatientMeeting insertDoctorPatientMeeting(DoctorPatientMeeting doctorPatientMeeting) {
 		Info info=new Info();
 		try {
 		DoctorPatientMeeting doctorPatientMeetingResponse=doctorPatientMeetingRepository.save( doctorPatientMeeting);
@@ -79,6 +79,7 @@ public class DoctorPatientMeetingServiceImpl implements DoctorPatientMeetingServ
 			 
 			 info.setError(false);
 			 info.setMessage("Success");
+			 return doctorPatientMeetingResponse;
 		 }
 		 else {
 			 info.setError(true); 
@@ -90,7 +91,7 @@ public class DoctorPatientMeetingServiceImpl implements DoctorPatientMeetingServ
 			 info.setError(true);
 			 info.setMessage("Failed");
 		}
-			 return info;
+			 return null;
 	}
 	
 	

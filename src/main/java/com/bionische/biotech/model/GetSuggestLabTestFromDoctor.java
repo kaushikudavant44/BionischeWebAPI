@@ -9,8 +9,8 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name="t_suggest_lab_test_from_doctor")
-public class SuggestLabTestFromDoctor {
+ 
+public class GetSuggestLabTestFromDoctor {
 
 	
 	@Id
@@ -25,7 +25,11 @@ public class SuggestLabTestFromDoctor {
 	
 	private String testIdList;
 	
+	private String testNameList;
+	
 	private int labId;
+	
+	private String labName;
 
 	public int getSuggestId() {
 		return suggestId;
@@ -75,11 +79,30 @@ public class SuggestLabTestFromDoctor {
 		this.meetId = meetId;
 	}
 
-	@Override
-	public String toString() {
-		return "SuggestLabTestFromDoctor [suggestId=" + suggestId + ", meetId=" + meetId + ", doctorId=" + doctorId
-				+ ", patientId=" + patientId + ", testIdList=" + testIdList + ", labId=" + labId + "]";
+	public String getTestNameList() {
+		return testNameList;
 	}
 
+	public void setTestNameList(String testNameList) {
+		this.testNameList = testNameList;
+	}
+
+	public String getLabName() {
+		return labName;
+	}
+
+	public void setLabName(String labName) {
+		this.labName = labName;
+	}
+
+	@Override
+	public String toString() {
+		return "GetSuggestLabTestFromDoctor [suggestId=" + suggestId + ", meetId=" + meetId + ", doctorId=" + doctorId
+				+ ", patientId=" + patientId + ", testIdList=" + testIdList + ", testNameList=" + testNameList
+				+ ", labId=" + labId + ", labName=" + labName + "]";
+	}
+
+	 
+	 
 	 
 }

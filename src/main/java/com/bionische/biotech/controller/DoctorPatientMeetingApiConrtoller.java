@@ -90,7 +90,7 @@ public class DoctorPatientMeetingApiConrtoller {
 	
 	// insert specialization
 	@RequestMapping(value = { "/insertDoctoPatientMeeting" }, method = RequestMethod.POST)
-	public @ResponseBody Info insertDoctoPatientMeeting(@RequestBody DoctorPatientMeeting doctorPatientMeeting) {
+	public @ResponseBody DoctorPatientMeeting insertDoctoPatientMeeting(@RequestBody DoctorPatientMeeting doctorPatientMeeting) {
   
 		
 		return doctorPatientMeetingService.insertDoctorPatientMeeting(doctorPatientMeeting);

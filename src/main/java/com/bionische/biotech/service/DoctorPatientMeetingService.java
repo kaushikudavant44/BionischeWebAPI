@@ -6,6 +6,6 @@ import com.bionische.biotech.model.Info;
 public interface DoctorPatientMeetingService {
 
 	
-	Info insertDoctorPatientMeeting(DoctorPatientMeeting doctorPatientMeeting);
+	DoctorPatientMeeting insertDoctorPatientMeeting(DoctorPatientMeeting doctorPatientMeeting);
  
 }

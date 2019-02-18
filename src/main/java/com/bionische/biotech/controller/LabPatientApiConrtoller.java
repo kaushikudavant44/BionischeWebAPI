@@ -20,6 +20,7 @@ import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.GetLabAppointment;
 import com.bionische.biotech.model.GetLabForAppointment;
 import com.bionische.biotech.model.GetPatientContactDetailsById;
+import com.bionische.biotech.model.GetSuggestLabTestFromDoctor;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabNotification;
 import com.bionische.biotech.model.LabTests;
@@ -32,6 +33,7 @@ import com.bionische.biotech.repository.AppointmentTimeRepository;
 import com.bionische.biotech.repository.GetLabAppointmentRrepository;
 import com.bionische.biotech.repository.GetLabForAppointmentRepository;
 import com.bionische.biotech.repository.GetPatientContactDetailsByIdRepository;
+import com.bionische.biotech.repository.GetSuggestLabTestFromDoctorRepository;
 import com.bionische.biotech.repository.LabNotificationRepository;
 import com.bionische.biotech.repository.LabTestsRepository;
 import com.bionische.biotech.repository.SuggestLabTestFromDoctorRepository;
@@ -71,6 +73,8 @@ public class LabPatientApiConrtoller {
 	GetPatientReportsRepository getPatientReportsRepository;
 	@Autowired
 	SuggestLabTestFromDoctorRepository suggestLabTestFromDoctorRepository;
+	@Autowired
+	GetSuggestLabTestFromDoctorRepository getSuggestLabTestFromDoctorRepository;
 	
 	@RequestMapping(value = { "/insertTestsInLab" }, method = RequestMethod.POST)
 	public @ResponseBody TestsInLab insertTestsInLab(@Valid @RequestBody TestsInLab testsInLab) {
@@ -458,6 +462,22 @@ public class LabPatientApiConrtoller {
 		catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
+		return null;
+	}
+	
+	 
+	
+	@RequestMapping(value = { "/getSuggestLabTestFromDoctor" }, method = RequestMethod.POST)
+	public @ResponseBody GetSuggestLabTestFromDoctor getSuggestLabTestFromDoctor(@RequestParam("meetId")int meetId) {
+	 
+		try {
+			return getSuggestLabTestFromDoctorRepository.getSuggestLabTestFromDoctor(meetId);
+			
+		}
+	catch (Exception e) {
+		
+		// TODO: handle exception
+	}
 		return null;
 	}
 }
