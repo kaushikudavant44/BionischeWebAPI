@@ -63,8 +63,33 @@ public class ConsultingDetails {
 	@Column(name="email")
 	private String email;
 	
+	//dr education
+	@Column(name="qualification")
+	private String qualification;
+	
+	//dr sign
+	@Column(name="signature")
+	private String signature;
 	
 	
+	
+	
+	public String getQualification() {
+		return qualification;
+	}
+
+	public void setQualification(String qualification) {
+		this.qualification = qualification;
+	}
+
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+
 	public String getEmail() {
 		return email;
 	}
@@ -202,8 +227,11 @@ public class ConsultingDetails {
 				+ ", hospitalName=" + hospitalName + ", doctorName=" + doctorName + ", date=" + date + ", time=" + time
 				+ ", patientProblem=" + patientProblem + ", discussion=" + discussion + ", note=" + note
 				+ ", patientName=" + patientName + ", int2=" + int2 + ", address=" + address + ", contactNo="
-				+ contactNo + ", emailId=" + emailId + ", email=" + email + "]";
+				+ contactNo + ", emailId=" + emailId + ", email=" + email + ", qualification=" + qualification
+				+ ", signature=" + signature + "]";
 	}
+
+	
 
 	
 

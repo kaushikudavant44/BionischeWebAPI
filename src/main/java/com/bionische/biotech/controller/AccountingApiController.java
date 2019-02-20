@@ -25,6 +25,7 @@ import com.bionische.biotech.account.model.GetPharmacyPrescriptionReceipt;
 import com.bionische.biotech.account.model.LabBankAccountInfo;
 import com.bionische.biotech.account.model.LabReportReceipt;
 import com.bionische.biotech.account.model.LabSuscriptionReceipt;
+import com.bionische.biotech.account.model.PatientBankAccountInfo;
 import com.bionische.biotech.account.model.PharmacyBankAccountInfo;
 import com.bionische.biotech.account.model.PharmacyPrescriptionReceipt;
 import com.bionische.biotech.account.model.PharmacySuscriptionReceipt;
@@ -49,6 +50,7 @@ import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.repository.AppointmentDetailsRepository;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
+import com.bionische.biotech.repository.PatientBankAccountInfoRepository;
 import com.bionische.biotech.repository.PrescriptionToMedicalRepository;
 import com.bionische.biotech.repository.TransactionDetailsRepository;
 import com.bionische.biotech.service.SendFcmNotificationService;
@@ -100,6 +102,10 @@ public class AccountingApiController {
 	
 	@Autowired
 	DoctorDetailsRepository doctorDetailsRepository;
+	
+	
+	@Autowired
+	PatientBankAccountInfoRepository patientBankAccountInfoRepository;
 	
 	@RequestMapping(value = { "/insertBrokerageDetails" }, method = RequestMethod.POST)
 	public @ResponseBody BrokerageDetails insertBrokerageDetails(@RequestBody BrokerageDetails brokerageDetails) {
@@ -551,6 +557,33 @@ public @ResponseBody List<GetPharmacyPrescriptionReceipt> getPharmacyPrescriprio
 	return null;
 	}
 
+@RequestMapping(value = { "/insertPatientBankDetails" }, method = RequestMethod.POST)
+public @ResponseBody PatientBankAccountInfo insertPatientBankDetails(@RequestBody PatientBankAccountInfo patientBankAccountInfo) {
 
+	
+	System.out.println("patientBankAccountInfo"+patientBankAccountInfo.toString());
+	PatientBankAccountInfo patientBankAccountInfoRes=new PatientBankAccountInfo();
+	try{
+		patientBankAccountInfoRes=patientBankAccountInfoRepository.save(patientBankAccountInfo);
+	}
+	catch (Exception e) {
+		e.printStackTrace();
+	}
+	
+	return patientBankAccountInfoRes;
+	}
+@RequestMapping(value = { "/getPatientBankDetails" }, method = RequestMethod.POST)
+public @ResponseBody PatientBankAccountInfo getPatientBankDetails(@RequestParam("patientId")int patientId) {
+
+	PatientBankAccountInfo patientBankAccountInfoRes=new PatientBankAccountInfo();
+	try{
+		patientBankAccountInfoRes=patientBankAccountInfoRepository.findByPatientIdAndDelStatus(patientId, 0);
+	}
+	catch (Exception e) {
+		System.out.println(e.getMessage());// TODO: handle exception
+	}
+	
+	return patientBankAccountInfoRes;
+	}
 
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.ewallet.model.BankTransferRequest;
 import com.bionische.biotech.ewallet.model.GetWalletTransactionDetails;
 import com.bionische.biotech.ewallet.model.TransactionWalletDetails;
 import com.bionische.biotech.ewallet.model.WalletDetails;
@@ -19,6 +20,7 @@ import com.bionische.biotech.ewallet.repository.UserWalletDetailsRepository;
 import com.bionische.biotech.ewallet.repository.UserWalletTransactionRepository;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.MedicalDetails;
+import com.bionische.biotech.repository.BankTransferRequestRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
 import com.bionische.biotech.repository.TransactionWalletDetailsRepository;
@@ -47,6 +49,9 @@ public class UserWalletApiController {
 
 	@Autowired
 	private GetWalletTransactionDetailsRepository getWalletTransactionDetailsRepository;
+	
+	@Autowired
+	private BankTransferRequestRepository bankTransferRequestRepository;
 	/*
 	 * @author Ganesh
 	 * get user All wallet  details 
@@ -209,6 +214,46 @@ public class UserWalletApiController {
 	}
 	return getWalletTransactionDetailsList;
 	}
+
+
+
+@RequestMapping(value = { "/insertWalletMoneyBankTransferRequest" }, method = RequestMethod.POST)
+public @ResponseBody BankTransferRequest insertWalletMoneyBankTransferRequest(@RequestBody BankTransferRequest bankTransferRequest)
+{
+	BankTransferRequest bankTransferRequestRes=new BankTransferRequest();
+	try {
+		
+		bankTransferRequestRes=bankTransferRequestRepository.save(bankTransferRequest);
+		
+		if(bankTransferRequestRes!=null) {
+			
+			
+			
+			WalletDetails walletDetails=walletDetailsRepository.findByWalletId(bankTransferRequestRes.getWalletId());
+			
+			int walletId=bankTransferRequestRes.getWalletId();
+			float updatedWalletAmount=walletDetails.getWalletAmount()-bankTransferRequestRes.getRequestAmount();
+			int result=walletDetailsRepository.updateWalletAmount(walletId,updatedWalletAmount);
+			
+			TransactionWalletDetails transactionWalletDetails=new TransactionWalletDetails();
+			transactionWalletDetails.setAmount(bankTransferRequestRes.getRequestAmount());
+			transactionWalletDetails.setFromUserId(walletDetails.getUserId());
+			transactionWalletDetails.setToUserId(0);
+			transactionWalletDetails.setToUserType(0);
+			transactionWalletDetails.setTransactionType(4);
+			transactionWalletDetails.setUserType(walletDetails.getUserType());
+			transactionWalletDetails.setWalletId(walletDetails.getWalletId());
+			transactionWalletDetails=transactionWalletDetailsRepository.save(transactionWalletDetails);
+			
+		}
+		
+	}catch (Exception e) {
+		System.out.println(e.getMessage());// TODO: handle exception
+		e.printStackTrace();
+	} 
+	
+	return bankTransferRequestRes;
+}
 	
 	
 }
