@@ -27,7 +27,6 @@ import com.bionische.biotech.repository.ConsultingDetailsRepository;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
 import com.bionische.biotech.repository.GetLabAppointmentRrepository;
 import com.bionische.biotech.repository.GetPrescriptionWithBillRepository;
-import com.bionische.biotech.repository.GetReportDetailsForLabRepository;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
 import com.bionische.biotech.repository.MedicalsInfoRepository;
 import com.bionische.biotech.repository.PrescriptionDetailsRepository;
@@ -48,9 +47,7 @@ public class ConsultingDetailsController {
 	@Autowired
 	MedicalDetailsRepository medicalDetailsRepository;
 	@Autowired
-	PrescriptionToMedicalRepository prescriptionToMedicalRepository;
-	@Autowired
-	GetReportDetailsForLabRepository getReportDetailsForLabRepository;
+	PrescriptionToMedicalRepository prescriptionToMedicalRepository; 
 	@Autowired
 	SubmitPrescBillRepository submitPrescBillRepository;
 	@Autowired

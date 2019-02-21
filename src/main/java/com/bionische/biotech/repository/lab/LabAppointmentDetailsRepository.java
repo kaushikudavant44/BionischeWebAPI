@@ -1,5 +1,7 @@
 package com.bionische.biotech.repository.lab;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -39,5 +41,18 @@ public interface LabAppointmentDetailsRepository extends JpaRepository<LabAppoin
 	@Query("UPDATE LabAppointmentDetails  SET paymentStatus =:txnStatus, txnId=:txnId,  labAppDate=NOW(), orderId=:orderId, paidAmount=:txnAmt WHERE labAppId=:appointmentId")
 	int updateLabAppointmentPayment(@Param("appointmentId")int appointmentId, @Param("txnStatus")int txnStatus, @Param("txnId")String txnId, @Param("orderId")String orderId, @Param("txnAmt")float txnAmt);
 
-	
+	@Transactional
+	@Modifying
+	@Query("UPDATE LabAppointmentDetails   SET  paymentClearReceiptNo=:receiptNo WHERE id IN(:appointmentId)")
+	int updateAppointmentReceiptStatusAndReceiptNo(@Param("appointmentId")List<Integer> appointmentId, @Param("receiptNo")int receiptNo);
+
+
+	 
+	@Query(value="SELECT a.* FROM lab_appointment_details a, appointment_time t WHERE a.status=1 AND a.date = CURDATE() AND t.time_id IN (:timeIdList) GROUP BY lab_app_id",nativeQuery=true)
+	List<LabAppointmentDetails> findAppointmentofPatientByTimeIdList(@Param("timeIdList")List<Integer> timeIdList);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE LabAppointmentDetails  SET ratingStatus =1 WHERE labAppId=:appointmentId")
+	int updateLabRatingStatus(@Param("appointmentId")int appointmentId);
 } 

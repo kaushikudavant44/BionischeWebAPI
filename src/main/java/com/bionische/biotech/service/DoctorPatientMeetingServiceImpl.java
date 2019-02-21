@@ -37,7 +37,7 @@ public class DoctorPatientMeetingServiceImpl implements DoctorPatientMeetingServ
 	
 	@Override
 	public DoctorPatientMeeting insertDoctorPatientMeeting(DoctorPatientMeeting doctorPatientMeeting) {
-		Info info=new Info();
+		 
 		try {
 		DoctorPatientMeeting doctorPatientMeetingResponse=doctorPatientMeetingRepository.save( doctorPatientMeeting);
 		DoctorDetails doctorDetails = doctorDetailsRepository.findByDoctorId(doctorPatientMeeting.getDoctorId());
@@ -61,6 +61,7 @@ public class DoctorPatientMeetingServiceImpl implements DoctorPatientMeetingServ
 		}
 		 if(doctorPatientMeetingResponse!=null)
 		 {
+			 try {
 			 PatientDetails patientDetails=patientDetailsRepository.findByPatientId(doctorPatientMeetingResponse.getPatientId());
 			 
 			 String doctorReviewNot="Review your doctor";
@@ -76,20 +77,18 @@ public class DoctorPatientMeetingServiceImpl implements DoctorPatientMeetingServ
 			 }else if(patientDetails.getInt1()==0) {
 				 sendFcmNotificationService.notifyiOSUser(patientDetails.getString2(), "BIONISCHE", doctorReviewNot, DateConverter.currentDateAndTime(),18);
 			 }
+			 }
+			 catch (Exception e) {
+				// TODO: handle exception
+			}
 			 
-			 info.setError(false);
-			 info.setMessage("Success");
 			 return doctorPatientMeetingResponse;
 		 }
-		 else {
-			 info.setError(true); 
-			 info.setMessage("Failed");
-		 }
+		 
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());
-			 info.setError(true);
-			 info.setMessage("Failed");
+			 
 		}
 			 return null;
 	}

@@ -8,10 +8,10 @@ import com.bionische.biotech.model.GetLabBillDetails;
 
 public interface GetLabBillDetailsRepository extends JpaRepository<GetLabBillDetails, Integer>{
 
-	@Query(value="SELECT t.id, t.from_user_id, t.to_user_id, t.amount_type, t.status, t.amount, t.discount, t.total_amount, " + 
-			"t.report_id, t.txn_id, t.order_id, t.payment_date, CONCAT(p.f_name,' ',p.l_name)AS patient_name, l.lab_name,r.lab_test_id,r.report_file_name,p.email,l.contact, " + 
-			"l.address FROM transaction t, lab_details l, patient_details p,patient_reports r WHERE t.status!=0 AND t.id=:id AND r.report_id=t.report_id " + 
-			"AND l.lab_id=t.to_user_id AND p.patient_id=t.from_user_id",nativeQuery=true)
+	@Query(value="SELECT a.lab_app_id, a.patient_id, a.lab_id, a.amount_type, a.payment_status, a.amount, a.discount, a.paid_amount, " + 
+			" a.txn_id, a.order_id, a.payment_date, CONCAT(p.f_name,' ',p.l_name)AS patient_name, l.lab_name, a.test_id_list,GROUP_CONCAT( t.lab_test_name SEPARATOR ', ')AS lab_test_name, p.email,l.contact, " + 
+			"l.address FROM t_lab_appointment_details a, lab_tests t, lab_details l, patient_details p WHERE a.payment_status!=0 AND a.lab_app_id=:id  " + 
+			"AND l.lab_id=a.lab_id AND p.patient_id=a.patient_id",nativeQuery=true)
 	GetLabBillDetails getLabBillDetailsRepository(@Param("id")int id);
 	
 }

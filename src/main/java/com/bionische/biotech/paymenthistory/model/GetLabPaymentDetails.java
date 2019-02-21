@@ -12,17 +12,17 @@ public class GetLabPaymentDetails {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
-	private int id;
+	@Column(name="lab_app_id")
+	private int labAppId;
  
-
-	@Column(name="from_user_id")
+ 
+	@Column(name="patient_id")
 	private int patientId;
 	
 	@Column(name="patient_name")
 	private String patientName;
 	
-	@Column(name="to_user_id")
+	@Column(name="lab_id")
 	private int labId;
 	
 	
@@ -32,8 +32,8 @@ public class GetLabPaymentDetails {
 	@Column(name="amount_type")
 	private int amountType;
 	
-	@Column(name="status")
-	private int status;
+	@Column(name="payment_status")
+	private int paymentStatus;
 	
 	@Column(name="amount")
 	private float amount;
@@ -41,12 +41,11 @@ public class GetLabPaymentDetails {
 	@Column(name="discount")
 	private float discount;
 	
-	@Column(name="totalAmount")
+	@Column(name="total_amount")
 	private float totalAmount;
-	
-	
-	@Column(name="report_id")
-	private int reportId;
+ 
+	@Column(name="paid_amount")
+	private float paidAmount;
 	
 	@Column(name="txn_id")
 	private String txnId;
@@ -59,13 +58,13 @@ public class GetLabPaymentDetails {
 	private String paymentDate;
 
 
-	public int getId() {
-		return id;
+	public int getLabAppId() {
+		return labAppId;
 	}
 
 
-	public void setId(int id) {
-		this.id = id;
+	public void setLabAppId(int labAppId) {
+		this.labAppId = labAppId;
 	}
 
 
@@ -119,13 +118,13 @@ public class GetLabPaymentDetails {
 	}
 
 
-	public int getStatus() {
-		return status;
+	public int getPaymentStatus() {
+		return paymentStatus;
 	}
 
 
-	public void setStatus(int status) {
-		this.status = status;
+	public void setPaymentStatus(int paymentStatus) {
+		this.paymentStatus = paymentStatus;
 	}
 
 
@@ -159,16 +158,6 @@ public class GetLabPaymentDetails {
 	}
 
 
-	public int getReportId() {
-		return reportId;
-	}
-
-
-	public void setReportId(int reportId) {
-		this.reportId = reportId;
-	}
-
-
 	public String getTxnId() {
 		return txnId;
 	}
@@ -199,13 +188,24 @@ public class GetLabPaymentDetails {
 	}
 
 
+	public float getPaidAmount() {
+		return paidAmount;
+	}
+
+
+	public void setPaidAmount(float paidAmount) {
+		this.paidAmount = paidAmount;
+	}
+
+
 	@Override
 	public String toString() {
-		return "GetLabPaymentDetails [id=" + id + ", patientId=" + patientId + ", patientName=" + patientName
-				+ ", labId=" + labId + ", labName=" + labName + ", amountType=" + amountType + ", status=" + status
-				+ ", amount=" + amount + ", discount=" + discount + ", totalAmount=" + totalAmount + ", reportId="
-				+ reportId + ", txnId=" + txnId + ", orderId=" + orderId + ", paymentDate=" + paymentDate + "]";
+		return "GetLabPaymentDetails [labAppId=" + labAppId + ", patientId=" + patientId + ", patientName="
+				+ patientName + ", labId=" + labId + ", labName=" + labName + ", amountType=" + amountType
+				+ ", paymentStatus=" + paymentStatus + ", amount=" + amount + ", discount=" + discount
+				+ ", totalAmount=" + totalAmount + ", paidAmount=" + paidAmount + ", txnId=" + txnId + ", orderId="
+				+ orderId + ", paymentDate=" + paymentDate + "]";
 	}
-	
-	
+ 
+ 
 }

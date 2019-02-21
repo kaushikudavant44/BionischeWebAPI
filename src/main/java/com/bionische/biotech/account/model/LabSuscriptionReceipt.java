@@ -26,7 +26,7 @@ public class LabSuscriptionReceipt {
 	@Column(name="order_id")
 	private String orderId;
 	
-	@Column(name = "created_date")
+	@Column(name = "payment_date")
 	private String createdDate;
 	
 	@Column(name="txn_id")

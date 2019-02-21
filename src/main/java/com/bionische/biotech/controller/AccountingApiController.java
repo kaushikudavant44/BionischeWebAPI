@@ -53,6 +53,7 @@ import com.bionische.biotech.repository.DoctorDetailsRepository;
 import com.bionische.biotech.repository.PatientBankAccountInfoRepository;
 import com.bionische.biotech.repository.PrescriptionToMedicalRepository;
 import com.bionische.biotech.repository.TransactionDetailsRepository;
+import com.bionische.biotech.repository.lab.LabAppointmentDetailsRepository;
 import com.bionische.biotech.service.SendFcmNotificationService;
 
 @RestController
@@ -99,7 +100,8 @@ public class AccountingApiController {
 	
 	@Autowired
 	SendFcmNotificationService sendFcmNotificationService;
-	
+	@Autowired
+	LabAppointmentDetailsRepository labAppointmentDetailsRepository;
 	@Autowired
 	DoctorDetailsRepository doctorDetailsRepository;
 	
@@ -415,7 +417,7 @@ public @ResponseBody Info updateLabReportBillStatus(@RequestBody UpdateReceiptSt
 	 Info info=new Info();
 	 info.setError(true);
 	try{
-		int res=transactionDetailsRepository.updateReportReceiptStatusAndReceiptNo(UpdateReceiptStatusAndReceiptNo.getAppointmentId(),UpdateReceiptStatusAndReceiptNo.getReceiptNo());
+		int res=labAppointmentDetailsRepository.updateAppointmentReceiptStatusAndReceiptNo(UpdateReceiptStatusAndReceiptNo.getAppointmentId(),UpdateReceiptStatusAndReceiptNo.getReceiptNo());
 		if(res>0) {
 			
 			info.setError(false);

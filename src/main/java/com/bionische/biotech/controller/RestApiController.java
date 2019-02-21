@@ -53,11 +53,8 @@ import com.bionische.biotech.model.GetRatingCount;
 import com.bionische.biotech.model.GetUsersCount;
 import com.bionische.biotech.model.HospitalDetails;
 import com.bionische.biotech.model.Info;
-import com.bionische.biotech.model.LabAppointment;
 import com.bionische.biotech.model.LabCertificateDetails;
 import com.bionische.biotech.model.LabDetails;
-import com.bionische.biotech.model.LabNotification;
-import com.bionische.biotech.model.LabTests;
 import com.bionische.biotech.model.MedicalDetails;
 import com.bionische.biotech.model.PatientAddress;
 import com.bionische.biotech.model.PatientDetails;
@@ -98,7 +95,6 @@ import com.bionische.biotech.repository.GetPatientDetailsForEditRepository;
 import com.bionische.biotech.repository.GetRatingCountRepository;
 import com.bionische.biotech.repository.GetUsersCountRepository;
 import com.bionische.biotech.repository.HospitalDetailsRepository;
-import com.bionische.biotech.repository.LabAppointmentRepository;
 import com.bionische.biotech.repository.LabCertificateDetailsRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.LabNotificationRepository;
@@ -118,6 +114,7 @@ import com.bionische.biotech.repository.SpecializationDetailsRepository;
 import com.bionische.biotech.repository.StateRepository;
 import com.bionische.biotech.repository.TermsAndConditionsRepository;
 import com.bionische.biotech.repository.WalletDetailsRepository;
+import com.bionische.biotech.repository.lab.LabAppointmentDetailsRepository;
 import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.FixDoctorScheduleService;
 import com.bionische.biotech.service.SendEMailService;
@@ -198,8 +195,7 @@ public class RestApiController {
 	@Autowired
 	GetDoctorProfileRepository getDoctorProfileRepository;
 
-	@Autowired
-	LabAppointmentRepository labAppointmentRepository;
+ 
 	
 	@Autowired
 	SharingReportWithDocRepository sharingReportWithDocRepository;
@@ -282,7 +278,8 @@ public class RestApiController {
 	@Autowired
 	WalletDetailsRepository walletDetailsRepository;
 	String MESSAGE;
-	
+	@Autowired
+	LabAppointmentDetailsRepository labAppointmentDetailsRepository;
 	
 
 	@RequestMapping(value = { "/insertPatientSuscriptionDetails" }, method = RequestMethod.POST)
@@ -1587,47 +1584,7 @@ System.out.println(e.getMessage());
 				}
 
 
-			//cancel lab app
-				@RequestMapping(value = { "/deleteLabAppointment"}, method = RequestMethod.POST)
-				public @ResponseBody Info deleteLabAppointment(@RequestParam("appId") int appId) {
-					System.out.println("appId "+appId);
-					
-				 
-					Info info=new Info();
-					try {
-						int res=labAppointmentRepository.updateLabAppointmentStatus(appId); 
-						if(res>0)
-						{
-							GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByLabAppointId(appId);							 
-							sendEMailService.sendMail("Your Appointment Is edited!!", "Your Appointment edited!!" , getPatientContactDetailsById.getEmail());
-							
-							LabAppointment labAppointment = labAppointmentRepository.appointmentDetailsOfLabByAppId(appId);
-							LabNotification labNotification=new LabNotification();
-							LabTests labTests=labTestsRepository.getTestDetailsByTestId(labAppointment.getLabTestId());
-							AppointmentTime appointmentTime=appointmentTimeRepository.findByTimeId(labAppointment.getTimeId());
-												
-							labNotification.setLabId(labAppointment.getLabId());
-							labNotification.setNotification(getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+" has cancelled appointment of "+labTests.getLabTestName()+" on DATE "+labAppointment.getLabAppDate()+" and TIME "+appointmentTime.getTime());					
-							labNotification.setStatus(0);
-							labNotification.setString1("Appointment Cancelled");
-							labNotification.setInt1(labAppointment.getPatientId());
-							labNotificationRepository.save(labNotification);
-							
-							
-							info.setMessage("Your Appointment Delete Successfully!!");
-							info.setError(false);
-						}
-						else {
-							info.setMessage("Your Appointment Delete Failed!!");
-							info.setError(true);
-						}
-						 
-					}
-					catch (Exception e) {
-					e.printStackTrace();
-					}
-			        return info;
-				}	
+		 	
 		
 				@RequestMapping(value = { "/submitSharingReportWithDoc" }, method = RequestMethod.POST)
 				public @ResponseBody Info submitSharingReportWithDoc(@RequestBody SharingReportWithDoc sharingReportWithDoc)
@@ -1864,8 +1821,8 @@ System.out.println(e.getMessage());
 					
 				 
 					Info info=new Info();
-					try {
-						int res=labAppointmentRepository.updateLabRatingStatus(labAppId);
+				 	try {
+						int res=labAppointmentDetailsRepository.updateLabRatingStatus(labAppId);
 						if(res>0)
 						{
 							info.setMessage("Your Appointment Delete Successfully!!");
@@ -1879,7 +1836,7 @@ System.out.println(e.getMessage());
 					}
 					catch (Exception e) {
 					e.printStackTrace();
-					}
+					} 
 			        return info;
 				}
 				

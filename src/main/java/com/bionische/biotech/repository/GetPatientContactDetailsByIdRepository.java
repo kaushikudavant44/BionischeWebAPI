@@ -14,7 +14,7 @@ public interface GetPatientContactDetailsByIdRepository extends JpaRepository<Ge
 	@Query(value="select p.patient_id,p.f_name, p.l_name, p.m_name, p.contact, p.email from patient_details p, doctor_appointment a where p.patient_id=a.patient_id AND appoint_id=:appointId",nativeQuery=true)
 	GetPatientContactDetailsById getPatientContactDetailsByDoctorAppointId(@Param("appointId") int appointId);
 	
-	@Query(value="select p.patient_id,p.f_name, p.l_name, p.m_name, p.contact, p.email from patient_details p, lab_appointments a where p.patient_id=a.patient_id AND lab_app_id=:appointId",nativeQuery=true)
+	@Query(value="select p.patient_id,p.f_name, p.l_name, p.m_name, p.contact, p.email from patient_details p, t_lab_appointment_details a where p.patient_id=a.patient_id AND lab_app_id=:appointId",nativeQuery=true)
 	GetPatientContactDetailsById getPatientContactDetailsByLabAppointId(@Param("appointId") int appointId);
 	
 }

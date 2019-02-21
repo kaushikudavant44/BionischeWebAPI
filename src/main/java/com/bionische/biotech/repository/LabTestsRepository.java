@@ -22,9 +22,9 @@ public interface LabTestsRepository extends JpaRepository<LabTests, Integer> {
 	@Query(value = " SELECT * from lab_tests where lab_test_id IN(:testIdList) AND del_status=0", nativeQuery = true)
 	List<LabTests> getTestDetails(@Param("testIdList") List<String> testIdList);
 
-	@Query(value = " SELECT * FROM lab_tests WHERE lab_test_id IN (SELECT DISTINCT lab_test_id FROM patient_reports WHERE patient_id=:patientId)", nativeQuery = true)
+	/*@Query(value = " SELECT * FROM lab_tests WHERE lab_test_id IN (SELECT DISTINCT lab_test_id FROM patient_reports WHERE patient_id=:patientId)", nativeQuery = true)
 	List<LabTests> getTestOfPatients(@Param("patientId") int patientId);
-
+*/
 	@Transactional
 	@Modifying
 	@Query("UPDATE LabTests  SET delStatus =:delStatus WHERE labTestId=:labTestId")

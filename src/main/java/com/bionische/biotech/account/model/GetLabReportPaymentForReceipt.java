@@ -10,13 +10,13 @@ public class GetLabReportPaymentForReceipt {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
+	@Column(name="lab_app_id")
 	private int appointId;
 	
 	@Column(name="lab_id")
 	private int labId;
 	
-	@Column(name="amount")
+	@Column(name="paid_amount")
 	private float amount;
 	
 	@Column(name="txn_id")

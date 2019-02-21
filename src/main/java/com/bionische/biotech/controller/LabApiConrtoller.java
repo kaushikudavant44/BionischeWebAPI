@@ -3,11 +3,9 @@ package com.bionische.biotech.controller;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -20,20 +18,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.AppointmentTimeList;
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.GetDoctorRatingReviewCount;
-import com.bionische.biotech.model.GetLabAppointment;
-import com.bionische.biotech.model.GetLabForAppointment;
 import com.bionische.biotech.model.GetLabRatingReview;
-import com.bionische.biotech.model.GetPatientContactDetailsById;
 import com.bionische.biotech.model.GetRatingCount;
-import com.bionische.biotech.model.GetReportDetailsForLab;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabAppOfLastThirtyDays;
-import com.bionische.biotech.model.LabAppointment;
 import com.bionische.biotech.model.LabAppointmentCount;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.LabNotification;
@@ -41,11 +33,6 @@ import com.bionische.biotech.model.LabSubscriptionDetails;
 import com.bionische.biotech.model.LabTests;
 import com.bionische.biotech.model.LabTestsList;
 import com.bionische.biotech.model.PateintReportPaymentDetails;
-import com.bionische.biotech.model.PatientDetails;
-import com.bionische.biotech.model.PatientNotification;
-import com.bionische.biotech.model.ReportDetails;
-import com.bionische.biotech.model.SharingReportWithDoc;
-import com.bionische.biotech.model.TransactionDetails;
 import com.bionische.biotech.repository.AppointmentTimeRepository;
 import com.bionische.biotech.repository.BabyBornReportsRepository;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
@@ -54,12 +41,9 @@ import com.bionische.biotech.repository.GetLabForAppointmentRepository;
 import com.bionische.biotech.repository.GetLabRatingReviewRepository;
 import com.bionische.biotech.repository.GetPatientBornReportRepository;
 import com.bionische.biotech.repository.GetPatientContactDetailsByIdRepository;
-import com.bionische.biotech.repository.GetPatientUploadedReportsRepository;
 import com.bionische.biotech.repository.GetRatingCountRepository;
-import com.bionische.biotech.repository.GetReportDetailsForLabRepository;
 import com.bionische.biotech.repository.LabAppOfLastThirtyDaysRepository;
 import com.bionische.biotech.repository.LabAppointmentCountRepository;
-import com.bionische.biotech.repository.LabAppointmentRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.LabNotificationRepository;
 import com.bionische.biotech.repository.LabSubscriptionDetailsRepository;
@@ -67,7 +51,6 @@ import com.bionische.biotech.repository.LabTestsRepository;
 import com.bionische.biotech.repository.PateintReportPaymentDetailsRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.PatientNotificationRepository;
-import com.bionische.biotech.repository.ReportDetailsRepository;
 import com.bionische.biotech.repository.SharingReportWithDocRepository;
 import com.bionische.biotech.repository.TransactionDetailsRepository;
 import com.bionische.biotech.service.CreateDirectoryService;
@@ -91,9 +74,7 @@ public class LabApiConrtoller {
 	
 	@Autowired
 	LabTestsRepository labTestsRepository;
-	
-	@Autowired
-	LabAppointmentRepository labAppointmentRepository;
+	 
 	
 	@Autowired
 	AppointmentTimeRepository appointmentTimeRepository;
@@ -106,9 +87,7 @@ public class LabApiConrtoller {
 	
 	@Autowired
 	DoctorDetailsRepository doctorDetailsRepository;
-	
-	@Autowired
-	GetReportDetailsForLabRepository getReportDetailsForLabRepository;
+	 
 	
 	@Autowired
 	GetRatingCountRepository getRatingCountRepository;
@@ -142,9 +121,7 @@ public class LabApiConrtoller {
 
 @Autowired
 LabTestsRepository labTypesRepository;
-
-@Autowired
-ReportDetailsRepository reportDetailsRepository;
+ 
 
 
 /*
@@ -160,9 +137,7 @@ GetPatientBornReportRepository getPatientBornReportRepository;
 
 @Autowired
 SharingReportWithDocRepository sharingReportWithDocRepository;
-
-@Autowired
-GetPatientUploadedReportsRepository getPatientUploadedReportsRepository;
+ 
 @Autowired
 LabSubscriptionDetailsRepository labSubscriptionDetailsRepository;
 
@@ -223,7 +198,8 @@ LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 		}
 		return labDetailsList;
 	}
-	
+	/*   Ganesh 2019-02-19
+	 * 
 	@RequestMapping(value = { "/getLabsByCityIdAndTestId" }, method = RequestMethod.POST)
 	public @ResponseBody List<GetLabForAppointment> getLabsByCityIdAndTestId(@RequestParam("cityId") int cityId, @RequestParam("testId") int testId) {
 		System.out.println("cccity "+cityId);
@@ -251,7 +227,7 @@ LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 		e.printStackTrace();
 		}
 		return labDetailsList;
-	}
+	}*/
 	
 	//Ganesh
 			//Lab Rating Review
@@ -378,7 +354,9 @@ LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 		}
 	
 	
-	@RequestMapping(value = { "/getTestsByLabId" }, method = RequestMethod.POST)
+	/*Ganesh 2019-02-19
+	 * 
+	 * @RequestMapping(value = { "/getTestsByLabId" }, method = RequestMethod.POST)
 	public @ResponseBody List<LabTests> getTestsByLabId(@RequestParam("labId") int labId)
 	{
 		LabDetails LabDetails=new LabDetails();
@@ -407,8 +385,9 @@ LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 		
 		
 		return labTestsList;
-	}
-	
+	}*/
+	/*Ganesh 2019-02-19
+	 * 
 	@RequestMapping(value = { "/labAppointmentsByTest" }, method = RequestMethod.POST)
 	public @ResponseBody List<LabAppointment> labAppointmentsByTest(@RequestParam("labId") int labId,@RequestParam("labTestId") int labTestId)
 	{
@@ -424,8 +403,9 @@ LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 		
 			
 		return appointmentList;
-	}
-	
+	}*/
+	/*Ganesh 2019-02-19
+	 * 
 	@RequestMapping(value = { "/insertLabAppointment" }, method = RequestMethod.POST)
 	public @ResponseBody Info insertLabAppointment(@RequestBody LabAppointment  labAppointment)
 	{
@@ -465,9 +445,12 @@ LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 	
 		return info;
 	}
-	
+	*/
 	/*edit lab appointment by lab*/
-	@RequestMapping(value = { "/editLabAppointmentByLab" }, method = RequestMethod.POST)
+	/*
+	 * Ganesh 2019-02-19
+	 * 
+	 * @RequestMapping(value = { "/editLabAppointmentByLab" }, method = RequestMethod.POST)
 	public @ResponseBody Info editLabAppointmentByLab(@RequestParam("appId") int appId,@RequestParam("date") String date,@RequestParam("time") int time)
 	{System.out.println("caaaaaaaame"+date);
 		Info info=new Info();
@@ -490,7 +473,7 @@ LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 			patientNotificationRepository.save(patientNotification);
 			
 			String confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been confirmed for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
-			
+		 	
 			System.out.println("token="+patientDetails.getString2());
 			try {
 			if(patientDetails.getInt1()==0) {
@@ -513,10 +496,13 @@ LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 			info.setMessage("Problem to edit Appointment!!");
 		}
 		return info;
-	}
+	}*/
 	
 	/*cancel lab appointment by lab*/
-	@RequestMapping(value = { "/cancelLabAppointmentByLab" }, method = RequestMethod.POST)
+	
+	/*Ganesh 2019-02-19
+	 * 
+	 * @RequestMapping(value = { "/cancelLabAppointmentByLab" }, method = RequestMethod.POST)
 	public @ResponseBody Info cancelLabAppointmentByLab(@RequestParam("appId") int appId, @RequestParam("status") int status)
 	{System.out.println("caaaaaaaame"+appId);
 		Info info=new Info();
@@ -545,7 +531,7 @@ LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 			info.setMessage("Problem to cancel Appointment!!");
 		}
 		return info;
-	}
+	}*/
 	@RequestMapping(value = { "/getAllTime" }, method = RequestMethod.GET)
 	public @ResponseBody List<LabDetails> getAllTime() {
 	
@@ -571,7 +557,7 @@ LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 	
 	
 	//Update LabAppointmentStatus
-	//Ganesh
+/*	//Ganesh 2019-02-19
 @RequestMapping(value = { "/updateLabAppointmentStatus"}, method = RequestMethod.POST)
 public @ResponseBody Info updateLabAppointmentStatus(@RequestParam("appointId") int appointId) {
 System.out.println("appointId "+appointId);
@@ -602,8 +588,9 @@ catch (Exception e) {
 e.printStackTrace();
 }
 return info;
-}
-
+}*/
+/*
+ * Ganesh 2019-02-19
 @RequestMapping(value = { "/getReportDetailsForLab" }, method = RequestMethod.POST)
 public @ResponseBody List<GetReportDetailsForLab> getReportDetailsForLab(@RequestParam("labId") int labId,@RequestParam("testId") int testId,@RequestParam("fromDate") String fromDate,@RequestParam("toDate") String toDate)
 {
@@ -619,7 +606,7 @@ public @ResponseBody List<GetReportDetailsForLab> getReportDetailsForLab(@Reques
 	
 	return getReportDetailsForLabList;
 }
-
+*/
 @RequestMapping(value = { "/getLabDetailsByUsrname" }, method = RequestMethod.POST)
 public @ResponseBody LabDetails getLabDetailsByUsrname(@RequestParam("userName") String uName)
 
@@ -637,7 +624,8 @@ System.out.println(e.getMessage());
  return labDetailsRes;
  
 }
-
+/*
+ * Ganesh 2019-02-19
 @RequestMapping(value = { "/addTestsToLab" }, method = RequestMethod.POST)
 public @ResponseBody Info addTestsToLab(@RequestParam("labId") int labId,@RequestParam("testId") String testId)
 
@@ -667,9 +655,11 @@ System.out.println(e.getMessage());
 }
  return info;
  
-}
+}*/
 
-@RequestMapping(value = { "/deleteTestOfLab" }, method = RequestMethod.POST)
+/*
+ * Ganesh 2019-02-19
+ * @RequestMapping(value = { "/deleteTestOfLab" }, method = RequestMethod.POST)
 public @ResponseBody Info deleteTestOfLab(@RequestParam("labId") int labId,@RequestParam("testId") String testId)
 
 {
@@ -727,7 +717,7 @@ System.out.println(e.getMessage());
 }
  return info;
  
-}
+}*/
 
 @RequestMapping(value = { "/updateLabProfilePic" }, method = RequestMethod.POST)
 public @ResponseBody Info updateLabProfilePic(@RequestParam("labId") int labId,@RequestParam("profilePhoto") String profilePhoto)
@@ -758,7 +748,9 @@ System.out.println(e.getMessage());
  
 }
 
-@RequestMapping(value = { "/getAllLabTestsOfPatient" }, method = RequestMethod.POST)
+/*
+ * Ganesh 2019-02-19
+ * @RequestMapping(value = { "/getAllLabTestsOfPatient" }, method = RequestMethod.POST)
 public @ResponseBody LabTestsList getAllLabTestsOfPatient(@RequestParam("patientId") int patientId)
 {
  
@@ -794,7 +786,7 @@ public @ResponseBody LabTestsList getAllLabTestsOfPatient(@RequestParam("patient
 	}		
 	return labTestsList;
 }
-
+*/
 @RequestMapping(value = { "/getLabNotification"}, method = RequestMethod.POST)
 public @ResponseBody List<LabNotification> getLabNotification(@RequestParam("labId") int labId) {
 	
@@ -827,7 +819,8 @@ public @ResponseBody List<LabTests> getAllLabTypes() {
 }
 
 /** insert patient Report*/
-
+/*Ganesh 2019-02-19
+ * 
 @RequestMapping(value = { "/insertPatientReport" }, method = RequestMethod.POST)
 public @ResponseBody ReportDetails insertPatientReport(@RequestBody ReportDetails reportDetails)
 {
@@ -894,14 +887,16 @@ public @ResponseBody ReportDetails insertPatientReport(@RequestBody ReportDetail
 	}
 
 	return patientReport;
-}
+}*/
 
 
 
 
 
 /** get patient report by test*/
-
+/*
+ * Ganesh 2019-02-19
+ * 
 @RequestMapping(value = { "/insertPatientOwnReport" }, method = RequestMethod.POST)
 public @ResponseBody Info insertPatientOwnReport(@RequestBody ReportDetails reportDetails)
 {
@@ -932,8 +927,9 @@ public @ResponseBody Info insertPatientOwnReport(@RequestBody ReportDetails repo
 	return info;
 }
 
-
-
+*/
+/*Ganesh 2019-02-19
+ * 
 	@RequestMapping(value = { "/getPatientReportsByTest" }, method = RequestMethod.POST)
 	public @ResponseBody List<ReportDetails> getPatientReportsByTest(@RequestParam("testId") int testId,@RequestParam("patientId") int patientId)
 	
@@ -950,10 +946,10 @@ System.out.println(e.getMessage());
 	 return reportDetailsList;
 	 
 	}
-
+*/
 	/** get patient report by test*/
 	
-	
+/*	Ganesh 2019-02-19
 	@RequestMapping(value = { "/getPatientReportsByDate" }, method = RequestMethod.POST)
 	public @ResponseBody List<ReportDetails> getPatientReportsByDate(@RequestParam("fromDate") String fromDate,@RequestParam("toDate") String toDate,@RequestParam("patientId") int patientId)
 	
@@ -971,7 +967,7 @@ System.out.println(e.getMessage());
 	}
 	 return reportDetailsList;
 	 
-	}
+	}*/
 	@RequestMapping(value = { "/insertLabDetails" }, method = RequestMethod.POST)
 	public @ResponseBody LabDetails insertLabDetails(@RequestBody LabDetails labDetails)
 	{
@@ -1139,7 +1135,9 @@ System.out.println(e.getMessage());
 	
 	
 	}*/
-	@RequestMapping(value = { "/updateLabAppointmentCompleteStatus" }, method = RequestMethod.POST)
+/*	Ganesh 2019-02-19
+ * 
+ * @RequestMapping(value = { "/updateLabAppointmentCompleteStatus" }, method = RequestMethod.POST)
 	public @ResponseBody Info updateLabAppointmentCompleteStatus(@RequestParam("appointId") int appointId, @RequestParam("reportIdList")String reportIdList)
 	{
 		Info info=new Info();
@@ -1181,9 +1179,10 @@ System.out.println(e.getMessage());
 			// TODO: handle exception
 		}
 		return info;
-	}
+	}*/
 	
-	@RequestMapping(value = { "/insertTestTransaction" }, method = RequestMethod.POST)
+/*	Ganesh 2019-02-19
+ * @RequestMapping(value = { "/insertTestTransaction" }, method = RequestMethod.POST)
 	public @ResponseBody Info insertTestTransaction(@RequestBody TransactionDetails transactionDetails)
 	{
 		
@@ -1212,7 +1211,7 @@ System.out.println(e.getMessage());
 
 		return info;
 	}
-
+*/
 	@RequestMapping(value = { "/getLabPaymentInvoice" }, method = RequestMethod.POST)
 	public @ResponseBody List<PateintReportPaymentDetails> getLabPaymentInvoice(@RequestParam("patientId") int patientId)
 	
@@ -1247,7 +1246,9 @@ System.out.println(e.getMessage());
 	 
 	}
 	
-	@RequestMapping(value = { "/updateLabReportsPayment" }, method = RequestMethod.POST)
+/*
+ * Ganesh 2019-02-19
+ * 	@RequestMapping(value = { "/updateLabReportsPayment" }, method = RequestMethod.POST)
 	public @ResponseBody Info updateLabReportsPayment(@RequestParam("amountType") int amountType,@RequestParam("reportId") int reportId,@RequestParam("txnTableId") int txnTableId,@RequestParam("txnStatus") int txnStatus,@RequestParam("txnId") String txnId,@RequestParam("orderId") String orderId,@RequestParam("txnAmt") float txnAmt)
 	{
  
@@ -1279,7 +1280,7 @@ System.out.println(e.getMessage());
 
 		return info;
 	}
-	
+	*/
 	
 	@RequestMapping(value = { "/insertLabSuscriptionDetails" }, method = RequestMethod.POST)
 	public @ResponseBody LabSubscriptionDetails insertLabSuscriptionDetails(@RequestBody LabSubscriptionDetails labSubscriptionDetails)
@@ -1298,6 +1299,8 @@ System.out.println(e.getMessage());
 		return labSubscriptionDetailsRes;
 	}
 	
+	
+	//TO DO Change after new lab 
 	@RequestMapping(value = { "/getLabAppointmentCount" }, method = RequestMethod.POST)
 	public @ResponseBody LabAppointmentCount getLabAppointmentCount(@RequestParam("labId")int labId,@RequestParam("appDate")String appDate) {
   

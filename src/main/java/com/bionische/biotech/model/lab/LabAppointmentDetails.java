@@ -64,7 +64,12 @@ public class LabAppointmentDetails {
 	private int refference;
 	
 	private int doctorId;
+	
+	private int paymentClearReceiptNo;
 
+	private int ratingStatus;
+	
+	
 	public int getLabAppId() {
 		return labAppId;
 	}
@@ -219,6 +224,22 @@ public class LabAppointmentDetails {
 		this.doctorId = doctorId;
 	}
 
+	public int getPaymentClearReceiptNo() {
+		return paymentClearReceiptNo;
+	}
+
+	public void setPaymentClearReceiptNo(int paymentClearReceiptNo) {
+		this.paymentClearReceiptNo = paymentClearReceiptNo;
+	}
+
+	public int getRatingStatus() {
+		return ratingStatus;
+	}
+
+	public void setRatingStatus(int ratingStatus) {
+		this.ratingStatus = ratingStatus;
+	}
+
 	@Override
 	public String toString() {
 		return "LabAppointmentDetails [labAppId=" + labAppId + ", testIdList=" + testIdList + ", labId=" + labId
@@ -226,7 +247,11 @@ public class LabAppointmentDetails {
 				+ delStatus + ", status=" + status + ", amountType=" + amountType + ", amount=" + amount
 				+ ", paymentStatus=" + paymentStatus + ", discount=" + discount + ", totalAmount=" + totalAmount
 				+ ", txnId=" + txnId + ", paidAmount=" + paidAmount + ", orderId=" + orderId + ", paymentDate="
-				+ paymentDate + ", refference=" + refference + ", doctorId=" + doctorId + "]";
+				+ paymentDate + ", refference=" + refference + ", doctorId=" + doctorId + ", paymentClearReceiptNo="
+				+ paymentClearReceiptNo + ", ratingStatus=" + ratingStatus + "]";
 	}
+
+ 
+	 
  
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.GetLabAppointment;
 import com.bionische.biotech.model.GetLabForAppointment;
@@ -24,6 +25,8 @@ import com.bionische.biotech.model.GetSuggestLabTestFromDoctor;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabNotification;
 import com.bionische.biotech.model.LabTests;
+import com.bionische.biotech.model.PatientDetails;
+import com.bionische.biotech.model.PatientNotification;
 import com.bionische.biotech.model.SuggestLabTestFromDoctor;
 import com.bionische.biotech.model.lab.GetPatientReports;
 import com.bionische.biotech.model.lab.LabAppointmentDetails;
@@ -36,12 +39,15 @@ import com.bionische.biotech.repository.GetPatientContactDetailsByIdRepository;
 import com.bionische.biotech.repository.GetSuggestLabTestFromDoctorRepository;
 import com.bionische.biotech.repository.LabNotificationRepository;
 import com.bionische.biotech.repository.LabTestsRepository;
+import com.bionische.biotech.repository.PatientDetailsRepository;
+import com.bionische.biotech.repository.PatientNotificationRepository;
 import com.bionische.biotech.repository.SuggestLabTestFromDoctorRepository;
 import com.bionische.biotech.repository.lab.GetPatientReportsRepository;
 import com.bionische.biotech.repository.lab.LabAppointmentDetailsRepository;
 import com.bionische.biotech.repository.lab.PatientReportsDetailsRepository;
 import com.bionische.biotech.repository.lab.TestsInLabRepository;
 import com.bionische.biotech.service.SendEMailService;
+import com.bionische.biotech.service.SendFcmNotificationService;
 
 @RestController
 @RequestMapping(value = { "/lab"})
@@ -75,6 +81,12 @@ public class LabPatientApiConrtoller {
 	SuggestLabTestFromDoctorRepository suggestLabTestFromDoctorRepository;
 	@Autowired
 	GetSuggestLabTestFromDoctorRepository getSuggestLabTestFromDoctorRepository;
+	@Autowired
+	SendFcmNotificationService sendFcmNotificationService;
+	@Autowired
+	PatientDetailsRepository patientDetailsRepository;
+	@Autowired
+	PatientNotificationRepository patientNotificationRepository;
 	
 	@RequestMapping(value = { "/insertTestsInLab" }, method = RequestMethod.POST)
 	public @ResponseBody TestsInLab insertTestsInLab(@Valid @RequestBody TestsInLab testsInLab) {
@@ -169,10 +181,62 @@ public class LabPatientApiConrtoller {
 			
 			 info.setError(true);
 		  int res=labAppointmentDetailsRepository.updateLabAppointmentStatus(labAppId, status);
+		  GetLabAppointment getLabAppointment = getLabAppointmentRrepository.getLabAppointmentDetails(labAppId);
+		  
 		  if(res>0)
 		  {
 			  info.setError(false);
 			  info.setMessage("Appointment Status Update Successfully");
+			  
+			  PatientNotification patientNotification = new PatientNotification();
+				GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByLabAppointId(labAppId);
+				 
+				sendEMailService.sendMail("Your Appointment Is edited!!", "Your Appointment edited!!" , getPatientContactDetailsById.getEmail());
+				PatientDetails patientDetails=patientDetailsRepository.findByPatientId(getPatientContactDetailsById.getPatientId());
+				patientNotification.setPatientId(getPatientContactDetailsById.getPatientId());
+				 
+				if(status==1)
+				patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been confirmed for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime());					
+				else if(status==2)
+				patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been Cancel");					
+				else if(status==3)
+					patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been Reject By Lab");
+				
+				else if(status==5)
+					patientNotification.setNotification("Your Reports has been uploaded by "+getLabAppointment.getLabName()+". Please find your report on profile. Note: To view your reports please do payment if pending. Thank you !! ");
+				
+				patientNotification.setStatus(0);
+				
+				patientNotification.setString1("Appointment Confirmed");
+				
+				patientNotification.setString2("lab");
+				patientNotification.setInt1(getLabAppointment.getLabId());
+				patientNotificationRepository.save(patientNotification);
+				String confirmAppointmentNotification="";
+				if(status==1)
+				  confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been confirmed for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
+				else if(status==2)
+					  confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been Canceled for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
+				else if(status==3)
+					confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been Reject By Lab for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
+				else if(status==5)
+					confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" Your Reports has been uploaded by "+getLabAppointment.getLabName()+"Please find your report on profile. Note: To view your reports please do payment if pending. Thank you !!";
+				
+				System.out.println("token="+patientDetails.getString2());
+				try {
+				if(patientDetails.getInt1()==0) {
+				
+				sendFcmNotificationService.notifyUser(patientDetails.getString2(), "BIONISCHE", confirmAppointmentNotification, DateConverter.currentDateAndTime(),12);
+				}else if(patientDetails.getInt1()==1) {
+					
+					sendFcmNotificationService.notifyiOSUser(patientDetails.getString2(), "BIONISCHE", confirmAppointmentNotification, DateConverter.currentDateAndTime(),12);	
+				}
+				}
+				catch (Exception e) {
+					System.out.println(e.getMessage());// TODO: handle exception
+				}
+				
+				
 		  }
 		  else {
 			  info.setError(true);
@@ -197,10 +261,60 @@ public class LabPatientApiConrtoller {
 			
 			 info.setError(true);
 		  int res=labAppointmentDetailsRepository.collectSampleWithPaymentDetails(labAppId, status,totalAmount,  paidAmount, discount, amount, amountType, paymentStatus);
+		  GetLabAppointment getLabAppointment = getLabAppointmentRrepository.getLabAppointmentDetails(labAppId);
 		  if(res>0)
 		  {
 			  info.setError(false);
 			  info.setMessage("Appointment Status Update Successfully");
+			  
+			  PatientNotification patientNotification = new PatientNotification();
+				GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByLabAppointId(labAppId);
+				 
+				sendEMailService.sendMail("Your Appointment Is edited!!", "Your Appointment edited!!" , getPatientContactDetailsById.getEmail());
+				PatientDetails patientDetails=patientDetailsRepository.findByPatientId(getPatientContactDetailsById.getPatientId());
+				patientNotification.setPatientId(getPatientContactDetailsById.getPatientId());
+				 
+				if(status==1)
+				patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been confirmed for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime());					
+				else if(status==2)
+				patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been Cancel");					
+				else if(status==3)
+					patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been Reject By Lab");
+				
+				else if(status==5)
+					patientNotification.setNotification("Your Reports has been uploaded by "+getLabAppointment.getLabName()+". Please find your report on profile. Note: To view your reports please do payment if pending. Thank you !! ");
+				
+				patientNotification.setStatus(0);
+				
+				patientNotification.setString1("Appointment Confirmed");
+				
+				patientNotification.setString2("lab");
+				patientNotification.setInt1(getLabAppointment.getLabId());
+				patientNotificationRepository.save(patientNotification);
+				String confirmAppointmentNotification="";
+				if(status==1)
+				  confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been confirmed for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
+				else if(status==2)
+					  confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been Canceled for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
+				else if(status==3)
+					confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been Reject By Lab for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
+				else if(status==5)
+					confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" Your Reports has been uploaded by "+getLabAppointment.getLabName()+"Please find your report on profile. Note: To view your reports please do payment if pending. Thank you !!";
+				
+				System.out.println("token="+patientDetails.getString2());
+				try {
+				if(patientDetails.getInt1()==0) {
+				
+				sendFcmNotificationService.notifyUser(patientDetails.getString2(), "BIONISCHE", confirmAppointmentNotification, DateConverter.currentDateAndTime(),12);
+				}else if(patientDetails.getInt1()==1) {
+					
+					sendFcmNotificationService.notifyiOSUser(patientDetails.getString2(), "BIONISCHE", confirmAppointmentNotification, DateConverter.currentDateAndTime(),12);	
+				}
+				}
+				catch (Exception e) {
+					System.out.println(e.getMessage());// TODO: handle exception
+				}
+				
 		  }
 		  else {
 			  info.setError(true);
@@ -223,10 +337,60 @@ public class LabPatientApiConrtoller {
 			
 			 info.setError(true);
 		  int res=labAppointmentDetailsRepository.editLabAppointmentByLab(appId, status, date, timeId);
+		  GetLabAppointment getLabAppointment = getLabAppointmentRrepository.getLabAppointmentDetails(appId);
 		  if(res>0)
 		  {
 			  info.setError(false);
 			  info.setMessage("Appointment Status Update Successfully");
+			  
+			  PatientNotification patientNotification = new PatientNotification();
+				GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByLabAppointId(appId);
+				 
+				sendEMailService.sendMail("Your Appointment Is edited!!", "Your Appointment edited!!" , getPatientContactDetailsById.getEmail());
+				PatientDetails patientDetails=patientDetailsRepository.findByPatientId(getPatientContactDetailsById.getPatientId());
+				patientNotification.setPatientId(getPatientContactDetailsById.getPatientId());
+				 
+				if(status==1)
+				patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been confirmed for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime());					
+				else if(status==2)
+				patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been Cancel");					
+				else if(status==3)
+					patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been Reject By Lab");
+				
+				else if(status==5)
+					patientNotification.setNotification("Your Reports has been uploaded by "+getLabAppointment.getLabName()+". Please find your report on profile. Note: To view your reports please do payment if pending. Thank you !! ");
+				
+				patientNotification.setStatus(0);
+				
+				patientNotification.setString1("Appointment Confirmed");
+				
+				patientNotification.setString2("lab");
+				patientNotification.setInt1(getLabAppointment.getLabId());
+				patientNotificationRepository.save(patientNotification);
+				String confirmAppointmentNotification="";
+				if(status==1)
+				  confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been confirmed for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
+				else if(status==2)
+					  confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been Canceled for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
+				else if(status==3)
+					confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been Reject By Lab for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
+				else if(status==5)
+					confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" Your Reports has been uploaded by "+getLabAppointment.getLabName()+"Please find your report on profile. Note: To view your reports please do payment if pending. Thank you !!";
+				
+				System.out.println("token="+patientDetails.getString2());
+				try {
+				if(patientDetails.getInt1()==0) {
+				
+				sendFcmNotificationService.notifyUser(patientDetails.getString2(), "BIONISCHE", confirmAppointmentNotification, DateConverter.currentDateAndTime(),12);
+				}else if(patientDetails.getInt1()==1) {
+					
+					sendFcmNotificationService.notifyiOSUser(patientDetails.getString2(), "BIONISCHE", confirmAppointmentNotification, DateConverter.currentDateAndTime(),12);	
+				}
+				}
+				catch (Exception e) {
+					System.out.println(e.getMessage());// TODO: handle exception
+				}
+				
 		  }
 		  else {
 			  info.setError(true);
