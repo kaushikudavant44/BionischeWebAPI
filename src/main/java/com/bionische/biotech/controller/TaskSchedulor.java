@@ -2,7 +2,6 @@ package com.bionische.biotech.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -13,19 +12,15 @@ import org.springframework.stereotype.Component;
 import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.model.AppointmentDetails;
 import com.bionische.biotech.model.AppointmentTime;
-import com.bionische.biotech.model.DocAvailableTime;
 import com.bionische.biotech.model.DoctorDetails;
-import com.bionische.biotech.model.GetLabAppointment;
-import com.bionische.biotech.model.LabAppointment;
 import com.bionische.biotech.model.PatientDetails;
+import com.bionische.biotech.model.lab.LabAppointmentDetails;
 import com.bionische.biotech.repository.AppointmentDetailsRepository;
 import com.bionische.biotech.repository.AppointmentTimeRepository;
-import com.bionische.biotech.repository.DocAvailableTimeRepository;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
 import com.bionische.biotech.repository.DoctorSubscriptionDetailsRepository;
-import com.bionische.biotech.repository.GetLabAppointmentRrepository;
-import com.bionische.biotech.repository.LabAppointmentRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
+import com.bionische.biotech.repository.lab.LabAppointmentDetailsRepository;
 import com.bionische.biotech.service.SendFcmNotificationService;
 
 @Component
@@ -48,11 +43,9 @@ public class TaskSchedulor {
 	
 	@Autowired
 	PatientDetailsRepository patientDetailsRepository;
-	
-	
-	
 	@Autowired
-	LabAppointmentRepository labAppointmentRepository;
+	LabAppointmentDetailsRepository labAppointmentDetailsRepository;
+	 
 	
 	/*@Autowired
 	AppointmentTimeRepository appointmentTimeRepository;
@@ -146,7 +139,7 @@ public class TaskSchedulor {
 		 * This is for lab appointment
 		 */
 		
-		List<LabAppointment> getLabAppointmentList=labAppointmentRepository.findAppointmentofPatientByTimeIdList(timeIdList);
+		List<LabAppointmentDetails> getLabAppointmentList=labAppointmentDetailsRepository.findAppointmentofPatientByTimeIdList(timeIdList);
 		
 		if(!getLabAppointmentList.isEmpty()) {
 			for(int i=0;i<getLabAppointmentList.size();i++) {
