@@ -943,10 +943,10 @@ System.out.println(e.getMessage());
 				 doctorIdList.add(0);
 				for(int i=0;i<getDoctorListForAppointmentLsit.size();i++) {
 					doctorIdList.add(getDoctorListForAppointmentLsit.get(i).getDoctorId());
-				}
+				} 
 				 
 				 List<GetDoctorListForAppointment> getDoctorListForAppointmentLsitRes=new ArrayList<GetDoctorListForAppointment>();
-				  getDoctorListForAppointmentLsitRes=fixDoctorScheduleService.getDoctorListForAppointment(specId, cityId,doctorIdList);
+				  getDoctorListForAppointmentLsitRes=fixDoctorScheduleService.getDoctorListForAppointment(specId, cityId,doctorIdList,date);
 					System.out.println("fix Schedule "+getDoctorListForAppointmentLsitRes.toString());
 				  
 				

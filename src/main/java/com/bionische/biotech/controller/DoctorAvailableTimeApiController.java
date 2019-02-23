@@ -2,6 +2,8 @@ package com.bionische.biotech.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.DocAvailableTime;
+import com.bionische.biotech.model.DoctorLeavesDetails;
 import com.bionische.biotech.model.FixDoctorAppointSchedule;
 import com.bionische.biotech.model.GetDoctorHospitalDetails;
 import com.bionische.biotech.model.GetHospitalClinicByDoctorIdAndAvailDate;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.repository.AppointmentTimeRepository;
 import com.bionische.biotech.repository.DocAvailableTimeRepository;
+import com.bionische.biotech.repository.DoctorLeavesDetailsRepository;
 import com.bionische.biotech.repository.FixDoctorAppointScheduleRepository;
 import com.bionische.biotech.repository.GetDoctorHospitalDetailsRepository;
 import com.bionische.biotech.repository.GetHospitalClinicByDoctorIdAndAvailDateRepository;
@@ -42,6 +46,8 @@ public class DoctorAvailableTimeApiController {
 	FixDoctorAppointScheduleRepository fixDoctorAppointScheduleRepository;
 	@Autowired
 	FixDoctorScheduleService fixDoctorScheduleService;
+	@Autowired
+	DoctorLeavesDetailsRepository doctorLeavesDetailsRepository;
 	
 	@Autowired
 	GetHospitalClinicByDoctorIdAndAvailDateRepository getHospitalClinicByDoctorIdAndAvailDateRepository;
@@ -243,4 +249,100 @@ public  List<GetHospitalClinicByDoctorIdAndAvailDate> getHospitalClinicByDoctorI
 	}
 	return null;
 }
+
+@RequestMapping(value = { "/getDoctorFixScheduleByDoctorId"}, method = RequestMethod.POST)
+public  List<AppointmentTime> getDoctorFixScheduleByDoctorId(@RequestParam("doctorId")int doctorId) {
+
+	
+	try {
+		List<FixDoctorAppointSchedule> fixDoctorAppointScheduleList=fixDoctorAppointScheduleRepository.findByDoctorIdAndDelStatus(doctorId, 0);
+	ObjectMapper mapper = new ObjectMapper();
+	 List<AppointmentTime> appointmentTimeList=new  ArrayList<AppointmentTime>();
+	for(int ii=0;ii<fixDoctorAppointScheduleList.size();ii++) {
+	 List<AppointmentTime> appointmentTimeList1 = mapper.readValue(fixDoctorAppointScheduleList.get(ii).getTimeJson(),new TypeReference<List<AppointmentTime>>() { });
+	 
+	 appointmentTimeList.addAll(appointmentTimeList1);
+	 
+		 
+	}
+	List<Integer> timeIdList=new ArrayList<Integer>();
+
+	for(int i=0;i<appointmentTimeList.size();i++)
+	{
+		appointmentTimeList.get(i).setInt1(1);
+		timeIdList.add(appointmentTimeList.get(i).getTimeId());
+	}
+	List<AppointmentTime> appointmentTimeList2=appointmentTimeRepository.findByTimeIdNotIn(timeIdList);
+	appointmentTimeList.addAll(appointmentTimeList2);
+	 Collections.sort(appointmentTimeList, new SortbyTimeId()); 
+	return appointmentTimeList;
+	}
+	catch (Exception e) {
+		System.out.println(e.getMessage());// TODO: handle exception
+	}
+	return null;
+}
+
+class SortbyTimeId implements Comparator<AppointmentTime> 
+{ 
+    // Used for sorting in ascending order of 
+    // roll number 
+    public int compare(AppointmentTime a, AppointmentTime b) 
+    { 
+        return a.timeId - b.timeId; 
+    } 
+} 
+
+@RequestMapping(value = { "/getDoctorLeaves"}, method = RequestMethod.POST)
+public  List<DoctorLeavesDetails> insertDoctorLeave(@RequestParam("date")String date, @RequestParam("doctorId")int doctorId) {
+	try {
+	return doctorLeavesDetailsRepository.findByDateGreaterThanEqualAndDoctorId(date, doctorId);
+	}
+	catch (Exception e) {
+		// TODO: handle exception
+	}
+	return null;
+}
+
+@RequestMapping(value = { "/insertDoctorLeave"}, method = RequestMethod.POST)
+public  DoctorLeavesDetails insertDoctorLeave(@RequestBody DoctorLeavesDetails doctorLeavesDetails) {
+	try {
+		if(doctorLeavesDetailsRepository.findByDateAndDoctorId(doctorLeavesDetails.getDate(), doctorLeavesDetails.getDoctorId())==null)
+	return doctorLeavesDetailsRepository.save(doctorLeavesDetails);
+	}
+	catch (Exception e) {
+		// TODO: handle exception
+	}
+	return null;
+}
+@RequestMapping(value = { "/deleteDoctorLeave"}, method = RequestMethod.POST)
+public  Info deleteDoctorLeave(@RequestParam("leaveId")int leaveId) {
+	System.out.println("leaveId "+leaveId);
+	Info info=new Info();
+	info.setError(true);
+	try {
+		int res =doctorLeavesDetailsRepository.deleteDoctorLeave(leaveId);
+		if(res>0)
+		{
+			
+			info.setError(false);
+			info.setMessage("Successfully Deleted");
+			return info;
+		}
+		else {
+			info.setError(true);
+			info.setMessage("Failed To Deleted");
+		}
+	}
+	catch (Exception e) {
+		 
+		info.setError(true);
+		info.setMessage("Failed To Deleted");
+		return info;
+	}
+	return info;
+}
+
+
+
 }

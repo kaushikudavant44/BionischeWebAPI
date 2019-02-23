@@ -14,7 +14,7 @@ public class AppointmentTime {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="time_id")
-	private int timeId;
+	 public int timeId;
 	
 	@Column(name="time")
 	private String time;

@@ -382,13 +382,13 @@ public class LoginApiController {
 				System.out.println(hashedPass);
 				System.out.println(patientDetails.getPassword());
 				if (patientDetails.getPassword().equals(hashedPass)) {
-					patientDetails.setPassword("");
-					patientLogin.setPatientDetails(patientDetails);
+					
 					info.setError(false);
 					info.setMessage("Login Successfull");
 					int updatePatientTokenAndDevice = patientDetailsRepository
 							.updatePatientTokenAsString2ByPatientId(patientDetails.getPatientId(), token, deviceType);
-
+					patientDetails.setPassword("");
+					patientLogin.setPatientDetails(patientDetails);
 					patientLogin.setInfo(info);
 					Info suscriptionInfo = new Info();
 					suscriptionInfo.setError(true);

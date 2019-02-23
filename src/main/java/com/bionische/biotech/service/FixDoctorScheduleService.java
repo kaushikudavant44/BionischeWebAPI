@@ -9,6 +9,6 @@ public interface FixDoctorScheduleService {
 
 	FixDoctorAppointSchedule insertFixDoctorAppointSchedule(FixDoctorAppointSchedule fixDoctorAppointSchedule);
 
-	List<GetDoctorListForAppointment> getDoctorListForAppointment(int specId, int cityId, List<Integer> doctorIdList);
+	List<GetDoctorListForAppointment> getDoctorListForAppointment(int specId, int cityId, List<Integer> doctorIdList, String date);
 	 
 }

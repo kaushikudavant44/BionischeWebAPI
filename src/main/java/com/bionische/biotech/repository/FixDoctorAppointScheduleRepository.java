@@ -1,5 +1,7 @@
 package com.bionische.biotech.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +23,5 @@ public interface FixDoctorAppointScheduleRepository extends JpaRepository<FixDoc
 	int updateDelStatus(@Param("doctorId")int doctorId);
 
 	FixDoctorAppointSchedule findByDoctorIdAndClinicIdAndDelStatus(int doctorId, int clinicId, int delStatus);
+	List<FixDoctorAppointSchedule> findByDoctorIdAndDelStatus(int doctorId, int delStatus);
 }

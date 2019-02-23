@@ -60,8 +60,8 @@ public  String getDoctorFixSchedule(int doctorId, int clinicId) {
 
 
 @Override
-public List<GetDoctorListForAppointment> getDoctorListForAppointment(int specId, int cityId, List<Integer> doctoridList) {
-	return getDoctorListForAppointmentRepository.getDoctorListForAppointment( specId,  cityId,doctoridList);
+public List<GetDoctorListForAppointment> getDoctorListForAppointment(int specId, int cityId, List<Integer> doctoridList, String date) {
+	return getDoctorListForAppointmentRepository.getDoctorListForAppointment( specId,  cityId,doctoridList,date);
 	 
 }
 
