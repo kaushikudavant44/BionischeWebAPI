@@ -29,7 +29,7 @@ public interface GetDoctorListForAppointmentRepository extends JpaRepository<Get
 				+ " WHERE r.doctor_id=d.doctor_id), 0) AS rating    FROM  doctor_details d, hospital_details h, city c, doctor_specialization s,"
 				+ " fix_doctor_schedule a, t_doctor_subscription_details ds  WHERE d.spec_id=:specId AND d.city_id=:cityId  AND d.del_status=0  AND"
 				+ " d.spec_id=s.spec_id  AND d.doctor_id=a.doctor_id  AND h.hospital_id=a.hospital_id AND c.city_id=h.cityid AND"
-				+ " d.doctor_id=ds.doctor_id AND ds.package_exp_date>=NOW() AND ds.txn_status=1 AND a.doctor_id NOT IN (:doctoridList) AND d.doctor_id NOT IN(SELECT l.doctor_id FROM t_doctor_leaves l  WHERE d.doctor_id=l.doctor_id AND l.date=:date) GROUP BY a.doctor_id",nativeQuery=true) 
+				+ " d.doctor_id=ds.doctor_id AND ds.package_exp_date>=NOW() AND ds.txn_status=1   AND a.del_status=0 AND a.doctor_id NOT IN (:doctoridList) AND d.doctor_id NOT IN(SELECT l.doctor_id FROM t_doctor_leaves l  WHERE d.doctor_id=l.doctor_id AND l.date=:date) GROUP BY a.doctor_id",nativeQuery=true) 
 		List<GetDoctorListForAppointment> getDoctorListForAppointment(@Param("specId")int specId, @Param("cityId")int cityId, @Param("doctoridList")List<Integer> doctoridList, @Param("date")String date);
 }
  

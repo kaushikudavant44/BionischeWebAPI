@@ -41,7 +41,8 @@ public interface AppointmentTimeRepository extends JpaRepository<AppointmentTime
 	@Query(value="select * from appointment_time where time_id IN(:fromTime, :toTime)", nativeQuery=true)
 	List<AppointmentTime> getDoctorAppointMentTime(@Param("fromTime")String fromTime, @Param("toTime")String toTime);
 
-	@Query(value="SELECT t.time_id, t.time, (SELECT COUNT(a.appoint_id) FROM doctor_appointment a WHERE a.doctor_id=:doctorId AND a.time=t.time_id AND a.hospital_id=:hospitalId AND a.date=:date)AS int_1, :noOfPatient as string1 FROM appointment_time t WHERE t.time_id IN(:availableTimeList)", nativeQuery=true)
+	@Query(value="SELECT t.time_id, t.time, (SELECT COUNT(a.appoint_id) FROM doctor_appointment a WHERE a.doctor_id=:doctorId AND a.time=t.time_id AND a.hospital_id=:hospitalId AND"
+			+ " a.date=:date AND a.status!= 2 AND a.status!=3)AS int_1, :noOfPatient as string1 FROM appointment_time t WHERE t.time_id IN(:availableTimeList)", nativeQuery=true)
 	List<AppointmentTime> getClinicAvailabledAppointTime(@Param("doctorId")int doctorId,@Param("hospitalId")int hospitalId,@Param("date")String date, @Param("availableTimeList")List<String> availableTimeList,@Param("noOfPatient")int noOfPatient);
 	
 
@@ -52,4 +53,8 @@ public interface AppointmentTimeRepository extends JpaRepository<AppointmentTime
 	List<AppointmentTime> findByTime(@Param("timeList")List<String> timeList);
 	
 	List<AppointmentTime> findByTimeIdNotIn(List<Integer> timeId);
+ 
+	
+	 
+	
 }
