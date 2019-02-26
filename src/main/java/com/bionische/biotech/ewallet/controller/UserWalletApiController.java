@@ -216,6 +216,25 @@ public class UserWalletApiController {
 	}
 
 
+@RequestMapping(value = { "/getAllWalletTransactionDetails"}, method = RequestMethod.POST)
+public @ResponseBody List<GetWalletTransactionDetails> getAllWalletTransactionDetails(@RequestParam("userId") int userId,@RequestParam("userType") int userType) {
+
+	List<GetWalletTransactionDetails> getWalletTransactionDetailsList=new ArrayList<GetWalletTransactionDetails>();
+	
+try {
+System.out.println(userId+" And "+userType);
+
+	getWalletTransactionDetailsList=getWalletTransactionDetailsRepository.getAllWalletTransactionDetails(userId,userType);
+		System.out.println("wallet details ="+getWalletTransactionDetailsList.toString());
+}
+catch (Exception e) {
+	e.printStackTrace();
+}
+return getWalletTransactionDetailsList;
+}
+
+
+
 
 @RequestMapping(value = { "/insertWalletMoneyBankTransferRequest" }, method = RequestMethod.POST)
 public @ResponseBody BankTransferRequest insertWalletMoneyBankTransferRequest(@RequestBody BankTransferRequest bankTransferRequest)

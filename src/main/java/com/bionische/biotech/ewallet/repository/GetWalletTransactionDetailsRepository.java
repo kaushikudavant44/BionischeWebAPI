@@ -19,8 +19,19 @@ public interface GetWalletTransactionDetailsRepository extends JpaRepository<Get
 			"WHEN t.to_user_type = 2 THEN (SELECT l.lab_name FROM lab_details l WHERE l.lab_id=t.to_user_id)  " + 
 			"WHEN t.to_user_type = 3 THEN (SELECT m.medical_name FROM medical_details m WHERE m.medical_id=t.to_user_id) " + 
 			"ELSE 'other' END AS to_user_name FROM t_wallet_transactions t WHERE  t.from_user_id=:userId AND " + 
-			"t.user_type=:userType AND t.transaction_type != 3  ",nativeQuery=true)
+			"t.user_type=:userType AND t.transaction_type != 3 ORDER BY transaction_id DESC LIMIT 20",nativeQuery=true)
     List<GetWalletTransactionDetails> getWalletTransactionDetails(@Param("userId")int userId, @Param("userType")int userType);
+	
+	@Query(value="SELECT *, CASE  " + 
+			"WHEN t.to_user_type = 0 THEN (SELECT CONCAT(d.f_name,' ', d.l_name) FROM doctor_details d WHERE d.doctor_id=t.to_user_id)  " + 
+			"WHEN t.to_user_type = 1 THEN (SELECT CONCAT(p.f_name,' ', p.l_name) FROM patient_details p WHERE p.patient_id=t.to_user_id) " + 
+			"WHEN t.to_user_type = 2 THEN (SELECT l.lab_name FROM lab_details l WHERE l.lab_id=t.to_user_id)  " + 
+			"WHEN t.to_user_type = 3 THEN (SELECT m.medical_name FROM medical_details m WHERE m.medical_id=t.to_user_id) " + 
+			"ELSE 'other' END AS to_user_name FROM t_wallet_transactions t WHERE  t.from_user_id=:userId AND " + 
+			"t.user_type=:userType AND t.transaction_type != 3 ",nativeQuery=true)
+    List<GetWalletTransactionDetails> getAllWalletTransactionDetails(@Param("userId")int userId, @Param("userType")int userType);
+	
+	
 	
 	/*@Query(value="select CASE "
 			 + " WHEN t.from_to_user_type = 1 THEN (select CONCAT(d.f_name,' ', d.l_name) FROM doctor_details d where d.doctor_id=t.from_to) "
