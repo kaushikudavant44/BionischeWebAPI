@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bionische.biotech.Common.DateConverter;
+import com.bionische.biotech.ewallet.model.TransactionWalletDetails;
+import com.bionische.biotech.model.AppointmentDetails;
 import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.GetLabAppointment;
 import com.bionische.biotech.model.GetLabForAppointment;
@@ -32,6 +34,7 @@ import com.bionische.biotech.model.lab.GetPatientReports;
 import com.bionische.biotech.model.lab.LabAppointmentDetails;
 import com.bionische.biotech.model.lab.PatientReportsDetails;
 import com.bionische.biotech.model.lab.TestsInLab;
+import com.bionische.biotech.repository.AppointmentDetailsRepository;
 import com.bionische.biotech.repository.AppointmentTimeRepository;
 import com.bionische.biotech.repository.GetLabAppointmentRrepository;
 import com.bionische.biotech.repository.GetLabForAppointmentRepository;
@@ -42,6 +45,8 @@ import com.bionische.biotech.repository.LabTestsRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.PatientNotificationRepository;
 import com.bionische.biotech.repository.SuggestLabTestFromDoctorRepository;
+import com.bionische.biotech.repository.TransactionWalletDetailsRepository;
+import com.bionische.biotech.repository.WalletDetailsRepository;
 import com.bionische.biotech.repository.lab.GetPatientReportsRepository;
 import com.bionische.biotech.repository.lab.LabAppointmentDetailsRepository;
 import com.bionische.biotech.repository.lab.PatientReportsDetailsRepository;
@@ -87,6 +92,17 @@ public class LabPatientApiConrtoller {
 	PatientDetailsRepository patientDetailsRepository;
 	@Autowired
 	PatientNotificationRepository patientNotificationRepository;
+	@Autowired
+	AppointmentDetailsRepository appointmentDetailsRepository;
+	
+	@Autowired
+	WalletDetailsRepository walletDetailsRepository;
+
+	@Autowired
+	TransactionWalletDetailsRepository transactionWalletDetailsRepository;
+	
+
+	
 	
 	@RequestMapping(value = { "/insertTestsInLab" }, method = RequestMethod.POST)
 	public @ResponseBody TestsInLab insertTestsInLab(@Valid @RequestBody TestsInLab testsInLab) {
@@ -572,21 +588,71 @@ public class LabPatientApiConrtoller {
 	}
 	
 	@RequestMapping(value = { "/updateLabReportsPayment" }, method = RequestMethod.POST)
-	public @ResponseBody Info updateLabReportsPayment(@RequestParam("appointmentId") int appointmentId,@RequestParam("txnStatus") int txnStatus,@RequestParam("txnId") String txnId,@RequestParam("orderId") String orderId,@RequestParam("txnAmt") float txnAmt)
+	public @ResponseBody Info updateLabReportsPayment(@RequestParam("appointmentId") int appointmentId,@RequestParam("txnStatus") int txnStatus,@RequestParam("txnId") String txnId,@RequestParam("walletAmount") float walletAmount,
+			@RequestParam("reportAmount") float reportAmount, @RequestParam("orderId") String orderId,@RequestParam("walletId") int walletId,@RequestParam("txnAmt") float txnAmt)
 	{
  
 		
 		Info info =new Info();
 		info.setError(true);
 		try {
-
-			int resTransaction=labAppointmentDetailsRepository.updateLabAppointmentPayment(appointmentId, txnStatus, txnId, orderId, txnAmt);
+			int isPaymentStatus=0;
+			int resTransaction=0;
+			
+			if(walletAmount>reportAmount) {
+				
+			isPaymentStatus=1;
+			resTransaction=labAppointmentDetailsRepository.updateLabAppointmentPaymentByWallet(appointmentId, txnStatus, txnId, orderId, txnAmt,reportAmount,isPaymentStatus);
+			LabAppointmentDetails labAppointmentDetails=labAppointmentDetailsRepository.findByLabAppId(appointmentId);
+			float wallAmount=walletAmount-reportAmount;
+			walletDetailsRepository.updateWalletAmount(walletId, wallAmount);
+			TransactionWalletDetails transactionWalletDetails=new TransactionWalletDetails(); 
+			
+			transactionWalletDetails.setAmount(reportAmount);
+			transactionWalletDetails.setFromUserId(labAppointmentDetails.getPatientId());
+			transactionWalletDetails.setToUserId(0);
+			transactionWalletDetails.setToUserType(0);
+			transactionWalletDetails.setTransactionType(1);
+			transactionWalletDetails.setUserType(1);
+			transactionWalletDetails.setWalletId(walletId);
+			transactionWalletDetails=transactionWalletDetailsRepository.save(transactionWalletDetails);
+			
+			}else if(walletAmount!=0) {
+				
+				isPaymentStatus=1;
+				resTransaction=labAppointmentDetailsRepository.updateLabAppointmentPayment(appointmentId, txnStatus, txnId, orderId, txnAmt,walletAmount,reportAmount,isPaymentStatus);				
+				
+				LabAppointmentDetails labAppointmentDetails=labAppointmentDetailsRepository.findByLabAppId(appointmentId);
+				float wallAmount=0;
+				walletDetailsRepository.updateWalletAmount(walletId, wallAmount);
+				TransactionWalletDetails transactionWalletDetails=new TransactionWalletDetails(); 
+				
+				transactionWalletDetails.setAmount(walletAmount);
+				transactionWalletDetails.setFromUserId(labAppointmentDetails.getPatientId());
+				transactionWalletDetails.setToUserId(0);
+				transactionWalletDetails.setToUserType(0);
+				transactionWalletDetails.setTransactionType(1);
+				transactionWalletDetails.setUserType(1);
+				transactionWalletDetails.setWalletId(walletId);
+				transactionWalletDetails=transactionWalletDetailsRepository.save(transactionWalletDetails);
+			
+			}
+			else{
+				
+			resTransaction=labAppointmentDetailsRepository.updateLabAppointmentPayment(appointmentId, txnStatus, txnId, orderId, txnAmt,walletAmount,reportAmount,isPaymentStatus);	
+			}
+			
+			
+			
 			
 			int reportStatusRes=patientReportsDetailsRepository.updatePaymentStatusByAppointmentId(appointmentId, txnStatus);
 			if(reportStatusRes>0 ) {
 				
 				info.setError(true);
 				info.setMessage("Payment updated");
+				
+				
+				
 			}
 			else {
 				info.setError(true);

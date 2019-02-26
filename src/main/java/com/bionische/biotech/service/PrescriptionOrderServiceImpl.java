@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.bionische.biotech.ConstantFileUploadPath;
 import com.bionische.biotech.Common.DateConverter;
+import com.bionische.biotech.ewallet.model.TransactionWalletDetails;
 import com.bionische.biotech.model.GetMedicalOrderDetails;
 import com.bionische.biotech.model.GetPatientContactDetailsById;
 import com.bionische.biotech.model.GetPrescriptionDetailsForOrder;
@@ -15,6 +16,7 @@ import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.PrescriptionDetails;
 import com.bionische.biotech.model.PrescriptionOrderDetails;
 import com.bionische.biotech.model.PrescriptionToMedical;
+import com.bionische.biotech.model.lab.LabAppointmentDetails;
 import com.bionische.biotech.repository.GetMedicalOrderDetailsRepository;
 import com.bionische.biotech.repository.GetPatientContactDetailsByIdRepository;
 import com.bionische.biotech.repository.GetPrescriptionDetailsForOrderRepository;
@@ -22,6 +24,8 @@ import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionOrderDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionToMedicalRepository;
+import com.bionische.biotech.repository.TransactionWalletDetailsRepository;
+import com.bionische.biotech.repository.WalletDetailsRepository;
 import com.bionische.biotech.model.PatientDetails;
 
 @Service
@@ -56,6 +60,12 @@ public class PrescriptionOrderServiceImpl implements PrescriptionOrderService {
 
 	@Autowired
 	PatientDetailsRepository patientDetailsRepository;
+	
+	@Autowired
+	WalletDetailsRepository walletDetailsRepository;
+
+	@Autowired
+	TransactionWalletDetailsRepository transactionWalletDetailsRepository;
 
 	@Override
 	public PrescriptionToMedical orderPrescription(PrescriptionToMedical prescriptionToMedical) {
@@ -293,13 +303,67 @@ public class PrescriptionOrderServiceImpl implements PrescriptionOrderService {
 
 	@Override
 	public Info updatePatientMedicinePayment(float txnAmt, String orderId, String txnId, int txnStatus,
-			int requestToMedicalId) {
+			int requestToMedicalId,float walletAmount,int walletId,float totalMedicineAmount) {
 
 		Info info = new Info();
 		info.setError(true);
 		try {
-			int res = prescriptionToMedicalRepository.updateMedicinePayment(txnAmt, orderId, txnId, txnStatus,
-					requestToMedicalId);
+			int isPaymentStatus=0;
+			int res=0;
+			//int res = prescriptionToMedicalRepository.updateMedicinePayment(txnAmt, orderId, txnId, txnStatus,requestToMedicalId);
+			
+			System.out.println("wallet amount="+walletAmount);
+			if(walletAmount>totalMedicineAmount) {
+				
+				isPaymentStatus=1;
+				res=prescriptionToMedicalRepository.updateMedicinePaymentByWallet(txnAmt, orderId, txnId, txnStatus,
+						requestToMedicalId,isPaymentStatus);
+				PrescriptionToMedical prescriptionToMedical=prescriptionToMedicalRepository.findByRequestToMedicalId(requestToMedicalId);
+				float wallAmount=walletAmount-txnAmt;
+				walletDetailsRepository.updateWalletAmount(walletId, wallAmount);
+				TransactionWalletDetails transactionWalletDetails=new TransactionWalletDetails(); 
+				
+				transactionWalletDetails.setAmount(txnAmt);
+				transactionWalletDetails.setFromUserId(prescriptionToMedical.getPatientId());
+				transactionWalletDetails.setToUserId(0);
+				transactionWalletDetails.setToUserType(0);
+				transactionWalletDetails.setTransactionType(1);
+				transactionWalletDetails.setUserType(1);
+				transactionWalletDetails.setWalletId(walletId);
+				transactionWalletDetails=transactionWalletDetailsRepository.save(transactionWalletDetails);
+				
+				}else if(walletAmount!=0) {
+					
+					isPaymentStatus=1;
+					
+					float paidByBank=totalMedicineAmount-walletAmount;
+					res=prescriptionToMedicalRepository.updateMedicinePayment( orderId, txnId, txnStatus,
+							requestToMedicalId,walletAmount,isPaymentStatus,paidByBank);
+					PrescriptionToMedical prescriptionToMedical=prescriptionToMedicalRepository.findByRequestToMedicalId(requestToMedicalId);
+					
+					
+					float wallAmount=0;
+					walletDetailsRepository.updateWalletAmount(walletId, wallAmount);
+					TransactionWalletDetails transactionWalletDetails=new TransactionWalletDetails(); 
+					
+					transactionWalletDetails.setAmount(walletAmount);
+					transactionWalletDetails.setFromUserId(prescriptionToMedical.getPatientId());
+					transactionWalletDetails.setToUserId(0);
+					transactionWalletDetails.setToUserType(0);
+					transactionWalletDetails.setTransactionType(1);
+					transactionWalletDetails.setUserType(1);
+					transactionWalletDetails.setWalletId(walletId);
+					transactionWalletDetails=transactionWalletDetailsRepository.save(transactionWalletDetails);
+				
+				}
+				else{
+					float paidByBank=txnAmt;
+					res=prescriptionToMedicalRepository.updateMedicinePayment(orderId, txnId, txnStatus,
+							requestToMedicalId,walletAmount,isPaymentStatus,paidByBank);	
+				}
+			
+			
+			
 			if (res > 0) {
 				info.setError(false);
 				info.setMessage("Payment update successfully");

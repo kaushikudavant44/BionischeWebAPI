@@ -38,9 +38,23 @@ public interface LabAppointmentDetailsRepository extends JpaRepository<LabAppoin
 
 	@Transactional
 	@Modifying
-	@Query("UPDATE LabAppointmentDetails  SET paymentStatus =:txnStatus, txnId=:txnId,  labAppDate=NOW(), orderId=:orderId, paidAmount=:txnAmt WHERE labAppId=:appointmentId")
-	int updateLabAppointmentPayment(@Param("appointmentId")int appointmentId, @Param("txnStatus")int txnStatus, @Param("txnId")String txnId, @Param("orderId")String orderId, @Param("txnAmt")float txnAmt);
+	@Query("UPDATE LabAppointmentDetails  SET paymentStatus =:txnStatus, txnId=:txnId,  labAppDate=NOW(), orderId=:orderId, paidAmount=:txnAmt,paidByWallet=:walletAmount,isWalletPayment=:isPaymentStatus,totalAmount=:reportAmount WHERE labAppId=:appointmentId")
+	int updateLabAppointmentPayment(@Param("appointmentId")int appointmentId, @Param("txnStatus")int txnStatus, @Param("txnId")String txnId, @Param("orderId")String orderId, @Param("txnAmt")float txnAmt, @Param("walletAmount")float walletAmount, @Param("reportAmount")float reportAmount, @Param("isPaymentStatus")int isPaymentStatus);
 
+	
+	
+	
+	
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE LabAppointmentDetails  SET paymentStatus =:txnStatus, txnId=:txnId,  labAppDate=NOW(), orderId=:orderId, paidAmount=:txnAmt,paidByWallet=:reportAmount,isWalletPayment=:isPaymentStatus,totalAmount=:reportAmount WHERE labAppId=:appointmentId")
+	int updateLabAppointmentPaymentByWallet(@Param("appointmentId")int appointmentId, @Param("txnStatus")int txnStatus, @Param("txnId")String txnId, @Param("orderId")String orderId, @Param("txnAmt")float txnAmt,@Param("reportAmount")float reportAmount, @Param("isPaymentStatus")int isPaymentStatus);
+	
+	
+	
+	
+	
 	@Transactional
 	@Modifying
 	@Query("UPDATE LabAppointmentDetails   SET  paymentClearReceiptNo=:receiptNo WHERE id IN(:appointmentId)")

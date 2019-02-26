@@ -95,11 +95,15 @@ public class PrescriptionOrderApiController {
 	
 	
 	@RequestMapping(value = { "/updatePatientMedicinePayment" }, method = RequestMethod.POST)
-	public @ResponseBody Info updatePatientMedicinePayment(@RequestParam("txnAmt")float txnAmt,@RequestParam("orderId")String orderId,@RequestParam("txnId")String txnId,@RequestParam("txnStatus")int txnStatus,@RequestParam("requestToMedicalId")int requestToMedicalId) {
+	public @ResponseBody Info updatePatientMedicinePayment(@RequestParam("txnAmt")float txnAmt,@RequestParam("orderId")String orderId,
+			@RequestParam("txnId")String txnId,
+			@RequestParam("txnStatus")int txnStatus,@RequestParam("requestToMedicalId")int requestToMedicalId,
+			@RequestParam("walletAmount")float walletAmount,@RequestParam("walletId")int walletId,
+			@RequestParam("totalMedicineAmount")float totalMedicineAmount) {
   
 	 
 		
-		return prescriptionOrderService.updatePatientMedicinePayment(txnAmt, orderId,txnId,txnStatus,requestToMedicalId);
+		return prescriptionOrderService.updatePatientMedicinePayment(txnAmt, orderId,txnId,txnStatus,requestToMedicalId,walletAmount,walletId,totalMedicineAmount);
 	}
 	 
 }

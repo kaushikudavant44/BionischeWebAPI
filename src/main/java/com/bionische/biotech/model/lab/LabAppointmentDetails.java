@@ -69,7 +69,30 @@ public class LabAppointmentDetails {
 
 	private int ratingStatus;
 	
+	private int isWalletPayment;
 	
+	private float paidByWallet;
+	
+	
+	
+	
+	
+	public int getIsWalletPayment() {
+		return isWalletPayment;
+	}
+
+	public void setIsWalletPayment(int isWalletPayment) {
+		this.isWalletPayment = isWalletPayment;
+	}
+
+	public float getPaidByWallet() {
+		return paidByWallet;
+	}
+
+	public void setPaidByWallet(float paidByWallet) {
+		this.paidByWallet = paidByWallet;
+	}
+
 	public int getLabAppId() {
 		return labAppId;
 	}
@@ -248,8 +271,11 @@ public class LabAppointmentDetails {
 				+ ", paymentStatus=" + paymentStatus + ", discount=" + discount + ", totalAmount=" + totalAmount
 				+ ", txnId=" + txnId + ", paidAmount=" + paidAmount + ", orderId=" + orderId + ", paymentDate="
 				+ paymentDate + ", refference=" + refference + ", doctorId=" + doctorId + ", paymentClearReceiptNo="
-				+ paymentClearReceiptNo + ", ratingStatus=" + ratingStatus + "]";
+				+ paymentClearReceiptNo + ", ratingStatus=" + ratingStatus + ", isWalletPayment=" + isWalletPayment
+				+ ", paidByWallet=" + paidByWallet + "]";
 	}
+
+	
 
  
 	 

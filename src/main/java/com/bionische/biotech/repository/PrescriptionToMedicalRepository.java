@@ -39,8 +39,19 @@ public interface PrescriptionToMedicalRepository extends JpaRepository<Prescript
 
 	@Transactional
 	@Modifying
-	@Query("UPDATE PrescriptionToMedical p SET p.paymentDate=NOW(), p.status =:txnStatus,p.paymentStatus =:txnStatus, p.totalAmt=:txnAmt,p.orderId=:orderId, p.txnId=:txnId  WHERE p.requestToMedicalId=:requestToMedicalId")
-	int updateMedicinePayment(@Param("txnAmt")float txnAmt, @Param("orderId")String orderId, @Param("txnId")String txnId, @Param("txnStatus")int txnStatus, @Param("requestToMedicalId")int requestToMedicalId);
+	@Query("UPDATE PrescriptionToMedical p SET p.paymentDate=NOW(), p.status =:txnStatus,p.paymentStatus =:txnStatus,p.orderId=:orderId, p.txnId=:txnId,p.paidByWallet=:walletAmount,p.isWalletPayment=:isWalletPayment,p.paidByBank=:paidByBank  WHERE p.requestToMedicalId=:requestToMedicalId")
+	int updateMedicinePayment( @Param("orderId")String orderId, @Param("txnId")String txnId, @Param("txnStatus")int txnStatus, @Param("requestToMedicalId")int requestToMedicalId,@Param("walletAmount")float walletAmount,@Param("isWalletPayment")int isWalletPayment,@Param("paidByBank")float paidByBank);
+	
+	
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE PrescriptionToMedical p SET p.paymentDate=NOW(), p.status =:txnStatus,p.paymentStatus =:txnStatus,p.orderId=:orderId, p.txnId=:txnId,p.paidByWallet=:txnAmt,p.isWalletPayment=:isWalletPayment,p.paidByBank=0  WHERE p.requestToMedicalId=:requestToMedicalId")
+	int updateMedicinePaymentByWallet(@Param("txnAmt")float txnAmt, @Param("orderId")String orderId, @Param("txnId")String txnId, @Param("txnStatus")int txnStatus, @Param("requestToMedicalId")int requestToMedicalId,@Param("isWalletPayment")int isWalletPayment);
+	
+	
+	
+	
 	
 	@Transactional
 	@Modifying

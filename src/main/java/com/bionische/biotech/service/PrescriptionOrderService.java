@@ -29,5 +29,5 @@ public interface PrescriptionOrderService {
 	
 	List<GetMedicalOrderDetails> getMedicalCancelledOrderByMedicalIdAndStatus(int medicalId,int status);
 	Info updatePatientMedicinePayment(float txnAmt, String orderId, String txnId, int txnStatus,
-			int requestToMedicalId);
+			int requestToMedicalId,float walletAmount,int walletId,float totalMedicineAmount);
 }

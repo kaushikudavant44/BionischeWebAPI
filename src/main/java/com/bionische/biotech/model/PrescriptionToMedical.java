@@ -101,6 +101,54 @@ public class PrescriptionToMedical {
 	@Column(name="payment_date")
 	private String paymentDate;
 	
+	@Column(name="is_wallet_payment")
+	private int isWalletPayment;
+	
+	@Column(name="paid_by_wallet")
+	private float paidByWallet;
+	
+	@Column(name="paid_by_bank")
+	private float paidByBank;
+	
+	
+	
+	
+	public int getIsWalletPayment() {
+		return isWalletPayment;
+	}
+
+
+
+	public void setIsWalletPayment(int isWalletPayment) {
+		this.isWalletPayment = isWalletPayment;
+	}
+
+
+
+	public float getPaidByWallet() {
+		return paidByWallet;
+	}
+
+
+
+	public void setPaidByWallet(float paidByWallet) {
+		this.paidByWallet = paidByWallet;
+	}
+
+
+
+	public float getPaidByBank() {
+		return paidByBank;
+	}
+
+
+
+	public void setPaidByBank(float paidByBank) {
+		this.paidByBank = paidByBank;
+	}
+
+
+
 	public String getTxnId() {
 		return txnId;
 	}
@@ -308,8 +356,13 @@ public class PrescriptionToMedical {
 				+ ", pincode=" + pincode + ", patientContact=" + patientContact + ", paymentStatus=" + paymentStatus
 				+ ", int1=" + int1 + ", int2=" + int2 + ", string1=" + string1 + ", string2=" + string2 + ", delStatus="
 				+ delStatus + ", status=" + status + ", address=" + address + ", email=" + email + ", txnId=" + txnId
-				+ ", orderId=" + orderId + ", paymentDate=" + paymentDate + "]";
+				+ ", orderId=" + orderId + ", paymentDate=" + paymentDate + ", isWalletPayment=" + isWalletPayment
+				+ ", paidByWallet=" + paidByWallet + ", paidByBank=" + paidByBank + "]";
 	}
+
+
+
+
 
 
 

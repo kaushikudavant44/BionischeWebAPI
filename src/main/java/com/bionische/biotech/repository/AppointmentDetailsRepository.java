@@ -16,7 +16,7 @@ import com.bionische.biotech.model.PrescriptionDetails;
  
 public interface AppointmentDetailsRepository extends JpaRepository<AppointmentDetails, Integer> {
 	
-AppointmentDetails  save(AppointmentDetails appointmentDetails);
+AppointmentDetails save(AppointmentDetails appointmentDetails);
 
 List<AppointmentDetails> findByDoctorIdAndDate(int doctorId, String date);
 
@@ -50,8 +50,8 @@ int cancelDoctorAppointmentByPatient(@Param("appointId")int appointId);
 
 @Transactional
 @Modifying
-@Query("UPDATE AppointmentDetails  SET paymentStatus =:paymentStatus, amount=:amount, txnId=:txnId, orderId=:orderId, paymentDate=NOW() WHERE appointId=:appointId")
-int updateAppointmentPayment(@Param("appointId")int appointId,@Param("paymentStatus")int paymentStatus,	@Param("amount")float amount,@Param("txnId")String txnId,@Param("orderId")String orderId);
+@Query("UPDATE AppointmentDetails  SET paymentStatus =:paymentStatus,isWalletAmount=:isPaymentStatus, amount=:consultingAmount, paidByWallet=:walletAmount,paidByBank=:amount, txnId=:txnId, orderId=:orderId, paymentDate=NOW() WHERE appointId=:appointId")
+int updateAppointmentPayment(@Param("appointId")int appointId,@Param("paymentStatus")int paymentStatus,	@Param("amount")float amount,@Param("txnId")String txnId,@Param("orderId")String orderId,@Param("walletAmount")float walletAmount,@Param("consultingAmount")float consultingAmount,@Param("isPaymentStatus")int isPaymentStatus);
 
 @Transactional
 @Modifying
@@ -62,6 +62,10 @@ int updateConsultingReceiptStatusAndReceiptNo(@Param("appointId")List<Integer> a
 List<AppointmentDetails> findAppointmentsofPatients(@Param("timeIdList")List<Integer> timeIdList);
 
 
+@Transactional
+@Modifying
+@Query("UPDATE AppointmentDetails  SET paymentStatus =:paymentStatus, amount=:consultingAmount,paidByBank=0, orderId=:orderId,isWalletAmount=1,paidByWallet=:consultingAmount, paymentDate=NOW() WHERE appointId=:appointId")
+int updateAppointmentPaymentUsingWallet(@Param("appointId")int appointId,@Param("consultingAmount")float consultingAmount,@Param("orderId")String orderId,@Param("paymentStatus")int paymentStatus);
 }
 
 

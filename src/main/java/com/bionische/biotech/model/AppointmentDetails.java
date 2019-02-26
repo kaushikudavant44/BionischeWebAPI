@@ -69,7 +69,37 @@ public class AppointmentDetails {
 
 	@Column(name="payment_date")
     private String paymentDate;
+	
+	@Column(name="paid_by_wallet_amount")
+	private float paidByWallet;
+	
+	@Column(name="paid_by_bank_amount")
+	private float paidByBank;
+	
+	@Column(name="is_wallet_amount")
+	private int isWalletAmount;
     
+	
+	
+	public float getPaidByWallet() {
+		return paidByWallet;
+	}
+	public void setPaidByWallet(float paidByWallet) {
+		this.paidByWallet = paidByWallet;
+	}
+	public float getPaidByBank() {
+		return paidByBank;
+	}
+	public void setPaidByBank(float paidByBank) {
+		this.paidByBank = paidByBank;
+	}
+	
+	public int getIsWalletAmount() {
+		return isWalletAmount;
+	}
+	public void setIsWalletAmount(int isWalletAmount) {
+		this.isWalletAmount = isWalletAmount;
+	}
 	public int getDoctorId() {
 		return doctorId;
 	}
@@ -182,9 +212,13 @@ public class AppointmentDetails {
 				+ ", patientId=" + patientId + ", time=" + time + ", date=" + date + ", int1=" + int1 + ", int2=" + int2
 				+ ", string1=" + string1 + ", string2=" + string2 + ", delStatus=" + delStatus + ", hospitalId="
 				+ hospitalId + ", paymentStatus=" + paymentStatus + ", txnId=" + txnId + ", orderId=" + orderId
-				+ ", amount=" + amount + ", paymentDate=" + paymentDate + "]";
+				+ ", amount=" + amount + ", paymentDate=" + paymentDate + ", paidByWallet=" + paidByWallet
+				+ ", paidByBank=" + paidByBank + ", isWalletAmount=" + isWalletAmount + "]";
 	}
-	 
+
+
+	
+	
 	  
 	
  

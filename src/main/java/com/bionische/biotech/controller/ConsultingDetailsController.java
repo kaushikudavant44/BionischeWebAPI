@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.ewallet.model.TransactionWalletDetails;
+import com.bionische.biotech.ewallet.model.WalletDetails;
+import com.bionische.biotech.model.AppointmentDetails;
 import com.bionische.biotech.model.ConsultingDetails;
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.GetDocAndLabForRating;
@@ -32,6 +35,8 @@ import com.bionische.biotech.repository.MedicalsInfoRepository;
 import com.bionische.biotech.repository.PrescriptionDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionToMedicalRepository;
 import com.bionische.biotech.repository.SubmitPrescBillRepository;
+import com.bionische.biotech.repository.TransactionWalletDetailsRepository;
+import com.bionische.biotech.repository.WalletDetailsRepository;
 
 @RestController
 public class ConsultingDetailsController {
@@ -56,7 +61,13 @@ public class ConsultingDetailsController {
 	GetLabAppointmentRrepository getLabAppointmentRrepository;
 	@Autowired
 	AppointmentDetailsRepository appointmentDetailsRepository;
+	
+	@Autowired
+	WalletDetailsRepository walletDetailsRepository;
 
+	@Autowired
+	TransactionWalletDetailsRepository transactionWalletDetailsRepository;
+	
 	@RequestMapping(value = { "/getConsultingByDoctorIdAndDate" }, method = RequestMethod.POST)
 	public @ResponseBody List getConsultingByDoctorIdAndDate(@RequestParam("doctorId") int doctorId,
 			@RequestParam("patientId") int patientId, @RequestParam("startdate") String startdate,
@@ -388,16 +399,86 @@ public class ConsultingDetailsController {
 	@RequestMapping(value = { "/updateAppointmentPayment" }, method = RequestMethod.POST)
 	public @ResponseBody Info updateAppointmentPayment(@RequestParam("appointId") int appointId,
 			@RequestParam("paymentStatus") int paymentStatus, @RequestParam("amount") float amount,
-			@RequestParam("txnId") String txnId, @RequestParam("orderId") String orderId)
+			@RequestParam("txnId") String txnId, @RequestParam("walletAmount") float walletAmount,
+			@RequestParam("consultingAmount") float consultingAmount, @RequestParam("orderId") String orderId,@RequestParam("walletId") int walletId)
+
+	{
+		int res=0;
+		int isPaymentStatus=0;
+		Info info = new Info();
+		try {
+			if(walletAmount!=0) {
+			isPaymentStatus=1;
+			 res = appointmentDetailsRepository.updateAppointmentPayment(appointId, paymentStatus, amount, txnId,orderId,walletAmount,consultingAmount,isPaymentStatus);
+			}else {
+			
+			 res = appointmentDetailsRepository.updateAppointmentPayment(appointId, paymentStatus, amount, txnId,orderId,walletAmount,consultingAmount,isPaymentStatus);
+			}
+			 
+			 if (res > 0) {
+				
+				info.setError(false);
+				info.setMessage("Payment update successfully");
+				
+				if(walletAmount!=0) {
+					
+				AppointmentDetails appointmentDetails=appointmentDetailsRepository.findByAppointId(appointId);
+				float wallAmount=0;
+				walletDetailsRepository.updateWalletAmount(walletId, wallAmount);
+				TransactionWalletDetails transactionWalletDetails=new TransactionWalletDetails(); 
+				
+				transactionWalletDetails.setAmount(walletAmount);
+				transactionWalletDetails.setFromUserId(appointmentDetails.getPatientId());
+				transactionWalletDetails.setToUserId(0);
+				transactionWalletDetails.setToUserType(0);
+				transactionWalletDetails.setTransactionType(1);
+				transactionWalletDetails.setUserType(1);
+				transactionWalletDetails.setWalletId(walletId);
+				transactionWalletDetails=transactionWalletDetailsRepository.save(transactionWalletDetails);
+			
+				}
+			
+			} else {
+				info.setError(true);
+				info.setMessage("Payment update Failed");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			info.setError(true);
+			info.setMessage("Payment update Failed");
+			System.out.println(e.getMessage());
+		}
+		return info;
+	}
+	
+	@RequestMapping(value = { "/updateAppointmentPaymentByWallet" }, method = RequestMethod.POST)
+	public @ResponseBody Info updateAppointmentPaymentByWallet(@RequestParam("appointId") int appointId, @RequestParam("walletAmount") float walletAmount,
+			@RequestParam("consultingAmount") float consultingAmount, @RequestParam("orderId") String orderId,@RequestParam("walletId") int walletId)
 
 	{
 		Info info = new Info();
 		try {
-			int res = appointmentDetailsRepository.updateAppointmentPayment(appointId, paymentStatus, amount, txnId,
-					orderId);
+			
+			int paymentStatus=1;
+			
+			int res = appointmentDetailsRepository.updateAppointmentPaymentUsingWallet(appointId,consultingAmount,orderId,paymentStatus);
 			if (res > 0) {
 				info.setError(false);
 				info.setMessage("Payment update successfully");
+				AppointmentDetails appointmentDetails=appointmentDetailsRepository.findByAppointId(appointId);
+				walletAmount=walletAmount-consultingAmount;
+				walletDetailsRepository.updateWalletAmount(walletId, walletAmount);
+				TransactionWalletDetails transactionWalletDetails=new TransactionWalletDetails(); 
+				transactionWalletDetails.setAmount(consultingAmount);
+				transactionWalletDetails.setFromUserId(appointmentDetails.getPatientId());
+				transactionWalletDetails.setToUserId(0);
+				transactionWalletDetails.setToUserType(0);
+				transactionWalletDetails.setTransactionType(1);
+				transactionWalletDetails.setUserType(1);
+				transactionWalletDetails.setWalletId(walletId);
+				transactionWalletDetails=transactionWalletDetailsRepository.save(transactionWalletDetails);
+				
+				
 			} else {
 				info.setError(true);
 				info.setMessage("Payment update Failed");
@@ -411,3 +492,8 @@ public class ConsultingDetailsController {
 		return info;
 	}
 }
+
+
+
+
+
