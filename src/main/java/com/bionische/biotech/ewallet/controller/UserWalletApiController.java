@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.ewallet.model.BankTransferRequest;
 import com.bionische.biotech.ewallet.model.GetWalletTransactionDetails;
 import com.bionische.biotech.ewallet.model.TransactionWalletDetails;
@@ -207,7 +208,10 @@ public class UserWalletApiController {
 	System.out.println(userId+" And "+userType);
 	
 		getWalletTransactionDetailsList=getWalletTransactionDetailsRepository.getWalletTransactionDetails(userId,userType);
-			System.out.println("wallet details ="+getWalletTransactionDetailsList.toString());
+		
+	
+		
+		System.out.println("wallet details ="+getWalletTransactionDetailsList.toString());
 	}
 	catch (Exception e) {
 		e.printStackTrace();
