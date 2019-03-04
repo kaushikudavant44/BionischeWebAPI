@@ -19,6 +19,16 @@ public class GetDoctorConsultingPaymentForReceipt {
 	@Column(name="amount")
 	private float amount;
 	
+	@Column(name="paid_by_bank_amount")
+	private float paidByBankAmount;
+	
+	@Column(name="paid_by_wallet_amount")
+	private float paidByWalletAmount;
+	
+	
+	@Column(name="is_wallet_amount")
+	private int isWalletAmount;
+	
 	@Column(name="txn_id")
 	private String txnId;
 	
@@ -76,11 +86,37 @@ public class GetDoctorConsultingPaymentForReceipt {
 		this.patientId = patientId;
 	}
 
+	public float getPaidByBankAmount() {
+		return paidByBankAmount;
+	}
+
+	public void setPaidByBankAmount(float paidByBankAmount) {
+		this.paidByBankAmount = paidByBankAmount;
+	}
+
+	public float getPaidByWalletAmount() {
+		return paidByWalletAmount;
+	}
+
+	public void setPaidByWalletAmount(float paidByWalletAmount) {
+		this.paidByWalletAmount = paidByWalletAmount;
+	}
+
+	public int getIsWalletAmount() {
+		return isWalletAmount;
+	}
+
+	public void setIsWalletAmount(int isWalletAmount) {
+		this.isWalletAmount = isWalletAmount;
+	}
+
 	@Override
 	public String toString() {
 		return "GetDoctorConsultingPaymentForReceipt [appointId=" + appointId + ", doctorId=" + doctorId + ", amount="
-				+ amount + ", txnId=" + txnId + ", paymentDate=" + paymentDate + ", patientId=" + patientId + "]";
+				+ amount + ", paidByBankAmount=" + paidByBankAmount + ", paidByWalletAmount=" + paidByWalletAmount
+				+ ", isWalletAmount=" + isWalletAmount + ", txnId=" + txnId + ", paymentDate=" + paymentDate
+				+ ", patientId=" + patientId + "]";
 	}
-	
-	
+
+	 
 }

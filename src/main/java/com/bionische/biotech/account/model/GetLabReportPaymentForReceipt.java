@@ -19,8 +19,17 @@ public class GetLabReportPaymentForReceipt {
 	@Column(name="paid_amount")
 	private float amount;
 	
+	@Column(name="total_amount")
+	private float totalAmount;
+	
+	@Column(name="paid_by_wallet")
+	private float paidByWallet;
+	
+	@Column(name="is_wallet_payment")
+	private int isWalletPayment;
+	
 	@Column(name="txn_id")
-	private String txnId;
+	private String txnId; 
 	
 	@Column(name = "payment_date")
 	private String paymentDate;
@@ -78,10 +87,36 @@ public class GetLabReportPaymentForReceipt {
 		this.patientId = patientId;
 	}
 
+	public float getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(float totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	public float getPaidByWallet() {
+		return paidByWallet;
+	}
+
+	public void setPaidByWallet(float paidByWallet) {
+		this.paidByWallet = paidByWallet;
+	}
+
+	public int getIsWalletPayment() {
+		return isWalletPayment;
+	}
+
+	public void setIsWalletPayment(int isWalletPayment) {
+		this.isWalletPayment = isWalletPayment;
+	}
+
 	@Override
 	public String toString() {
 		return "GetLabReportPaymentForReceipt [appointId=" + appointId + ", labId=" + labId + ", amount=" + amount
-				+ ", txnId=" + txnId + ", paymentDate=" + paymentDate + ", patientId=" + patientId + "]";
+				+ ", totalAmount=" + totalAmount + ", paidByWallet=" + paidByWallet + ", isWalletPayment="
+				+ isWalletPayment + ", txnId=" + txnId + ", paymentDate=" + paymentDate + ", patientId=" + patientId
+				+ "]";
 	}
 
 	 

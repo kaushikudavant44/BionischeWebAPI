@@ -25,6 +25,17 @@ public class GetPharmacyPrescriptionPaymentForReceipt {
 	@Column(name = "payment_date")
 	private String paymentDate;
 	
+	@Column(name="paid_by_wallet")
+	private float paidByWallet;
+	
+	@Column(name="paid_by_bank")
+	private float paidByBank;
+	
+	@Column(name="is_wallet_payment")
+	private int isWalletPayment;
+	
+	
+	
 	@Column(name="patient_id")
 	private int patientId;
 
@@ -77,13 +88,39 @@ public class GetPharmacyPrescriptionPaymentForReceipt {
 		this.patientId = patientId;
 	}
 
+	public float getPaidByWallet() {
+		return paidByWallet;
+	}
+
+	public void setPaidByWallet(float paidByWallet) {
+		this.paidByWallet = paidByWallet;
+	}
+
+	public float getPaidByBank() {
+		return paidByBank;
+	}
+
+	public void setPaidByBank(float paidByBank) {
+		this.paidByBank = paidByBank;
+	}
+
+	public int getIsWalletPayment() {
+		return isWalletPayment;
+	}
+
+	public void setIsWalletPayment(int isWalletPayment) {
+		this.isWalletPayment = isWalletPayment;
+	}
+
 	@Override
 	public String toString() {
 		return "GetPharmacyPrescriptionPaymentForReceipt [appointId=" + appointId + ", medicalId=" + medicalId
-				+ ", amount=" + amount + ", txnId=" + txnId + ", paymentDate=" + paymentDate + ", patientId="
+				+ ", amount=" + amount + ", txnId=" + txnId + ", paymentDate=" + paymentDate + ", paidByWallet="
+				+ paidByWallet + ", paidByBank=" + paidByBank + ", isWalletPayment=" + isWalletPayment + ", patientId="
 				+ patientId + "]";
 	}
 
+	 
 	 
 	
 }

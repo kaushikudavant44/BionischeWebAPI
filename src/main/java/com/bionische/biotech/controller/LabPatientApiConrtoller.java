@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.ewallet.model.TransactionWalletDetails;
-import com.bionische.biotech.model.AppointmentDetails;
 import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.GetLabAppointment;
 import com.bionische.biotech.model.GetLabForAppointment;
 import com.bionische.biotech.model.GetPatientContactDetailsById;
 import com.bionische.biotech.model.GetSuggestLabTestFromDoctor;
 import com.bionische.biotech.model.Info;
+import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.LabNotification;
 import com.bionische.biotech.model.LabTests;
 import com.bionische.biotech.model.PatientDetails;
@@ -40,6 +40,7 @@ import com.bionische.biotech.repository.GetLabAppointmentRrepository;
 import com.bionische.biotech.repository.GetLabForAppointmentRepository;
 import com.bionische.biotech.repository.GetPatientContactDetailsByIdRepository;
 import com.bionische.biotech.repository.GetSuggestLabTestFromDoctorRepository;
+import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.LabNotificationRepository;
 import com.bionische.biotech.repository.LabTestsRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
@@ -67,7 +68,8 @@ public class LabPatientApiConrtoller {
 	TestsInLabRepository testsInLabRepository;
 	@Autowired
 	GetLabForAppointmentRepository getLabForAppointmentRepository;
-	
+	@Autowired
+	LabDetailsRepository labDetailsRepository;
 	@Autowired
 	LabNotificationRepository labNotificationRepository;
 	@Autowired
@@ -197,7 +199,7 @@ public class LabPatientApiConrtoller {
 			
 			 info.setError(true);
 		  int res=labAppointmentDetailsRepository.updateLabAppointmentStatus(labAppId, status);
-		  GetLabAppointment getLabAppointment = getLabAppointmentRrepository.getLabAppointmentDetails(labAppId);
+		  GetLabAppointment getLabAppointment = getLabAppointmentRrepository.getLabAppointmentByAppointmentId(labAppId);
 		  
 		  if(res>0)
 		  {
@@ -205,27 +207,44 @@ public class LabPatientApiConrtoller {
 			  info.setMessage("Appointment Status Update Successfully");
 			  
 			  PatientNotification patientNotification = new PatientNotification();
+			  patientNotification.setString2("lab");
 				GetPatientContactDetailsById getPatientContactDetailsById=getPatientContactDetailsByIdRepository.getPatientContactDetailsByLabAppointId(labAppId);
 				 
 				sendEMailService.sendMail("Your Appointment Is edited!!", "Your Appointment edited!!" , getPatientContactDetailsById.getEmail());
 				PatientDetails patientDetails=patientDetailsRepository.findByPatientId(getPatientContactDetailsById.getPatientId());
 				patientNotification.setPatientId(getPatientContactDetailsById.getPatientId());
 				 
-				if(status==1)
+				if(status==1) {
 				patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been confirmed for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime());					
-				else if(status==2)
-				patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been Cancel");					
-				else if(status==3)
+				patientNotification.setString1("Appointment Confirmed");
+				}
+				else if(status==2) {
+				patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been Cancel");		
+				patientNotification.setString1("Appointment Cancel");
+				}
+				else if(status==3) {
 					patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been Reject By Lab");
-				
-				else if(status==5)
+					patientNotification.setString1("Appointment Reject");
+				}
+				else if(status==5) {
 					patientNotification.setNotification("Your Reports has been uploaded by "+getLabAppointment.getLabName()+". Please find your report on profile. Note: To view your reports please do payment if pending. Thank you !! ");
-				
+					 
+					
+					 
+					
+					patientNotification.setPatientId(patientDetails.getPatientId());
+					patientNotification.setNotification(getLabAppointment.getLabName());					
+				 
+					patientNotification.setString1("Rate Your Lab");
+					patientNotification.setString2("lrating");
+				 
+					patientNotification.setString1("Reports Upload successfully Please Rate This Lab");
+				}
 				patientNotification.setStatus(0);
 				
-				patientNotification.setString1("Appointment Confirmed");
 				
-				patientNotification.setString2("lab");
+				
+				
 				patientNotification.setInt1(getLabAppointment.getLabId());
 				patientNotificationRepository.save(patientNotification);
 				String confirmAppointmentNotification="";
@@ -390,9 +409,13 @@ public class LabPatientApiConrtoller {
 					  confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been Canceled for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
 				else if(status==3)
 					confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been Reject By Lab for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
-				else if(status==5)
+				else if(status==5) {
 					confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" Your Reports has been uploaded by "+getLabAppointment.getLabName()+"Please find your report on profile. Note: To view your reports please do payment if pending. Thank you !!";
 				
+
+				
+						
+				}
 				System.out.println("token="+patientDetails.getString2());
 				try {
 				if(patientDetails.getInt1()==0) {
@@ -538,6 +561,8 @@ public class LabPatientApiConrtoller {
 			System.out.println("patientReportsDetailsRes "+patientReportsDetailsRes.toString());
 			 
 		 
+			
+			
 			 return patientReportsDetailsRes;
 		} 
 		catch (Exception e) {

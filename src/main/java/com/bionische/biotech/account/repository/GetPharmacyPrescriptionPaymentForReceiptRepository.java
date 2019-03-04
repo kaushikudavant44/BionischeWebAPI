@@ -10,9 +10,9 @@ import com.bionische.biotech.account.model.GetPharmacyPrescriptionPaymentForRece
 
 public interface GetPharmacyPrescriptionPaymentForReceiptRepository extends JpaRepository<GetPharmacyPrescriptionPaymentForReceipt, Integer>{
 
-	@Query(value="select t.medical_request_id as appoint_id, t.medical_id, t.total_amt as amount, t.txn_id, t.payment_date, t.patient_id from  prescription_to_medical"
-			+ " t where t.payment_date between :fromDate AND :toDate AND t.medical_id=:medicalId AND t.payment_status=1 AND"
-			+ " t.int_1=0 order by t.payment_date ASC",nativeQuery=true)
+	@Query(value="select t.medical_request_id as appoint_id, t.medical_id, t.is_wallet_payment, t.paid_by_bank, t.paid_by_wallet, t.total_amt as amount, t.txn_id, t.payment_date, t.patient_id from  prescription_to_medical"
+			+ " t where t.payment_date between :fromDate AND :toDate AND t.medical_id=:medicalId AND (t.txn_id!=0 || t.is_wallet_payment=1) AND t.payment_status=1 AND"
+			+ " t.int_1=0   order by t.payment_date ASC",nativeQuery=true)
 	List<GetPharmacyPrescriptionPaymentForReceipt> getPharmacyPrescriptionPaymentForReceipt(@Param("medicalId")int medicalId,
 			@Param("fromDate")String fromDate, @Param("toDate")String toDate);
 
