@@ -69,7 +69,7 @@ public interface PatientDetailsRepository extends JpaRepository<PatientDetails, 
 	
 	@Transactional
 	@Modifying
-	@Query("UPDATE PatientDetails a SET a.string2 =:token, a.int1=:deviceType WHERE a.patientId=:patientId")
+	@Query("UPDATE PatientDetails a SET a.string1 =:token, a.int1=:deviceType WHERE a.patientId=:patientId")
 	int updatePatientTokenAsString2ByPatientId(@Param("patientId")int patientId,@Param("token")String token,@Param("deviceType")int deviceType);
 	
 	@Transactional

@@ -13,6 +13,7 @@ import com.bionische.biotech.model.GetMedicalOrderDetails;
 import com.bionische.biotech.model.GetPatientContactDetailsById;
 import com.bionische.biotech.model.GetPrescriptionDetailsForOrder;
 import com.bionische.biotech.model.Info;
+import com.bionische.biotech.model.MedicalDetails;
 import com.bionische.biotech.model.PrescriptionDetails;
 import com.bionische.biotech.model.PrescriptionOrderDetails;
 import com.bionische.biotech.model.PrescriptionToMedical;
@@ -20,6 +21,7 @@ import com.bionische.biotech.model.lab.LabAppointmentDetails;
 import com.bionische.biotech.repository.GetMedicalOrderDetailsRepository;
 import com.bionische.biotech.repository.GetPatientContactDetailsByIdRepository;
 import com.bionische.biotech.repository.GetPrescriptionDetailsForOrderRepository;
+import com.bionische.biotech.repository.MedicalDetailsRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionOrderDetailsRepository;
@@ -66,6 +68,9 @@ public class PrescriptionOrderServiceImpl implements PrescriptionOrderService {
 
 	@Autowired
 	TransactionWalletDetailsRepository transactionWalletDetailsRepository;
+	
+	@Autowired
+	MedicalDetailsRepository medicalDetailsRepository;
 
 	@Override
 	public PrescriptionToMedical orderPrescription(PrescriptionToMedical prescriptionToMedical) {
@@ -305,6 +310,8 @@ public class PrescriptionOrderServiceImpl implements PrescriptionOrderService {
 	public Info updatePatientMedicinePayment(float txnAmt, String orderId, String txnId, int txnStatus,
 			int requestToMedicalId,float walletAmount,int walletId,float totalMedicineAmount) {
 
+		
+		PrescriptionToMedical prescriptionToMedical=new PrescriptionToMedical();
 		Info info = new Info();
 		info.setError(true);
 		try {
@@ -318,7 +325,7 @@ public class PrescriptionOrderServiceImpl implements PrescriptionOrderService {
 				isPaymentStatus=1;
 				res=prescriptionToMedicalRepository.updateMedicinePaymentByWallet(txnAmt, orderId, txnId, txnStatus,
 						requestToMedicalId,isPaymentStatus);
-				PrescriptionToMedical prescriptionToMedical=prescriptionToMedicalRepository.findByRequestToMedicalId(requestToMedicalId);
+				 prescriptionToMedical=prescriptionToMedicalRepository.findByRequestToMedicalId(requestToMedicalId);
 				float wallAmount=walletAmount-txnAmt;
 				walletDetailsRepository.updateWalletAmount(walletId, wallAmount);
 				TransactionWalletDetails transactionWalletDetails=new TransactionWalletDetails(); 
@@ -339,7 +346,7 @@ public class PrescriptionOrderServiceImpl implements PrescriptionOrderService {
 					float paidByBank=totalMedicineAmount-walletAmount;
 					res=prescriptionToMedicalRepository.updateMedicinePayment( orderId, txnId, txnStatus,
 							requestToMedicalId,walletAmount,isPaymentStatus,paidByBank);
-					PrescriptionToMedical prescriptionToMedical=prescriptionToMedicalRepository.findByRequestToMedicalId(requestToMedicalId);
+					prescriptionToMedical=prescriptionToMedicalRepository.findByRequestToMedicalId(requestToMedicalId);
 					
 					
 					float wallAmount=0;
@@ -367,6 +374,14 @@ public class PrescriptionOrderServiceImpl implements PrescriptionOrderService {
 			if (res > 0) {
 				info.setError(false);
 				info.setMessage("Payment update successfully");
+				
+				PatientDetails patientDetails=patientDetailsRepository.findByPatientId(prescriptionToMedical.getPatientId());
+				
+				MedicalDetails medicalDetails=medicalDetailsRepository.findByMedicalId(prescriptionToMedical.getMedicalId());
+				sendTextMessageService.sendTextSms("Transaction Id"+prescriptionToMedical.getTxnId()+" "+patientDetails.getfName()+" "+patientDetails.getlName()+" your payment "+totalMedicineAmount+" rs. successfully done for medical "+medicalDetails.getMedicalName()+".", patientDetails.getContactNo());
+				sendTextMessageService.sendTextSms("Transaction Id"+prescriptionToMedical.getTxnId()+" "+medicalDetails.getMedicalName()+" your prescription payment "+totalMedicineAmount+" rs. successfully done by "+patientDetails.getfName()+" "+patientDetails.getlName()+".", medicalDetails.getContact());
+				
+				
 			} else {
 				info.setError(true);
 				info.setMessage("Payment update Failed");

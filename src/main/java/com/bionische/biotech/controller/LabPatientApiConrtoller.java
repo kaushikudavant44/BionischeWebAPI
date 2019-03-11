@@ -54,6 +54,7 @@ import com.bionische.biotech.repository.lab.PatientReportsDetailsRepository;
 import com.bionische.biotech.repository.lab.TestsInLabRepository;
 import com.bionische.biotech.service.SendEMailService;
 import com.bionische.biotech.service.SendFcmNotificationService;
+import com.bionische.biotech.service.SendTextMessageService;
 
 @RestController
 @RequestMapping(value = { "/lab"})
@@ -103,7 +104,8 @@ public class LabPatientApiConrtoller {
 	@Autowired
 	TransactionWalletDetailsRepository transactionWalletDetailsRepository;
 	
-
+	@Autowired
+	SendTextMessageService sendTextMessageService;
 	
 	
 	@RequestMapping(value = { "/insertTestsInLab" }, method = RequestMethod.POST)
@@ -617,7 +619,7 @@ public class LabPatientApiConrtoller {
 			@RequestParam("reportAmount") float reportAmount, @RequestParam("orderId") String orderId,@RequestParam("walletId") int walletId,@RequestParam("txnAmt") float txnAmt)
 	{
  
-		
+		LabAppointmentDetails labAppointmentDetails=new LabAppointmentDetails();
 		Info info =new Info();
 		info.setError(true);
 		try {
@@ -628,7 +630,7 @@ public class LabPatientApiConrtoller {
 				
 			isPaymentStatus=1;
 			resTransaction=labAppointmentDetailsRepository.updateLabAppointmentPaymentByWallet(appointmentId, txnStatus, txnId, orderId, txnAmt,reportAmount,isPaymentStatus);
-			LabAppointmentDetails labAppointmentDetails=labAppointmentDetailsRepository.findByLabAppId(appointmentId);
+			labAppointmentDetails=labAppointmentDetailsRepository.findByLabAppId(appointmentId);
 			float wallAmount=walletAmount-reportAmount;
 			walletDetailsRepository.updateWalletAmount(walletId, wallAmount);
 			TransactionWalletDetails transactionWalletDetails=new TransactionWalletDetails(); 
@@ -647,7 +649,7 @@ public class LabPatientApiConrtoller {
 				isPaymentStatus=1;
 				resTransaction=labAppointmentDetailsRepository.updateLabAppointmentPayment(appointmentId, txnStatus, txnId, orderId, txnAmt,walletAmount,reportAmount,isPaymentStatus);				
 				
-				LabAppointmentDetails labAppointmentDetails=labAppointmentDetailsRepository.findByLabAppId(appointmentId);
+				labAppointmentDetails=labAppointmentDetailsRepository.findByLabAppId(appointmentId);
 				float wallAmount=0;
 				walletDetailsRepository.updateWalletAmount(walletId, wallAmount);
 				TransactionWalletDetails transactionWalletDetails=new TransactionWalletDetails(); 
@@ -673,10 +675,14 @@ public class LabPatientApiConrtoller {
 			int reportStatusRes=patientReportsDetailsRepository.updatePaymentStatusByAppointmentId(appointmentId, txnStatus);
 			if(reportStatusRes>0 ) {
 				
+				PatientDetails patientDetails=patientDetailsRepository.findByPatientId(labAppointmentDetails.getPatientId());
+				LabDetails labDetails=labDetailsRepository.findByLabId(labAppointmentDetails.getLabAppId());
+				
 				info.setError(true);
 				info.setMessage("Payment updated");
-				
-				
+			
+				sendTextMessageService.sendTextSms("Transaction Id"+labAppointmentDetails.getTxnId()+" "+patientDetails.getfName()+" "+patientDetails.getlName()+" your lab report payment "+reportAmount+" rs. done successfully for lab"+ labDetails.getLabName()+".", patientDetails.getContactNo());
+				sendTextMessageService.sendTextSms("Transaction Id"+labAppointmentDetails.getTxnId()+" "+labDetails.getLabName()+" your lab report payment "+reportAmount+" rs. done successfully by ."+patientDetails.getfName()+" "+patientDetails.getlName()+".", labDetails.getContact());
 				
 			}
 			else {

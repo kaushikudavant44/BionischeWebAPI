@@ -24,6 +24,7 @@ import com.bionische.biotech.model.GetLabAppointment;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.MedicalDetails;
 import com.bionische.biotech.model.MedicalsInfo;
+import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.PrescriptionDetails;
 import com.bionische.biotech.repository.AppointmentDetailsRepository;
 import com.bionische.biotech.repository.ConsultingDetailsRepository;
@@ -32,11 +33,13 @@ import com.bionische.biotech.repository.GetLabAppointmentRrepository;
 import com.bionische.biotech.repository.GetPrescriptionWithBillRepository;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
 import com.bionische.biotech.repository.MedicalsInfoRepository;
+import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionToMedicalRepository;
 import com.bionische.biotech.repository.SubmitPrescBillRepository;
 import com.bionische.biotech.repository.TransactionWalletDetailsRepository;
 import com.bionische.biotech.repository.WalletDetailsRepository;
+import com.bionische.biotech.service.SendTextMessageService;
 
 @RestController
 public class ConsultingDetailsController {
@@ -67,6 +70,12 @@ public class ConsultingDetailsController {
 
 	@Autowired
 	TransactionWalletDetailsRepository transactionWalletDetailsRepository;
+	
+	@Autowired
+	SendTextMessageService sendTextMessageService;
+	
+	@Autowired
+	PatientDetailsRepository patientDetailsRepository;
 	
 	@RequestMapping(value = { "/getConsultingByDoctorIdAndDate" }, method = RequestMethod.POST)
 	public @ResponseBody List getConsultingByDoctorIdAndDate(@RequestParam("doctorId") int doctorId,
@@ -419,10 +428,10 @@ public class ConsultingDetailsController {
 				
 				info.setError(false);
 				info.setMessage("Payment update successfully");
-				
+				AppointmentDetails appointmentDetails=appointmentDetailsRepository.findByAppointId(appointId);
 				if(walletAmount!=0) {
 					
-				AppointmentDetails appointmentDetails=appointmentDetailsRepository.findByAppointId(appointId);
+				
 				float wallAmount=0;
 				walletDetailsRepository.updateWalletAmount(walletId, wallAmount);
 				TransactionWalletDetails transactionWalletDetails=new TransactionWalletDetails(); 
@@ -437,6 +446,12 @@ public class ConsultingDetailsController {
 				transactionWalletDetails=transactionWalletDetailsRepository.save(transactionWalletDetails);
 			
 				}
+				PatientDetails patientDetails=patientDetailsRepository.findByPatientId(appointmentDetails.getPatientId());
+				DoctorDetails doctorDetails=doctorDetailsRepository.findByDoctorId(appointmentDetails.getDoctorId());
+				
+				sendTextMessageService.sendTextSms("Transaction Id"+appointmentDetails.getTxnId()+" "+patientDetails.getfName()+" "+patientDetails.getlName()+" your consulting payment "+consultingAmount+" rs. successfully done for doctor "+doctorDetails.getfName()+" "+doctorDetails.getlName()+".", patientDetails.getContactNo());
+				sendTextMessageService.sendTextSms("Transaction Id"+appointmentDetails.getTxnId()+" Dr. "+doctorDetails.getfName()+" "+doctorDetails.getlName()+"  your consulting payment "+consultingAmount+" rs. successfully paid by "+patientDetails.getfName()+" "+patientDetails.getlName()+".", doctorDetails.getContactNo());
+			
 			
 			} else {
 				info.setError(true);
@@ -444,6 +459,8 @@ public class ConsultingDetailsController {
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
+			
+			
 			info.setError(true);
 			info.setMessage("Payment update Failed");
 			System.out.println(e.getMessage());

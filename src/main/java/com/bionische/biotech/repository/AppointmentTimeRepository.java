@@ -49,8 +49,11 @@ public interface AppointmentTimeRepository extends JpaRepository<AppointmentTime
 	@Query(value="SELECT time from appointment_time where time_id IN (:timeIdList)", nativeQuery=true)
 	List<String> getAppointTimeByIdList(@Param("timeIdList")List<String> timeIdList);
 	
-	@Query(value="SELECT * FROM appointment_time t WHERE t.time IN (:timeList)", nativeQuery=true)
-	List<AppointmentTime> findByTime(@Param("timeList")List<String> timeList);
+	/*@Query(value="SELECT * FROM appointment_time t WHERE t.time IN (:timeList)", nativeQuery=true)
+	List<AppointmentTime> findByTime(@Param("timeList")List<String> timeList);*/
+	
+	@Query(value="SELECT * FROM appointment_time t WHERE t.time IN (:currentTime)", nativeQuery=true)
+	List<AppointmentTime> findByTime(@Param("currentTime")String currentTime);
 	
 	List<AppointmentTime> findByTimeIdNotIn(List<Integer> timeId);
  

@@ -14,6 +14,7 @@ import com.bionische.biotech.model.AppointmentDetails;
 import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.PatientDetails;
+import com.bionische.biotech.model.PatientNotification;
 import com.bionische.biotech.model.lab.LabAppointmentDetails;
 import com.bionische.biotech.repository.AppointmentDetailsRepository;
 import com.bionische.biotech.repository.AppointmentTimeRepository;
@@ -22,6 +23,7 @@ import com.bionische.biotech.repository.DoctorSubscriptionDetailsRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.lab.LabAppointmentDetailsRepository;
 import com.bionische.biotech.service.SendFcmNotificationService;
+import com.bionische.biotech.service.SendTextMessageService;
 
 @Component
 public class TaskSchedulor {
@@ -46,6 +48,10 @@ public class TaskSchedulor {
 	@Autowired
 	LabAppointmentDetailsRepository labAppointmentDetailsRepository;
 	 
+	@Autowired
+	SendTextMessageService sendTextMessageService;
+	
+	
 	
 	/*@Autowired
 	AppointmentTimeRepository appointmentTimeRepository;
@@ -94,33 +100,43 @@ public class TaskSchedulor {
 	@Scheduled(cron = "0 0 * * * *")
 	public void appointmentRemainder() {
 
-		System.out.println(new SimpleDateFormat("HH:00").format(Calendar.getInstance().getTime()));
-		int curTime=Integer.parseInt(new SimpleDateFormat("HH").format(Calendar.getInstance().getTime()));
-	
-		int currentTime=curTime+1;
+		//System.out.println(new SimpleDateFormat("HH:00").format(Calendar.getInstance().getTime()));
+		int curHour=Integer.parseInt(new SimpleDateFormat("HH").format(Calendar.getInstance().getTime()));
+		int curMin=Integer.parseInt(new SimpleDateFormat("mm").format(Calendar.getInstance().getTime()));
 		
-		List<String> timeList=new ArrayList<>();
-		timeList.add(""+currentTime+":00");   
-		timeList.add(currentTime+":30");
-		timeList.add(currentTime+1+":00");   
-		List<AppointmentTime> appointMentTimeList=appointmentTimeRepository.findByTime(timeList);
-		 
-		List<Integer> timeIdList=new ArrayList<>();
-		for(int i=0;i<appointMentTimeList.size();i++) {
-		timeIdList.add(appointMentTimeList.get(i).getTimeId());
+		//System.out.println("current time"+curTime);
 		
-		}
+		int timeId1=curHour+curHour+3;
+		int timeId2=curHour+curHour+4;
+				
+		if(timeId1>48) {
+			
+			timeId1=timeId1%48;
+			timeId2=timeId2%48;
+		}		
+				
+		List<Integer> timeList=new ArrayList<>();
+		
+		timeList.add(timeId1);
+		timeList.add(timeId2);
+		
+		System.out.println("time id's= "+timeList.toString());
 		/**
 		 * This is for doctor appointment remainder to patient
 		 */
-		List<AppointmentDetails> appointmentDetailsList=appointmentDetailsRepository.findAppointmentsofPatients(timeIdList); 
+		List<AppointmentDetails> appointmentDetailsList=appointmentDetailsRepository.findAppointmentsofPatients(timeList); 
 		
-		
+		System.out.println("apointment id list+ "+appointmentDetailsList.toString());
 		if(!appointmentDetailsList.isEmpty()) {
 		for(int i=0;i<appointmentDetailsList.size();i++) {
 			
 		PatientDetails patientDetails=patientDetailsRepository.findByPatientId(appointmentDetailsList.get(i).getPatientId());
 		String remainderNotification=patientDetails.getfName()+" "+patientDetails.getlName()+" your doctor appointment is start is in some time. Please be on time.";
+	
+		System.out.println("Appointment Success");
+		sendTextMessageService.sendTextSms(remainderNotification, patientDetails.getContactNo());
+		
+		
 		if(patientDetails.getInt1()==0) {
 			
 			sendFcmNotificationService.notifyUser(patientDetails.getString2(), "BIONISCHE",
@@ -139,12 +155,14 @@ public class TaskSchedulor {
 		 * This is for lab appointment
 		 */
 		
-		List<LabAppointmentDetails> getLabAppointmentList=labAppointmentDetailsRepository.findAppointmentofPatientByTimeIdList(timeIdList);
+		List<LabAppointmentDetails> getLabAppointmentList=labAppointmentDetailsRepository.findAppointmentofPatientByTimeIdList(timeList);
 		
 		if(!getLabAppointmentList.isEmpty()) {
 			for(int i=0;i<getLabAppointmentList.size();i++) {
 				PatientDetails patientDetails=patientDetailsRepository.findByPatientId(getLabAppointmentList.get(i).getPatientId());
 				String remainderNotification=patientDetails.getfName()+" "+patientDetails.getlName()+" your lab appointment is start is in some time. Please be on time.";
+				
+				sendTextMessageService.sendTextSms(remainderNotification, patientDetails.getContactNo());
 				
 				if(patientDetails.getInt1()==0)  {
 					
