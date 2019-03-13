@@ -20,11 +20,15 @@ import com.bionische.biotech.ewallet.model.WalletDetails;
 import com.bionische.biotech.ewallet.repository.GetWalletTransactionDetailsRepository;
 import com.bionische.biotech.ewallet.repository.UserWalletDetailsRepository;
 import com.bionische.biotech.ewallet.repository.UserWalletTransactionRepository;
+import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.MedicalDetails;
+import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.repository.BankTransferRequestRepository;
+import com.bionische.biotech.repository.DoctorDetailsRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
+import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.TransactionWalletDetailsRepository;
 import com.bionische.biotech.repository.WalletDetailsRepository;
 import com.bionische.biotech.service.SendEMailService;
@@ -64,8 +68,20 @@ public class UserWalletApiController {
 	@Autowired
 	SendTextMessageService sendTextMessageService;
 	
+	@Autowired
+	PatientDetailsRepository patientDetailsRepository;
+	
+	@Autowired
+	DoctorDetailsRepository doctorDetailsRepository;
+	
+
+	
 	
 	String url="www.bionische.com";
+	
+	String PATIENT_REFERAL_URL="www.bionische.com";
+	
+	String DOCTOR_REFERAL_URL="www.bionische.com123";
 	/*
 	 * @author Ganesh
 	 * get user All wallet  details 
@@ -253,14 +269,17 @@ return getWalletTransactionDetailsList;
 
 
 @RequestMapping(value = { "/sendEmailOfReferal"}, method = RequestMethod.POST)
-public @ResponseBody Info sendEmailOfReferal(@RequestParam("email") String email,@RequestParam("referal") String referal) {
+public @ResponseBody Info sendEmailOfReferal(@RequestParam("email") String email,@RequestParam("referal") String referal,@RequestParam("userProfession")int userProfession) {
 
 	Info info=new Info();
 	
 try {
-
-	sendEMailService.sendMail("REFERAL", "Hi! Get Discount on installation use referal code is "+referal+", Download App now & get 25Rs flat discount."+ url, email);
-	
+	if(userProfession==0) {
+	sendEMailService.sendMail("REFERAL", "Hi! Get Discount on installation use referal code is "+referal+", Download App now & get 25Rs flat discount."+url+" "+PATIENT_REFERAL_URL, email);
+	}else 
+	{
+		sendEMailService.sendMail("REFERAL", "Hi! Get Discount on installation use referal code is "+referal+", Download App now & get 25Rs flat discount."+ url+" "+DOCTOR_REFERAL_URL, email);	
+	}
 }
 catch (Exception e) {
 	e.printStackTrace();
@@ -269,14 +288,17 @@ return info;
 }
 
 @RequestMapping(value = { "/sendPhoneOfReferal"}, method = RequestMethod.POST)
-public @ResponseBody Info sendPhoneOfReferal(@RequestParam("phoneNo") String phoneNo,@RequestParam("referal") String referal) {
+public @ResponseBody Info sendPhoneOfReferal(@RequestParam("phoneNo") String phoneNo,@RequestParam("referal") String referal,@RequestParam("userProfession")int userProfession) {
 
 	Info info=new Info();
 	
 try {
-
-	sendTextMessageService.sendTextSms("Hi! Get Discount on installation use referal code is "+referal+", Download App now & get 25Rs flat discount. "+url, phoneNo);
-	
+	if(userProfession==0) {
+	sendTextMessageService.sendTextSms("Hi! Get Discount on installation use referal code is "+referal+", Download App now & get 25Rs flat discount. "+url+" "+PATIENT_REFERAL_URL, phoneNo);
+	}else 
+	{
+		sendTextMessageService.sendTextSms("Hi! Get Discount on installation use referal code is "+referal+", Download App now & get 25Rs flat discount. "+url+" "+DOCTOR_REFERAL_URL, phoneNo);	
+	}
 }
 catch (Exception e) {
 	e.printStackTrace();
@@ -312,6 +334,30 @@ public @ResponseBody BankTransferRequest insertWalletMoneyBankTransferRequest(@R
 			transactionWalletDetails.setUserType(walletDetails.getUserType());
 			transactionWalletDetails.setWalletId(walletDetails.getWalletId());
 			transactionWalletDetails=transactionWalletDetailsRepository.save(transactionWalletDetails);
+			
+			
+			if(walletDetails.getUserType()==0) {
+				
+				DoctorDetails doctorDetails=doctorDetailsRepository.findByDoctorId(walletDetails.getUserId());
+				sendTextMessageService.sendTextSms(doctorDetails.getfName()+" "+doctorDetails.getlName()+" your request update successfully we are processing on your request money will transfer 24-48 hours.", doctorDetails.getContactNo());
+				
+			}else if(walletDetails.getUserType()==1) {
+				
+				PatientDetails patientDetails=patientDetailsRepository.findByPatientId(walletDetails.getUserId());
+				sendTextMessageService.sendTextSms(patientDetails.getfName()+" "+patientDetails.getlName()+" your request update successfully we are processing on your request money will transfer 24-48 hours.", patientDetails.getContactNo());
+				
+			}else if(walletDetails.getUserType()==2) {
+				
+				LabDetails labDetails=labDetailsRepository.findByLabId(walletDetails.getUserId());
+				sendTextMessageService.sendTextSms(labDetails.getLabName()+" your request update successfully we are processing on your request money will transfer 24-48 hours.", labDetails.getContact());
+				
+				
+			}else if(walletDetails.getUserType()==3) {
+				
+				MedicalDetails medicalDetails=medicalDetailsRepository.findByMedicalId(walletDetails.getUserId());
+				sendTextMessageService.sendTextSms(medicalDetails.getMedicalName()+" your request update successfully we are processing on your request money will transfer 24-48 hours.", medicalDetails.getContact());
+			}
+		
 			
 		}
 		

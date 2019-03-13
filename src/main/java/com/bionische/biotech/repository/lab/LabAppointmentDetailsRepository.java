@@ -62,7 +62,7 @@ public interface LabAppointmentDetailsRepository extends JpaRepository<LabAppoin
 
 
 	 
-	@Query(value="SELECT a.* FROM lab_appointment_details a, appointment_time t WHERE a.status=1 AND a.date = CURDATE() AND t.time_id IN (:timeIdList) GROUP BY lab_app_id",nativeQuery=true)
+	@Query(value="SELECT a.* FROM t_lab_appointment_details a, appointment_time t WHERE a.status=1 AND a.date = CURDATE() AND t.time_id IN (:timeIdList) AND a.time=t.time_id",nativeQuery=true)
 	List<LabAppointmentDetails> findAppointmentofPatientByTimeIdList(@Param("timeIdList")List<Integer> timeIdList);
 
 	@Transactional
