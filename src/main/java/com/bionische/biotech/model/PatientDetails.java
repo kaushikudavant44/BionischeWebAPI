@@ -92,8 +92,11 @@ public class PatientDetails {
 	@Column(name="refferal_code")
 	private String refferalCode;
 
+	@Column(name="web_token")
+	private String webToken;
 	
-	
+	@Column(name="mother_name")
+	private String motherName;
 	
 	public String getRefferalCode() {
 		return refferalCode;
@@ -307,6 +310,22 @@ public class PatientDetails {
 		this.profilePhoto = profilePhoto;
 	}
 
+	public String getWebToken() {
+		return webToken;
+	}
+
+	public void setWebToken(String webToken) {
+		this.webToken = webToken;
+	}
+
+	public String getMotherName() {
+		return motherName;
+	}
+
+	public void setMotherName(String motherName) {
+		this.motherName = motherName;
+	}
+
 	@Override
 	public String toString() {
 		return "PatientDetails [patientId=" + patientId + ", familyId=" + familyId + ", userName=" + userName
@@ -316,8 +335,10 @@ public class PatientDetails {
 				+ ", delStatus=" + delStatus + ", age=" + age + ", int1=" + int1 + ", int2=" + int2 + ", string1="
 				+ string1 + ", string2=" + string2 + ", stateId=" + stateId + ", qualification=" + qualification
 				+ ", profilePhoto=" + profilePhoto + ", countryId=" + countryId + ", refferalCode=" + refferalCode
-				+ "]";
+				+ ", webToken=" + webToken + ", motherName=" + motherName + "]";
 	}
+
+	 
 
 	
 

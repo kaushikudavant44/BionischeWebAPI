@@ -51,6 +51,26 @@ public class LoginApiController {
 	@Autowired
 	LabSubscriptionDetailsRepository labSubscriptionDetailsRepository;
 
+	
+	@RequestMapping(value = { "/getPatientDetailsByIdAndUpdateToken" }, method = RequestMethod.POST)
+	public @ResponseBody PatientDetails getPatientDetailsByIdAndUpdateToken(@RequestParam("patientId") int patientId, @RequestParam("token") String token)
+	
+	{
+		PatientDetails patientDetailsRes=new PatientDetails();
+	 try {
+		 if(patientSuscriptionDetailsRepository.findByPatientIdAndStatus(patientId, 1)!=null) {
+		 patientDetailsRes=	patientDetailsRepository.getPatientDetailsBYId(patientId);
+		 patientDetailsRepository.updateWebToken(patientId, token);
+	 
+		 System.out.println("patientDetailsRes:"+patientDetailsRes.toString());
+		 }
+	 }
+	 catch (Exception e) {
+System.out.println(e.getMessage());
+	}
+	 return patientDetailsRes;
+	  
+	}
 	@RequestMapping(value = { "/patientLoginProcess" }, method = RequestMethod.POST)
 	public @ResponseBody PatientLogin patientLoginProcess(@RequestParam("userName") String userName,
 			@RequestParam("password") String password) {
@@ -111,7 +131,7 @@ public class LoginApiController {
 
 	@RequestMapping(value = { "/doctorLoginProcess" }, method = RequestMethod.POST)
 	public @ResponseBody DoctorLogin doctorLoginProcess(@RequestParam("userName") String userName,
-			@RequestParam("password") String password) {
+			@RequestParam("password") String password,@RequestParam("webToken") String webToken) {
 		System.out.println("hbd:" + userName);
 
 		DoctorDetails doctorDetails = new DoctorDetails();
@@ -139,7 +159,7 @@ public class LoginApiController {
 				}
 				System.out.println(hashedPass);
 				if (doctorDetails.getPassword().equals(hashedPass)) {
-					doctorDetails.setPassword("");
+					
 					doctorLogin.setDoctorDetails(doctorDetails);
 					info.setError(false);
 					info.setMessage("Login Successfull");
@@ -154,6 +174,10 @@ public class LoginApiController {
 						doctorSuscriptionInfo.setError(false);
 						doctorSuscriptionInfo.setMessage(doctorSubscriptionDetailsRes.getPackageExpDate());
 						doctorLogin.setDoctorSuscriptionInfo(doctorSuscriptionInfo);
+						doctorDetailsRepository.updateDoctorWebTokenByDoctorId(doctorDetails.getDoctorId(), webToken);
+						 
+						doctorDetails.setPassword("");
+						
 					} else {
 						doctorSuscriptionInfo.setError(true);
 						doctorSuscriptionInfo.setMessage("Doctor Suscription is pendding");

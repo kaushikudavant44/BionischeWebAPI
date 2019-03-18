@@ -80,5 +80,9 @@ public interface DoctorDetailsRepository extends JpaRepository<DoctorDetails, Lo
 	@Query(value="SELECT d.* FROM doctor_details d WHERE d.refferal_code=:referal",nativeQuery=true)
 	DoctorDetails findByReferal(@Param("referal")String referal);
 	
+	@Transactional
+	@Modifying
+	@Query("UPDATE DoctorDetails  SET  webToken=:webToken WHERE  doctorId=:doctorId")
+	int updateDoctorWebTokenByDoctorId(@Param("doctorId")int doctorId,@Param("webToken")String webToken);
 	
 }

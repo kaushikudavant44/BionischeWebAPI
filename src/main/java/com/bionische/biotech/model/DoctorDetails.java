@@ -133,6 +133,8 @@ public class DoctorDetails {
 	@Column(name="signature", nullable=true)
 	private String signature;
 	
+	@Column(name="web_token", nullable=true)
+	private String webToken;
 	
 	
 	
@@ -417,6 +419,14 @@ public class DoctorDetails {
 		this.signature = signature;
 	}
 
+	public String getWebToken() {
+		return webToken;
+	}
+
+	public void setWebToken(String webToken) {
+		this.webToken = webToken;
+	}
+
 	@Override
 	public String toString() {
 		return "DoctorDetails [doctorId=" + doctorId + ", userName=" + userName + ", password=" + password + ", fName="
@@ -428,9 +438,10 @@ public class DoctorDetails {
 				+ councilRegNo + ", councilName=" + councilName + ", delStatus=" + delStatus + ", string1=" + string1
 				+ ", string2=" + string2 + ", int1=" + int1 + ", int2=" + int2 + ", fees=" + fees + ", location="
 				+ location + ", refferalCode=" + refferalCode + ", createDate=" + createDate + ", lastModifiedDate="
-				+ lastModifiedDate + ", signature=" + signature + "]";
+				+ lastModifiedDate + ", signature=" + signature + ", webToken=" + webToken + "]";
 	}
 
+	 
 	
 
 	
