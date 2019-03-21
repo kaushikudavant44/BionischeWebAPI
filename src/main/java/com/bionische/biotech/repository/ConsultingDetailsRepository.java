@@ -28,6 +28,13 @@ public interface ConsultingDetailsRepository extends JpaRepository<ConsultingDet
 	
 	List<ConsultingDetails> getConsultingDetailsByDate(@Param("startdate")String startdate,@Param("enddate")String enddate, @Param("patientId")int patientId);
 
+	@Query(value="select m.patient_id,CONCAT(p.f_name,' ',p.l_name) AS patient_name,h.contact_no,h.email_id,p.email,h.address, m.int_2,m.discussion,m.patient_problem,m.note,m.date,m.time,m.meet_id,CONCAT(d.f_name,' ',d.l_name) as f_name,h.hospital_name, m.doctor_id,d.qualification,d.signature FROM doctor_patient_meeting m,doctor_details d,hospital_details h,patient_details p "
+			 
+	+" WHERE  m.patient_id=:patientId AND m.doctor_id=d.doctor_id AND h.hospital_id=m.int_1 AND m.patient_id=p.patient_id ORDER BY m.date DESC LIMIT 10",nativeQuery=true)
+	
+	List<ConsultingDetails> getLast10ConsultingByPatientId( @Param("patientId")int patientId);
+
+	
 	@Query(value="select m.patient_id,h.contact_no,h.email_id,p.email,CONCAT(p.f_name,' ',p.l_name) AS patient_name,h.address,m.discussion, m.int_2, m.patient_problem,m.note,m.date,m.time,m.meet_id,CONCAT(d.f_name,' ',d.l_name) AS f_name,h.hospital_name, m.doctor_id,d.qualification,d.signature FROM doctor_patient_meeting m,doctor_details d,hospital_details h,prescription_details i,patient_details p "
 			 
 	+" WHERE m.date BETWEEN :startdate AND :enddate AND m.patient_id=:patientId AND m.doctor_id=d.doctor_id AND h.hospital_id=m.int_1 AND m.patient_id=p.patient_id AND m.meet_id=i.meeting_id GROUP BY m.meet_id",nativeQuery=true)

@@ -59,7 +59,68 @@ public class PatientPersonalHistoryApiController {
 	@Autowired
 	PatientTreatementHistoryRepository patientTreatementHistoryRepository;
 	 
+	@RequestMapping(value = { "/insertPersonalHistoryDetails" }, method = RequestMethod.POST)
+	public @ResponseBody PatientPersonalHistory insertPersonalHistoryDetails(@RequestBody PatientPersonalHistory patientPersonalHistory)
+	{
+		return patientPersonalHistoryRepository.save(patientPersonalHistory);
+		
+	}
 	
+	@RequestMapping(value = { "/insertMenstrualObstetricHistory" }, method = RequestMethod.POST)
+	public @ResponseBody MenstrualObstetricHistory insertMenstrualObstetricHistory(@RequestBody MenstrualObstetricHistory menstrualObstetricHistory)
+	{
+		return menstrualObstetricHistoryRepository.save(menstrualObstetricHistory);
+		
+	}
+	
+	@RequestMapping(value = { "/insertPatientFamilyHistory" }, method = RequestMethod.POST)
+	public @ResponseBody PatientFamilyHistory insertPatientFamilyHistory(@RequestBody PatientFamilyHistory patientFamilyHistory)
+	{
+		return patientFamilyHistoryRepository.save(patientFamilyHistory);
+		
+	}
+	@RequestMapping(value = { "/insertPatientHistoryChiefComplaints" }, method = RequestMethod.POST)
+	public @ResponseBody PatientHistoryChiefComplaints insertPatientHistoryChiefComplaints(@RequestBody PatientHistoryChiefComplaints patientHistoryChiefComplaints)
+	{
+		return patientHistoryChiefComplaintsRepository.save(patientHistoryChiefComplaints);
+		
+	}
+	
+	@RequestMapping(value = { "/insertPatientPastHistory" }, method = RequestMethod.POST)
+	public @ResponseBody PatientPastHistory insertPatientPastHistory(@RequestBody PatientPastHistory patientPastHistory)
+	{
+		return patientPastHistoryRepository.save(patientPastHistory);
+		
+	}
+	@RequestMapping(value = { "/insertPatientPastHistoryList" }, method = RequestMethod.POST)
+	public @ResponseBody Info insertPatientPastHistoryList(@RequestBody List<PatientPastHistory> patientPastHistoryList)
+	{ 
+		Info info=new Info();
+		for(PatientPastHistory patientPastHistory : patientPastHistoryList)
+		 patientPastHistoryRepository.save(patientPastHistory);
+		
+		return info;
+	}
+	@RequestMapping(value = { "/insertPatientPastHistoryIIlness" }, method = RequestMethod.POST)
+	public @ResponseBody PatientPastHistoryIIlness insertPatientPastHistoryIIlness(@RequestBody PatientPastHistoryIIlness patientPastHistoryIIlness)
+	{
+		return patientPastHistoryIIlnessRepository.save(patientPastHistoryIIlness);
+		
+	}
+	
+	@RequestMapping(value = { "/insertPatientPsychologicalHistory" }, method = RequestMethod.POST)
+	public @ResponseBody PatientPsychologicalHistory insertPatientPsychologicalHistory(@RequestBody PatientPsychologicalHistory patientPsychologicalHistory)
+	{
+		return patientPsychologicalHistoryRepository.save(patientPsychologicalHistory);
+		
+	}
+	
+	@RequestMapping(value = { "/insertPatientTreatementHistory" }, method = RequestMethod.POST)
+	public @ResponseBody PatientTreatementHistory insertPatientTreatementHistory(@RequestBody PatientTreatementHistory patientTreatementHistory)
+	{
+		return patientTreatementHistoryRepository.save(patientTreatementHistory);
+		
+	}
 	
 	
 	@RequestMapping(value = { "/insertPatientPersonalDetails" }, method = RequestMethod.POST)

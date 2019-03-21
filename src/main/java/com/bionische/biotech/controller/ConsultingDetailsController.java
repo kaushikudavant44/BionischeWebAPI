@@ -112,6 +112,35 @@ public class ConsultingDetailsController {
 		return consultingList;
 	}
 
+	
+	@RequestMapping(value = { "/getLast10ConsultingByPatientId" }, method = RequestMethod.POST)
+	public @ResponseBody List getConsultingByDoctorIdAndDate(@RequestParam("patientId") int patientId)
+
+	{
+
+		List<ConsultingDetails> consultingList = new ArrayList<ConsultingDetails>();
+		 
+		try {
+
+			 
+				consultingList = consultingDetailsRepository.getLast10ConsultingByPatientId(patientId);
+
+			 
+
+			System.out.println("Consulting List " + consultingList.toString());
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+
+		}
+
+		return consultingList;
+	}
+
+	
+	
+	
 	@RequestMapping(value = { "/getConsultingByDoctorAndDate" }, method = RequestMethod.POST)
 	public @ResponseBody List getConsultingByDoctorAndDate(@RequestParam("doctorId") int doctorId,
 			@RequestParam("startdate") String startdate, @RequestParam("enddate") String enddate)

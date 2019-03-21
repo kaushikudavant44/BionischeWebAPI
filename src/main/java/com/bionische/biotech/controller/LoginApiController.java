@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.DoctorLogin;
+import com.bionische.biotech.model.DoctorProfilePassword;
 import com.bionische.biotech.model.DoctorSubscriptionDetails;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabDetails;
@@ -22,6 +24,7 @@ import com.bionische.biotech.model.LabSubscriptionDetails;
 import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.PatientLogin;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
+import com.bionische.biotech.repository.DoctorProfilePasswordRepository;
 import com.bionische.biotech.repository.DoctorSubscriptionDetailsRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.LabSubscriptionDetailsRepository;
@@ -50,7 +53,8 @@ public class LoginApiController {
 	PatientSuscriptionDetailsRepository patientSuscriptionDetailsRepository;
 	@Autowired
 	LabSubscriptionDetailsRepository labSubscriptionDetailsRepository;
-
+	@Autowired
+	DoctorProfilePasswordRepository doctorProfilePasswordRepository;
 	
 	@RequestMapping(value = { "/getPatientDetailsByIdAndUpdateToken" }, method = RequestMethod.POST)
 	public @ResponseBody PatientDetails getPatientDetailsByIdAndUpdateToken(@RequestParam("patientId") int patientId, @RequestParam("token") String token)
@@ -517,4 +521,74 @@ System.out.println(e.getMessage());
 		return doctorLogin;
 	}
 
+	
+	 
+	@RequestMapping(value = { "/updateDoctorProfilePassword" }, method = RequestMethod.POST)
+	public @ResponseBody DoctorProfilePassword updateDoctorProfilePassword(@RequestBody DoctorProfilePassword doctorProfilePassword) {
+	
+		
+		
+	try {
+		MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+		messageDigest.update(doctorProfilePassword.getPassword().getBytes(), 0, doctorProfilePassword.getPassword().length());
+		String hashedPass = new BigInteger(1, messageDigest.digest()).toString(16);
+		if (hashedPass.length() < 32) {
+			hashedPass = "0" + hashedPass;
+		}
+		doctorProfilePassword.setPassword(hashedPass);
+		DoctorProfilePassword doctorProfilePasswordRes=doctorProfilePasswordRepository.findByDoctorId(doctorProfilePassword.getDoctorId());
+		
+		if(doctorProfilePasswordRes!=null) {
+			doctorProfilePassword.setId(doctorProfilePasswordRes.getId());
+			}
+		return doctorProfilePasswordRepository.save(doctorProfilePassword);
+		 
+	}
+	catch (Exception e) {
+		// TODO: handle exception
+		System.out.println(e.getMessage());
+	}
+	return null;
+	}
+	@RequestMapping(value = { "/getDoctorProfilePassword" }, method = RequestMethod.POST)
+	public @ResponseBody Info getDoctorProfilePassword(@RequestParam("doctorId") int doctorId,@RequestParam("password") String password) {
+	
+		Info info=new Info();
+		try {
+			MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+			messageDigest.update(password.getBytes(), 0, password.length());
+			String hashedPass = new BigInteger(1, messageDigest.digest()).toString(16);
+			if (hashedPass.length() < 32) {
+				hashedPass = "0" + hashedPass;
+			}
+			DoctorProfilePassword doctorProfilePasswordRes=doctorProfilePasswordRepository.findByDoctorId(doctorId);
+			if(doctorProfilePasswordRes!=null)
+			{
+				if(doctorProfilePasswordRes.getPassword().equals(hashedPass))
+					{
+					info.setError(false);
+					info.setMessage("Success");
+					 
+					return info;
+					}
+				else {
+					info.setError(true);
+					info.setMessage("Invalid Password");
+					return info;
+				}
+			}
+			else {
+				info.setError(true);
+				info.setMessage("User not set Password");
+				return info;
+			}
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			info.setError(true);
+			info.setMessage("Error");
+			System.out.println(e.getMessage());
+		}
+		return info;
+	}
 }
