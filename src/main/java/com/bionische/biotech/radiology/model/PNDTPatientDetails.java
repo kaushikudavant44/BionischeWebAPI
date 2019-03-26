@@ -76,7 +76,7 @@ public class PNDTPatientDetails {
 	@Column(name = "indication_mtp_abnormal")
 	private String indicationMTPAbnormal;
 
-	@Column(name = "gen_disease_history")
+	@Column(name = "gen_disease_history",nullable=true)
 	private String genDiseaseHistory;
 
 	@Column(name = "indication_diango_proc")

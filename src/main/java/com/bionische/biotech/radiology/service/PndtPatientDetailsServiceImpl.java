@@ -37,6 +37,13 @@ public class PndtPatientDetailsServiceImpl implements PndtPatientDetailsService 
 			System.out.println("cdscds" + pndtPatientDetails);
 			int pndtId = pndtPatientDetailsResponse.getPndtId();
 
+			for (int i = 0; i < pndtPatientDetails.getChildsModelList().size(); i++) {
+
+				pndtPatientDetails.getChildsModelList().get(i).setPndtId(pndtId);
+
+				pndtPatientChildRepository.save(pndtPatientDetails.getChildsModelList().get(i));
+			}
+			
 			for (int i = 0; i < pndtPatientDetails.getIndicationsModelList().size(); i++) {
 
 				pndtPatientDetails.getIndicationsModelList().get(i).setPndtId(pndtId);
@@ -44,12 +51,7 @@ public class PndtPatientDetailsServiceImpl implements PndtPatientDetailsService 
 
 			}
 
-			for (int i = 0; i < pndtPatientDetails.getChildsModelList().size(); i++) {
-
-				pndtPatientDetails.getChildsModelList().get(i).setPndtId(pndtId);
-
-				pndtPatientChildRepository.save(pndtPatientDetails.getChildsModelList().get(i));
-			}
+			
 
 			if (pndtPatientDetailsResponse != null) {
 				info.setError(false);

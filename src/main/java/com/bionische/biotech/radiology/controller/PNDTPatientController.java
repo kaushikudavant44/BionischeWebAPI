@@ -17,9 +17,11 @@ import com.bionische.biotech.radiology.model.ChildsModel;
 import com.bionische.biotech.radiology.model.IndicationsModel;
 import com.bionische.biotech.radiology.model.PNDTPatientDetails;
 import com.bionische.biotech.radiology.model.PndtPatientBasicDetails;
+import com.bionische.biotech.radiology.model.PndtPatientHeader;
 import com.bionische.biotech.radiology.model.TestDetails;
 import com.bionische.biotech.radiology.repository.PndtPatientBasicDetailsRepository;
 import com.bionische.biotech.radiology.repository.PndtPatientChildRepository;
+import com.bionische.biotech.radiology.repository.PndtPatientHeaderRepository;
 import com.bionische.biotech.radiology.repository.PndtPatientIndicationRepository;
 import com.bionische.biotech.radiology.repository.PndtPatientRepository;
 import com.bionische.biotech.radiology.repository.RadiologyTestDetailsRepository;
@@ -48,7 +50,24 @@ public class PNDTPatientController {
 
 	@Autowired
 	PndtPatientBasicDetailsRepository pndtPatientBasicDetailsRepository;
+	
+	
+	@Autowired
+	PndtPatientHeaderRepository pndtPatientHeaderRepository;
 
+	
+	/**
+	 * 
+	 * @param childsModel
+	 * @return
+	 */
+	@RequestMapping(value = { "/savePndtPatientHeader" }, method = RequestMethod.POST)
+	public @ResponseBody PndtPatientHeader savePndtPatientHeader(@RequestBody PndtPatientHeader pndtPatientHeader) {
+
+		return pndtPatientHeaderRepository.save(pndtPatientHeader);
+
+	}
+	
 	/**
 	 * 
 	 * @param childsModel
@@ -60,7 +79,37 @@ public class PNDTPatientController {
 		return pndtPatientDetailsService.insertPndtPatientDetails(pndtPatientDetails);
 
 	}
+	
+	
+	@RequestMapping(value = { "/getPndtPatientDetails" }, method = RequestMethod.POST)
+	public @ResponseBody PNDTPatientDetails getPndtPatientDetails(@RequestParam("patientId")int patientId) {
 
+		PNDTPatientDetails pndtPatientDetails=pndtPatientRepository.findByPndtPatientDetailsByPatientId(patientId);
+		
+		
+		List<IndicationsModel> indicationList=pndtPatientIndicationRepository.findByPndtId(pndtPatientDetails.getPndtId());
+		
+		List<ChildsModel> childList=pndtPatientChildRepository.findByPndtId(pndtPatientDetails.getPndtId());
+		
+		
+		pndtPatientDetails.setIndicationsModelList(indicationList);
+	
+		pndtPatientDetails.setChildsModelList(childList);
+		
+		return pndtPatientDetails;
+
+	}
+
+	@RequestMapping(value = { "/getPndtPatientHeader" }, method = RequestMethod.POST)
+	public @ResponseBody PndtPatientHeader getPndtPatientHeader(@RequestParam("patientId")int patientId) {
+
+	
+		
+		return pndtPatientHeaderRepository.getPatientDetailsById(patientId);
+
+	}
+	
+	
 	/**
 	 * 
 	 * @param childsModel
