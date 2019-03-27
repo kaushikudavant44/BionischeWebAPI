@@ -1,11 +1,19 @@
 package com.bionische.biotech.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Table(name="vaccination_completed")
@@ -36,6 +44,36 @@ public class SavePatientVaccination {
 	
 	@Column(name="string_1")
 	private String string1;
+	
+	@Column(name="created_date",updatable=false)
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreatedDate
+	private Date createdDate;
+	
+	@Column(name="modified_date")
+	@LastModifiedDate
+	@Temporal(TemporalType.TIMESTAMP)
+	@UpdateTimestamp
+	private Date modifiedDate;
+
+	
+	
+	
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
 
 	public int getId() {
 		return id;
@@ -106,8 +144,10 @@ public class SavePatientVaccination {
 	public String toString() {
 		return "SavePatientVaccination [id=" + id + ", vacciantionId=" + vacciantionId + ", patientId=" + patientId
 				+ ", doctorId=" + doctorId + ", status=" + status + ", int1=" + int1 + ", int2=" + int2 + ", string1="
-				+ string1 + "]";
+				+ string1 + ", createdDate=" + createdDate + ", modifiedDate=" + modifiedDate + "]";
 	}
+
+	
 
 	
 	
