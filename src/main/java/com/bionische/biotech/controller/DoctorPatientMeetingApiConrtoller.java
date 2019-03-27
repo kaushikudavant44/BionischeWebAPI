@@ -50,312 +50,290 @@ import com.bionische.biotech.service.PrescriptionOrderService;
 public class DoctorPatientMeetingApiConrtoller {
 
 	@Autowired
-	DoctorPatientMeetingService  doctorPatientMeetingService;
-	
+	DoctorPatientMeetingService doctorPatientMeetingService;
+
 	@Autowired
 	PatientCartRepository patientCartRepository;
-	
+
 	@Autowired
 	ConsultingDetailsRepository consultingDetailsRepository;
-	
+
 	@Autowired
 	PatientAddressListRepository patientAddressListRepository;
-	
+
 	@Autowired
 	GetCartProductsRepository getCartProductsRepository;
-	
+
 	@Autowired
 	PatientDetailsRepository patientDetailsRepository;
-	
+
 	@Autowired
 	PrescriptionToMedicalRepository prescriptionToMedicalRepository;
-	
+
 	@Autowired
 	GetMedicalOrderDetailsRepository getMedicalOrderDetailsRepository;
-	
+
 	@Autowired
 	AppointmentDetailsRepository appointmentDetailsRepository;
-	
+
 	@Autowired
 	DoctorAppointmentCountRepository doctorAppointmentCountRepository;
-	
+
 	@Autowired
 	DoctorCollectionAndReportDetailRepository doctorCollectionAndReportDetailRepository;
-	
+
 	@Autowired
 	DoctorAppOfLastThirtyDaysRepository doctorAppOfLastThirtyDaysRepository;
-	
+
 	@Autowired
 	PharmacyDayOrderDetailsRepository pharmacyDayOrderDetailsRepository;
-	
+
 	// insert specialization
 	@RequestMapping(value = { "/insertDoctoPatientMeeting" }, method = RequestMethod.POST)
-	public @ResponseBody DoctorPatientMeeting insertDoctoPatientMeeting(@RequestBody DoctorPatientMeeting doctorPatientMeeting) {
-  
-		
+	public @ResponseBody DoctorPatientMeeting insertDoctoPatientMeeting(
+			@RequestBody DoctorPatientMeeting doctorPatientMeeting) {
+
 		return doctorPatientMeetingService.insertDoctorPatientMeeting(doctorPatientMeeting);
 	}
-	
-	
-	
-	@RequestMapping(value = { "/getAllCartProductsOfPatient"}, method = RequestMethod.POST)
+
+	@RequestMapping(value = { "/getAllCartProductsOfPatient" }, method = RequestMethod.POST)
 	public @ResponseBody List<GetCartProducts> getAllCartProductsOfPatient(@RequestParam("familyId") int familyId) {
-		
-		List<GetCartProducts> getCartProductsList = new ArrayList<GetCartProducts>();;
-		
+
+		List<GetCartProducts> getCartProductsList = new ArrayList<GetCartProducts>();
+		;
+
 		List<PatientDetails> patientDetailsList = patientDetailsRepository.findByFamilyIdAndDelStatus(familyId, 0);
 		final ArrayList<GetCartProducts> getCartProductsListFinal = new ArrayList<GetCartProducts>();
 		try {
-			for(PatientDetails list:patientDetailsList)
-			{  			
+			for (PatientDetails list : patientDetailsList) {
 				getCartProductsList = getCartProductsRepository.getCartProductDetails(list.getPatientId());
-				if(getCartProductsList!=null)
-				{
-				getCartProductsListFinal.addAll(getCartProductsList);
+				if (getCartProductsList != null) {
+					getCartProductsListFinal.addAll(getCartProductsList);
 				}
 			}
-			System.out.println("getCartProductsListFinal:"+getCartProductsListFinal.toString());
-		}catch (Exception e) {
+			System.out.println("getCartProductsListFinal:" + getCartProductsListFinal.toString());
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
-					}
-	    return  getCartProductsListFinal;
+		}
+		return getCartProductsListFinal;
 	}
-	
-	@RequestMapping(value = { "/getPatientCartCount"}, method = RequestMethod.POST)
+
+	@RequestMapping(value = { "/getPatientCartCount" }, method = RequestMethod.POST)
 	public @ResponseBody int getPatientCartCount(@RequestParam("familyId") int familyId) {
-		
-		List<PatientDetails> patientDetailsList = patientDetailsRepository.findByFamilyIdAndDelStatus(familyId,0);
-		
-		int count =0;
-		for(PatientDetails list:patientDetailsList)
-		{  			
+
+		List<PatientDetails> patientDetailsList = patientDetailsRepository.findByFamilyIdAndDelStatus(familyId, 0);
+
+		int count = 0;
+		for (PatientDetails list : patientDetailsList) {
 			count = count + patientCartRepository.getPatientCartCount(list.getPatientId());
 		}
-		System.out.println("countcountcount:"+count);
-	    return  count;
-	}
-	
-	@RequestMapping(value = { "/addToCartAndGetCartCount"}, method = RequestMethod.POST)
-	public @ResponseBody int addToCartAndGetCartCount(@RequestBody PatientCart patientCart) {
-		
-		System.out.println("comig:"+patientCart.toString());
-		 int count=0;
-		 try {
-			  PatientCart patientCartVerify = null;
-			  PatientCart patientCartRes = null;
-			  patientCartVerify = patientCartRepository.getCartProductByMeetId(patientCart.getPatientId(), patientCart.getMeetId());
-			 
-			 if(patientCartVerify==null)
-			 {
-				 List<PatientDetails> patientDetailsList = patientDetailsRepository.getPatientDetailsListByFamilydAndPatientId(patientCart.getPatientId());
-				
-		      patientCartRes =patientCartRepository.save(patientCart);
-		      for(PatientDetails list:patientDetailsList)
-				{  			
-					count = count + patientCartRepository.getPatientCartCount(list.getPatientId());
-				}
-			 }
-			 else
-			 {
-				 count = -1;
-			 }
-		 
-		 
-			}catch (Exception e) {
-				System.out.println(e.getMessage());
-						}
+		System.out.println("countcountcount:" + count);
 		return count;
 	}
-	
+
+	@RequestMapping(value = { "/addToCartAndGetCartCount" }, method = RequestMethod.POST)
+	public @ResponseBody int addToCartAndGetCartCount(@RequestBody PatientCart patientCart) {
+
+		System.out.println("comig:" + patientCart.toString());
+		int count = 0;
+		try {
+			PatientCart patientCartVerify = null;
+			PatientCart patientCartRes = null;
+			patientCartVerify = patientCartRepository.getCartProductByMeetId(patientCart.getPatientId(),
+					patientCart.getMeetId());
+
+			if (patientCartVerify == null) {
+				List<PatientDetails> patientDetailsList = patientDetailsRepository
+						.getPatientDetailsListByFamilydAndPatientId(patientCart.getPatientId());
+
+				patientCartRes = patientCartRepository.save(patientCart);
+				for (PatientDetails list : patientDetailsList) {
+					count = count + patientCartRepository.getPatientCartCount(list.getPatientId());
+				}
+			} else {
+				count = -1;
+			}
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return count;
+	}
+
 	@RequestMapping(value = { "/addAddressToPatientAddressList" }, method = RequestMethod.POST)
-	public @ResponseBody List<PatientAddressList> addAddressToPatientAddressList(@RequestBody PatientAddressList patientAddressList)
-	{ 
-		Info info=new Info();
+	public @ResponseBody List<PatientAddressList> addAddressToPatientAddressList(
+			@RequestBody PatientAddressList patientAddressList) {
+		Info info = new Info();
 		PatientAddressList patientAddressListRes = new PatientAddressList();
 		List<PatientAddressList> allPatientAddressList = null;
-		
+
 		try {
-			
-			patientAddressListRes=patientAddressListRepository.save(patientAddressList);
-			if(patientAddressListRes!=null)
-			{
-				allPatientAddressList =  patientAddressListRepository.getPatientAddress(patientAddressList.getPatientId());
-				System.out.println("adrressoutput:"+allPatientAddressList.toString());
+
+			patientAddressListRes = patientAddressListRepository.save(patientAddressList);
+			if (patientAddressListRes != null) {
+				allPatientAddressList = patientAddressListRepository
+						.getPatientAddress(patientAddressList.getPatientId());
+				System.out.println("adrressoutput:" + allPatientAddressList.toString());
 			}
-			
-			
-		}catch (Exception e) {
+
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
-					}		
-		return allPatientAddressList;
-	}
-	
-	@RequestMapping(value = { "/getAddressListOfPatient" }, method = RequestMethod.POST)
-	public @ResponseBody List<PatientAddressList> getAddressListOfPatient(@RequestParam("patientId") int patientId)
-	{ 
-				return  patientAddressListRepository.getPatientAddress(patientId);	
-	}
-	
-	@RequestMapping(value = { "/deletePatientAddressList" }, method = RequestMethod.POST)
-	public @ResponseBody List<PatientAddressList> deletePatientAddressList(@RequestParam("addressId") int addressId,@RequestParam("patientId") int patientId)
-	{ 
-		List<PatientAddressList> allPatientAddressList = null;
-		int res=0;
-		
-		try {
-			
-			res=patientAddressListRepository.deleteAddress(addressId);
-			if(res>0)
-			{				
-					allPatientAddressList =  patientAddressListRepository.getPatientAddress(patientId);
-							
-			}
-			
-		}catch (Exception e) {
-			System.out.println(e.getMessage());
-					}		
-		return allPatientAddressList;
-	}
-	
-	@RequestMapping(value = { "/deleteCartItem" }, method = RequestMethod.POST)
-	public @ResponseBody Info deleteCartItem(@RequestParam("cartId") int cartId)
-	{ 
-		Info info = new Info();
-		int res=0;
-		
-		try {
-			
-			res=patientCartRepository.deleteCartItem(cartId);
-			if(res>0)
-			{				
-				info.setError(false);
-				info.setMessage("success");
-				
-			}
-			else {
-				info.setError(true);
-				info.setMessage("failed");				
-			}
-			
-		}catch (Exception e) {
-			System.out.println(e.getMessage());
-					}		
-		return info;
-	}
-	
-	@RequestMapping(value = { "/cancelOrder" }, method = RequestMethod.POST)
-	public @ResponseBody Info cancelOrder(@RequestParam("medicalRequestId") int medicalRequestId)
-	{ 
-		Info info = new Info();
-		int res=0;
-		
-		try {
-			
-			res=prescriptionToMedicalRepository.updateMedicineOrderDeliveredStatus(medicalRequestId,3);
-			if(res>0)
-			{				
-				info.setError(false);
-				info.setMessage("success");
-				
-			}
-			else {
-				info.setError(true);
-				info.setMessage("failed");				
-			}
-			
-		}catch (Exception e) {
-			System.out.println(e.getMessage());
-					}		
-		return info;
-	}
-	
-	@RequestMapping(value = { "/getPatientOrderDetailsByPatientIdAndDate" }, method = RequestMethod.POST)
-	public @ResponseBody List<GetMedicalOrderDetails> getPatientOrderDetailsByPatientIdAndDate(@RequestParam("patientId")int patientId,@RequestParam("month")int month) {
-  
-		Date date = new Date(0);
-		if(month!=0)
-		{
-		   date = java.sql.Date.valueOf(LocalDate.now().minus(month, ChronoUnit.MONTHS));
 		}
-		
-		return getMedicalOrderDetailsRepository.getPatientOrderDetailsByPatientId(patientId,date);
+		return allPatientAddressList;
 	}
-	
+
+	@RequestMapping(value = { "/getAddressListOfPatient" }, method = RequestMethod.POST)
+	public @ResponseBody List<PatientAddressList> getAddressListOfPatient(@RequestParam("patientId") int patientId) {
+		return patientAddressListRepository.getPatientAddress(patientId);
+	}
+
+	@RequestMapping(value = { "/deletePatientAddressList" }, method = RequestMethod.POST)
+	public @ResponseBody List<PatientAddressList> deletePatientAddressList(@RequestParam("addressId") int addressId,
+			@RequestParam("patientId") int patientId) {
+		List<PatientAddressList> allPatientAddressList = null;
+		int res = 0;
+
+		try {
+
+			res = patientAddressListRepository.deleteAddress(addressId);
+			if (res > 0) {
+				allPatientAddressList = patientAddressListRepository.getPatientAddress(patientId);
+
+			}
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return allPatientAddressList;
+	}
+
+	@RequestMapping(value = { "/deleteCartItem" }, method = RequestMethod.POST)
+	public @ResponseBody Info deleteCartItem(@RequestParam("cartId") int cartId) {
+		Info info = new Info();
+		int res = 0;
+
+		try {
+
+			res = patientCartRepository.deleteCartItem(cartId);
+			if (res > 0) {
+				info.setError(false);
+				info.setMessage("success");
+
+			} else {
+				info.setError(true);
+				info.setMessage("failed");
+			}
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return info;
+	}
+
+	@RequestMapping(value = { "/cancelOrder" }, method = RequestMethod.POST)
+	public @ResponseBody Info cancelOrder(@RequestParam("medicalRequestId") int medicalRequestId) {
+		Info info = new Info();
+		int res = 0;
+
+		try {
+
+			res = prescriptionToMedicalRepository.updateMedicineOrderDeliveredStatus(medicalRequestId, 3);
+			if (res > 0) {
+				info.setError(false);
+				info.setMessage("success");
+
+			} else {
+				info.setError(true);
+				info.setMessage("failed");
+			}
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return info;
+	}
+
+	@RequestMapping(value = { "/getPatientOrderDetailsByPatientIdAndDate" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetMedicalOrderDetails> getPatientOrderDetailsByPatientIdAndDate(
+			@RequestParam("patientId") int patientId, @RequestParam("month") int month) {
+
+		Date date = new Date(0);
+		if (month != 0) {
+			date = java.sql.Date.valueOf(LocalDate.now().minus(month, ChronoUnit.MONTHS));
+		}
+
+		return getMedicalOrderDetailsRepository.getPatientOrderDetailsByPatientId(patientId, date);
+	}
+
 	@RequestMapping(value = { "/getPatientAllOrderDetailsByPatientId" }, method = RequestMethod.POST)
-	public @ResponseBody List<GetMedicalOrderDetails> getPatientAllOrderDetailsByPatientId(@RequestParam("patientId")int patientId) {
-  
-		
+	public @ResponseBody List<GetMedicalOrderDetails> getPatientAllOrderDetailsByPatientId(
+			@RequestParam("patientId") int patientId) {
+
 		return getMedicalOrderDetailsRepository.getPatientAllOrderDetailsByPatientId(patientId);
 	}
-	
+
 	@RequestMapping(value = { "/getPatientOrderDetailsByRequestId" }, method = RequestMethod.POST)
-	public @ResponseBody GetMedicalOrderDetails getPatientOrderDetailsByRequestId(@RequestParam("requestId")int requestId) {
-  
-		
+	public @ResponseBody GetMedicalOrderDetails getPatientOrderDetailsByRequestId(
+			@RequestParam("requestId") int requestId) {
+
 		return getMedicalOrderDetailsRepository.getPatientOrderDetailsByRequestId(requestId);
 	}
-	
-	
-	
-	
+
 	@RequestMapping(value = { "/getPatientPaymentConcultingDetails" }, method = RequestMethod.POST)
-	public @ResponseBody Info getPatientPaymentConcultingDetails(@RequestParam("appointId")int appointId) {
-		
-		AppointmentDetails appointmentDetails=appointmentDetailsRepository.findByAppointId(appointId);
-		Info info=new Info();
-		if(appointmentDetails.getPaymentStatus()==1) {
-			
+	public @ResponseBody Info getPatientPaymentConcultingDetails(@RequestParam("appointId") int appointId) {
+
+		AppointmentDetails appointmentDetails = appointmentDetailsRepository.findByAppointId(appointId);
+		Info info = new Info();
+		if (appointmentDetails.getPaymentStatus() == 1) {
+
 			info.setMessage("Payment Successfull");
 		}
-		
+
 		return info;
 	}
-	
+
 	@RequestMapping(value = { "/getDoctorAppointmentCountDetails" }, method = RequestMethod.POST)
-	public @ResponseBody DoctorAppointmentCount getDoctorAppointmentCountDetails(@RequestParam("doctorId")int doctorId,@RequestParam("appDate")String appDate) {
-  
-		
+	public @ResponseBody DoctorAppointmentCount getDoctorAppointmentCountDetails(@RequestParam("doctorId") int doctorId,
+			@RequestParam("appDate") String appDate) {
+
 		return doctorAppointmentCountRepository.getAppointmentCount(doctorId, appDate);
 	}
-	
-	
+
 	@RequestMapping(value = { "/getDoctorCollectionAndReportDetails" }, method = RequestMethod.POST)
-	public @ResponseBody DoctorCollectionAndReportDetail getDoctorCollectionAndReportDetails(@RequestParam("doctorId")int doctorId,@RequestParam("appDate")String appDate) {
-  
-		
+	public @ResponseBody DoctorCollectionAndReportDetail getDoctorCollectionAndReportDetails(
+			@RequestParam("doctorId") int doctorId, @RequestParam("appDate") String appDate) {
+
 		return doctorCollectionAndReportDetailRepository.getCollectionAndReportDetail(doctorId, appDate);
 	}
-	
-	
+
 	@RequestMapping(value = { "/getLastThirtyDaysAppointment" }, method = RequestMethod.POST)
-	public @ResponseBody List<DoctorAppOfLastThirtyDays> getLastThirtyDaysAppointment(@RequestParam("doctorId")int doctorId) {
-  
-		int month=1;
+	public @ResponseBody List<DoctorAppOfLastThirtyDays> getLastThirtyDaysAppointment(
+			@RequestParam("doctorId") int doctorId) {
+
+		int month = 1;
 		Date date = new Date(0);
-		
+
 		date = java.sql.Date.valueOf(LocalDate.now().minus(month, ChronoUnit.MONTHS));
-		
-		return doctorAppOfLastThirtyDaysRepository.getLastThirtyDaysAppointment(doctorId,date);
+
+		return doctorAppOfLastThirtyDaysRepository.getLastThirtyDaysAppointment(doctorId, date);
 	}
-	
-	
+
 	@RequestMapping(value = { "/getPharmacyDayOrderDetails" }, method = RequestMethod.POST)
-	public @ResponseBody PharmacyDayOrderDetails getPharmacyDayOrderDetails(@RequestParam("medicald")int medicald,@RequestParam("appDate")String appDate) {
-  
-		
+	public @ResponseBody PharmacyDayOrderDetails getPharmacyDayOrderDetails(@RequestParam("medicald") int medicald,
+			@RequestParam("appDate") String appDate) {
+
 		return pharmacyDayOrderDetailsRepository.getPharmacyOrderDetails(medicald, appDate);
 	}
-	
+
 	@RequestMapping(value = { "/getPatientDoctorConsultDetails" }, method = RequestMethod.POST)
-	public @ResponseBody ConsultingDetails getPatientDoctorConsultDetails(@RequestParam("meetId")int meetId) {
-  
-		
+	public @ResponseBody ConsultingDetails getPatientDoctorConsultDetails(@RequestParam("meetId") int meetId) {
+
 		return consultingDetailsRepository.getPatientDoctorConsultedDetails(meetId);
 	}
+
 	@RequestMapping(value = { "/getAppointmentDetailsByAppointId" }, method = RequestMethod.POST)
-	public @ResponseBody AppointmentDetails getAppointmentDetailsByAppointId(@RequestParam("appointId")int appointId) {
-  
-		
+	public @ResponseBody AppointmentDetails getAppointmentDetailsByAppointId(@RequestParam("appointId") int appointId) {
+
 		return appointmentDetailsRepository.findByAppointId(appointId);
 	}
 }
