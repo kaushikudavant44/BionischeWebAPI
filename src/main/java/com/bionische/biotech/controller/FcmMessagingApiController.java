@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.FcmNotification;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.PatientDetails;
@@ -30,6 +31,7 @@ public class FcmMessagingApiController {
 	PatientDetailsRepository patientDetailsRepository;
 	@Autowired
 	DoctorDetailsRepository doctorDetailsRepository;
+ 
 
 	String androidFcmKey = "AAAA1rouwjc:APA91bFNBiVkWLcIgrtQBHrssxBBPfMBZgmwS6KVQ5AlrMpH1UYHU9wYn_rQqC0_W1-nN6yOO_igWzzzCUHRV6enWaa6-LUV9YVOiXyEAQLDixXZQ9TcbqxO637LNTDVt2fJ3Ale1lSh";
 	String androidFcmUrl = "https://fcm.googleapis.com/fcm/send";
@@ -116,6 +118,44 @@ public class FcmMessagingApiController {
 		return info;
 	}
 
+	//Doctor to doctor video call
+	
+	
+	
+	@RequestMapping(value = { "/sendVideoCallToDoctor" }, method = RequestMethod.POST)
+	public @ResponseBody Info sendVideoCallToDoctor(@RequestBody FcmNotification fcmNotification) {
+
+		Info info = new Info();
+
+		info.setError(true);
+		System.out.println("sendVideoCallToDoctor");
+
+	 
+
+			DoctorDetails doctorDetails = doctorDetailsRepository.findByDoctorId(fcmNotification.getData().getId());
+			int toDeviceType = doctorDetails.getInt1();
+			if (toDeviceType == 0)
+				fcmNotification.getData().setToDeviceType(1);
+			else
+				fcmNotification.getData().setToDeviceType(2);
+			fcmNotification.setTo(doctorDetails.getWebToken());
+			info = sendToAndroidUser(fcmNotification);
+			fcmNotification.setTo(doctorDetails.getString1());
+	 
+
+		if (fcmNotification.getData().getToDeviceType() == 1 || fcmNotification.getData().getToDeviceType() == 3) {
+			info = sendToAndroidUser(fcmNotification);
+
+		} else if (fcmNotification.getData().getToDeviceType() == 2) {
+			// IOS
+		}
+
+		return info;
+	}
+
+	
+	
+	
 	Info sendToAndroidUser(FcmNotification fcmNotification) {
 		 
 
@@ -148,5 +188,7 @@ public class FcmMessagingApiController {
 		System.out.println("info " + info.toString());
 		return info;
 	}
+	
+	
 
 }
