@@ -70,5 +70,13 @@ public interface ConsultingDetailsRepository extends JpaRepository<ConsultingDet
 
 	@Query(value="SELECT m.meet_id, m.doctor_id,h.contact_no,h.email_id,p.email, m.patient_id,h.address, CONCAT(p.f_name,' ',p.l_name) AS patient_name, h.hospital_name,CONCAT(d.f_name,' ',d.l_name) AS f_name, m.time, m.date, m.patient_problem,m.note, m.discussion, m.int_2,d.qualification,d.signature FROM patient_details p,hospital_details h, doctor_details d,doctor_patient_meeting m WHERE  m.meet_id=:meetId AND h.hospital_id=m.int_1 AND m.doctor_id=d.doctor_id AND m.patient_id=p.patient_id ",nativeQuery=true)
 	ConsultingDetails getPatientDoctorConsultedDetails(@Param("meetId")int meetId);
+	
+	@Query(value="select m.patient_id,h.contact_no,h.email_id,p.email,CONCAT(p.f_name,' ',p.l_name) AS patient_name,h.address,m.discussion, m.int_2, m.patient_problem,m.note,m.date,m.time,m.meet_id,CONCAT(d.f_name,' ',d.l_name) AS f_name,h.hospital_name, m.doctor_id,d.qualification,d.signature FROM doctor_patient_meeting m,doctor_details d,hospital_details h,prescription_details i,patient_details p "
+			 
+	+" WHERE  m.patient_id=:patientId AND m.doctor_id=d.doctor_id AND h.hospital_id=m.int_1 AND m.patient_id=p.patient_id AND m.meet_id=i.meeting_id GROUP BY m.meet_id ORDER BY m.meet_id DESC LIMIT 10",nativeQuery=true)
+	
+	List<ConsultingDetails> getLast10ConsultingDeatils(@Param("patientId")int patientId);
+
+	
 }
   

@@ -433,7 +433,36 @@ public class ConsultingDetailsController {
 
 		return consultingList;
 	}
+	
+	
+	@RequestMapping(value = { "/getLast10ConsultingDeatils" }, method = RequestMethod.POST)
+	public @ResponseBody List getLast10ConsultingDeatils(@RequestParam("patientId") int patientId)
 
+	{
+		System.out.println("patientId:" + patientId);
+	 
+
+		List<ConsultingDetails> consultingList = new ArrayList<ConsultingDetails>();
+		Info info = new Info();
+		try {
+
+		 
+
+				consultingList = consultingDetailsRepository.getLast10ConsultingDeatils(patientId);
+
+			 
+
+			System.out.println("Consulting List " + consultingList.toString());
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+
+		}
+
+		return consultingList;
+	}
+	
 	@RequestMapping(value = { "/updateAppointmentPayment" }, method = RequestMethod.POST)
 	public @ResponseBody Info updateAppointmentPayment(@RequestParam("appointId") int appointId,
 			@RequestParam("paymentStatus") int paymentStatus, @RequestParam("amount") float amount,
