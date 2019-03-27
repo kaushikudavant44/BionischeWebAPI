@@ -314,7 +314,7 @@ public class DoctorPatientMeetingApiConrtoller {
 		Date date = new Date(0);
 
 		date = java.sql.Date.valueOf(LocalDate.now().minus(month, ChronoUnit.MONTHS));
-
+		System.out.println(doctorAppOfLastThirtyDaysRepository.getLastThirtyDaysAppointment(doctorId, date));
 		return doctorAppOfLastThirtyDaysRepository.getLastThirtyDaysAppointment(doctorId, date);
 	}
 

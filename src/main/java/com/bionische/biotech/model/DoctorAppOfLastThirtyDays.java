@@ -9,19 +9,22 @@ import javax.persistence.Id;
 @Entity
 public class DoctorAppOfLastThirtyDays {
 	
+	
+	@Column(name="app_date")
+	private String appDate;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="app_date")
-	private int appDate;
-	
 	@Column(name="total_app")
 	private int totalApp;
 
-	public int getAppDate() {
+	
+
+	public String getAppDate() {
 		return appDate;
 	}
 
-	public void setAppDate(int appDate) {
+	public void setAppDate(String appDate) {
 		this.appDate = appDate;
 	}
 
@@ -37,6 +40,8 @@ public class DoctorAppOfLastThirtyDays {
 	public String toString() {
 		return "DoctorAppOfLastThirtyDays [appDate=" + appDate + ", totalApp=" + totalApp + "]";
 	}
+
+	
 	
 	 
 
