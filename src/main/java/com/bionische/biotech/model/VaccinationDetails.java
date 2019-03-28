@@ -29,7 +29,7 @@ public class VaccinationDetails {
 	
 	@Column(name="string_2")
 	private String string2;
-
+ 
 	@Column(name="vaxination_age_name")
 	private String vaxinationAgeName;
 	
