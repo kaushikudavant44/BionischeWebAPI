@@ -32,7 +32,7 @@ public class VaccinationDetails {
  
 	@Column(name="vaxination_age_name")
 	private String vaxinationAgeName;
-	
+	 
 	
 	public String getVaxinationAgeName() {
 		return vaxinationAgeName;
