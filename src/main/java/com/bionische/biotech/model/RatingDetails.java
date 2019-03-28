@@ -12,6 +12,8 @@ import javax.persistence.TemporalType;
 
 import org.springframework.data.annotation.CreatedDate;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 @Table(name="rating_details")
 public class RatingDetails {
@@ -55,7 +57,7 @@ public class RatingDetails {
 	private String createDate;
     
 	public String getCreateDate() {
-		return createDate;
+		return DateConverter.convertToDMY(createDate);
 	}
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;

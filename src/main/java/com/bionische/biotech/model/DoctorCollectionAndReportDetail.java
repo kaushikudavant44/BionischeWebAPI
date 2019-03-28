@@ -14,6 +14,7 @@ public class DoctorCollectionAndReportDetail {
 	@Column(name="unread_report")
 	private int unreadReport;
 	
+	
 	@Column(name="total_collection")
 	private int totalCollection;
 

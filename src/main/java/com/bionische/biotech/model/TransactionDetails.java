@@ -13,6 +13,8 @@ import javax.persistence.TemporalType;
 
 import org.springframework.data.annotation.CreatedDate;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 @Table(name="transaction")
 public class TransactionDetails {
@@ -204,7 +206,7 @@ public class TransactionDetails {
 	}
 
 	public String getPaymentDate() {
-		return paymentDate;
+		return DateConverter.convertToDMY(paymentDate);
 	}
 
 	public void setPaymentDate(String paymentDate) {

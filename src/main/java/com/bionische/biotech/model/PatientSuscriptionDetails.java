@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.bionische.biotech.Common.DateConverter;
+
 
 @Entity
 @Table(name="t_patient_suscription_details")
@@ -104,7 +106,7 @@ public class PatientSuscriptionDetails {
 	}
 
 	public String getPaymentDate() {
-		return paymentDate;
+		return DateConverter.convertToDMY(paymentDate);
 	}
 
 	public void setPaymentDate(String paymentDate) {

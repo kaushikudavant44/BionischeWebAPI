@@ -31,6 +31,7 @@ public class GetConsultingPaymentDetails {
 	@Column(name="payment_status")
     private int paymentStatus;
 	
+	
 	@Column(name="txn_id")
     private String txnId;
 
@@ -45,6 +46,8 @@ public class GetConsultingPaymentDetails {
 	@Column(name="payment_date")
     private String paymentDate;
 
+	
+	
 
 	public int getAppointId() {
 		return appointId;

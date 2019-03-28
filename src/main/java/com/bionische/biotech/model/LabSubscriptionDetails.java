@@ -10,6 +10,8 @@ import javax.persistence.Table;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 @Table(name="t_lab_subscription_details")
 @EntityListeners(AuditingEntityListener.class)
@@ -132,7 +134,7 @@ public class LabSubscriptionDetails {
 	}
 
 	public String getPaymentDate() {
-		return paymentDate;
+		return DateConverter.convertToDMY(paymentDate);
 	}
 
 	public void setPaymentDate(String paymentDate) {

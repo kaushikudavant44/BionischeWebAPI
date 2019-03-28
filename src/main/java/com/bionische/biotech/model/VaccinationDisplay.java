@@ -20,10 +20,8 @@ private int vaxinationAgeId;
 	
 	
 	List<VaccinationDetailss> vaccinationDetailsList;
-	
-	
 
-	
+
 
 	public List<VaccinationDetailss> getVaccinationDetailsList() {
 		return vaccinationDetailsList;

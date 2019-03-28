@@ -6,6 +6,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.bionische.biotech.Common.DateConverter;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name="t_doctor_leaves")
 public class DoctorLeavesDetails {
@@ -15,6 +18,7 @@ public class DoctorLeavesDetails {
 	private int leaveId;
 	
 	private int doctorId;
+
 	
 	private String date;
 
@@ -35,7 +39,9 @@ public class DoctorLeavesDetails {
 	}
 
 	public String getDate() {
-		return date;
+		
+		
+		return DateConverter.convertToDMY(date);
 	}
 
 	public void setDate(String date) {

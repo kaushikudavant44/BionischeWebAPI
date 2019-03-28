@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 @Table(name="stemcell_patient")
 
@@ -133,7 +135,7 @@ public class StemcellDetails {
 	}
 
 	public String getBirthDate() {
-		return birthDate;
+		return DateConverter.convertToDMY(birthDate);
 	}
 
 	public void setBirthDate(String birthDate) {

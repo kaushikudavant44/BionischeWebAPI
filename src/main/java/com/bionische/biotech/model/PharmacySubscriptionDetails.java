@@ -15,6 +15,8 @@ import javax.persistence.TemporalType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 @Table(name="t_pharmacy_subscription_details")
 @EntityListeners(AuditingEntityListener.class)
@@ -102,7 +104,7 @@ public class PharmacySubscriptionDetails {
 	}
 
 	public String getPackageExpDate() {
-		return packageExpDate;
+		return DateConverter.convertToDMY(packageExpDate);
 	}
 
 	public void setPackageExpDate(String packageExpDate) {
@@ -138,7 +140,7 @@ public class PharmacySubscriptionDetails {
 	}
 
 	public String getPaymentDate() {
-		return paymentDate;
+		return DateConverter.convertToDMY(paymentDate);
 	}
 
 	public void setPaymentDate(String paymentDate) {

@@ -14,6 +14,8 @@ import javax.persistence.TemporalType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 @Table(name="m_package_offers")
 public class PackageOffers {
@@ -103,7 +105,7 @@ public class PackageOffers {
 	}
 
 	public String getStartDate() {
-		return startDate;
+		return DateConverter.convertToDMY(startDate);
 	}
 
 	public void setStartDate(String startDate) {
@@ -111,7 +113,7 @@ public class PackageOffers {
 	}
 
 	public String getEndDate() {
-		return endDate;
+		return DateConverter.convertToDMY(endDate);
 	}
 
 	public void setEndDate(String endDate) {

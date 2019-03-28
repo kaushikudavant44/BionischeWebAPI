@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 @Table(name="priscription_bill")
 public class SubmitPrescBill {
@@ -117,7 +119,7 @@ public class SubmitPrescBill {
 	}
 
 	public String getBillDate() {
-		return billDate;
+		return DateConverter.convertToDMY(billDate);
 	}
 
 	public void setBillDate(String billDate) {

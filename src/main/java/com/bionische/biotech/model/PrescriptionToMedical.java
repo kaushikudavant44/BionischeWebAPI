@@ -18,6 +18,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.bionische.biotech.Common.DateConverter;
+
 
 @Entity
 @Table(name="prescription_to_medical")
@@ -337,7 +339,7 @@ public class PrescriptionToMedical {
 
 
 	public String getPaymentDate() {
-		return paymentDate;
+		return DateConverter.convertToDMY(paymentDate);
 	}
 
 

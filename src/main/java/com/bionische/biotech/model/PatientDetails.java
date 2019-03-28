@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 @Table(name="patient_details")
 public class PatientDetails {
@@ -199,7 +201,7 @@ public class PatientDetails {
 	}
 
 	public String getRegDate() {
-		return regDate;
+		return DateConverter.convertToDMY(regDate);
 	}
 
 	public void setRegDate(String regDate) {
@@ -207,7 +209,7 @@ public class PatientDetails {
 	}
 
 	public String getBirthDate() {
-		return birthDate;
+		return DateConverter.convertToDMY(birthDate);
 	}
 
 	public void setBirthDate(String birthDate) {

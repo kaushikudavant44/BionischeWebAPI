@@ -24,8 +24,8 @@ public class MedicalDetails {
 	@Column(name="city_id")
     private int cityId;
 	
-	
-	
+
+
 	@Column(name="medical_name")
     private String medicalName;
 		

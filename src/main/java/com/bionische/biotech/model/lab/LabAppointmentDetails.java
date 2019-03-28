@@ -8,6 +8,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 @Table(name="t_lab_appointment_details")
 public class LabAppointmentDetails {
@@ -120,7 +122,7 @@ public class LabAppointmentDetails {
 	}
 
 	public String getLabAppDate() {
-		return labAppDate;
+		return DateConverter.convertToDMY(labAppDate);
 	}
 
 	public void setLabAppDate(String labAppDate) {
