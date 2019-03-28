@@ -10,6 +10,8 @@ import javax.persistence.Id;
 
 import org.springframework.data.annotation.CreatedDate;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 public class GetPharmacyPaymentDetails {
 
@@ -77,7 +79,7 @@ public class GetPharmacyPaymentDetails {
 	 
 
 	public String getOrderDate() {
-		return orderDate;
+		return DateConverter.convertToDMY(orderDate);
 	}
 
 	public void setOrderDate(String orderDate) {
@@ -157,7 +159,7 @@ public class GetPharmacyPaymentDetails {
 	}
 
 	public String getPaymentDate() {
-		return paymentDate;
+		return DateConverter.convertToDMY(paymentDate);
 	}
 
 	public void setPaymentDate(String paymentDate) {

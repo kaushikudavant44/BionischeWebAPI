@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 @Table(name="doc_available_time")
 public class DocAvailableTime {
@@ -52,7 +54,7 @@ public class DocAvailableTime {
 	}
 
 	public String getDate() {
-		return date;
+		return DateConverter.convertToDMY(date);
 	}
 
 	public void setDate(String date) {

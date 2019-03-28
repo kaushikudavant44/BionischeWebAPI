@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 @Table(name="doctor_appointment")
 
@@ -115,7 +117,7 @@ public class AppointmentDetails {
 		this.time = time;
 	}
 	public String getDate() {
-		return date;
+		return DateConverter.convertToDMY(date);
 	}
 	public void setDate(String date) {
 		this.date = date;
@@ -201,7 +203,7 @@ public class AppointmentDetails {
 		this.amount = amount;
 	}
 	public String getPaymentDate() {
-		return paymentDate;
+		return DateConverter.convertToDMY(paymentDate);
 	}
 	public void setPaymentDate(String paymentDate) {
 		this.paymentDate = paymentDate;

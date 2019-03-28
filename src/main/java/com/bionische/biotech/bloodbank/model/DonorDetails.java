@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 @Table(name="donor_details")
 public class DonorDetails {
@@ -33,7 +35,7 @@ private String string1;
 	private String date;
 		
 	public String getDate() {
-		return date;
+		return DateConverter.convertToDMY(date);
 	}
 
 	public void setDate(String date) {

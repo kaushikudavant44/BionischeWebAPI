@@ -6,19 +6,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 public class LabAppOfLastThirtyDays {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="app_date")
-	private String appDate;
-	
 	@Column(name="total_app")
 	private int totalApp;
+	
+	@Column(name="app_date")
+	private String appDate;
 
 	public String getAppDate() {
-		return appDate;
+		return DateConverter.convertToDMY(appDate);
 	}
 
 	public void setAppDate(String appDate) {

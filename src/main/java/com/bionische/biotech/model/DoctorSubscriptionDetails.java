@@ -16,6 +16,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 @Table(name="t_doctor_subscription_details")
 @EntityListeners(AuditingEntityListener.class)
@@ -43,7 +45,6 @@ public class DoctorSubscriptionDetails {
 	private String orderId;
 	
 	@Column(name = "created_date")
-	 
 	private String createdDate;
 	
 	@Column(name="package_exp_date")
@@ -102,7 +103,7 @@ public class DoctorSubscriptionDetails {
 	}
 
 	public String getPackageExpDate() {
-		return packageExpDate;
+		return DateConverter.convertToDMY(packageExpDate);
 	}
 
 	public void setPackageExpDate(String packageExpDate) {
@@ -121,7 +122,7 @@ public class DoctorSubscriptionDetails {
 
 	 
 	public String getCreatedDate() {
-		return createdDate;
+		return DateConverter.convertToDMY(createdDate);
 	}
 
 	public void setCreatedDate(String createdDate) {

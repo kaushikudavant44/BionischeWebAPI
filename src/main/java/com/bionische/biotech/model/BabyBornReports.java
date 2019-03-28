@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 @Table(name="baby_born_reports")
 public class BabyBornReports {
@@ -107,7 +109,7 @@ public class BabyBornReports {
 
 
 	public String getDob() {
-		return dob;
+		return DateConverter.convertToDMY(dob);
 	}
 
 

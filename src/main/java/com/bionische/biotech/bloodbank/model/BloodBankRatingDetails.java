@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.bionische.biotech.Common.DateConverter;
+
 
 @Entity
 @Table(name="bloodbankrating_details")
@@ -111,7 +113,7 @@ public void setDelStatus(int delStatus) {
 
 
 public String getDate() {
-	return date;
+	return DateConverter.convertToDMY(date);
 }
 
 

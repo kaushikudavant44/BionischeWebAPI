@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import com.bionische.biotech.Common.DateConverter;
 @Entity
 @Table(name="doctor_patient_meeting")
 public class DoctorPatientMeeting {
@@ -99,7 +101,7 @@ public class DoctorPatientMeeting {
 	}
 
 	public String getDate() {
-		return date;
+		return DateConverter.convertToDMY(date);
 	}
 
 	public void setDate(String date) {

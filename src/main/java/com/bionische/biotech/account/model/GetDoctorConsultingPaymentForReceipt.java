@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import com.bionische.biotech.Common.DateConverter;
 @Entity
 public class GetDoctorConsultingPaymentForReceipt {
 
@@ -71,7 +73,7 @@ public class GetDoctorConsultingPaymentForReceipt {
 	}
 
 	public String getPaymentDate() {
-		return paymentDate;
+		return DateConverter.convertToDMY(paymentDate);
 	}
 
 	public void setPaymentDate(String paymentDate) {

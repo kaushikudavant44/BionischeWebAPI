@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 public class GetPatientBornReport {
 
@@ -118,7 +120,7 @@ public class GetPatientBornReport {
 
 
 	public String getDob() {
-		return dob;
+		return DateConverter.convertToDMY(dob);
 	}
 
 

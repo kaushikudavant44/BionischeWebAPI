@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 public class GetMedicalOrderDetails {
 
@@ -81,7 +83,7 @@ public class GetMedicalOrderDetails {
 	
 	
 	public String getPaymentDate() {
-		return paymentDate;
+		return DateConverter.convertToDMY(paymentDate);
 	}
 
 	public void setPaymentDate(String paymentDate) {
@@ -121,7 +123,7 @@ public class GetMedicalOrderDetails {
 	}
 
 	public String getLastModifiedDate() {
-		return lastModifiedDate;
+		return DateConverter.convertToDMY(lastModifiedDate);
 	}
 
 	public void setLastModifiedDate(String lastModifiedDate) {
@@ -129,7 +131,7 @@ public class GetMedicalOrderDetails {
 	}
 
 	public String getOrderDate() {
-		return orderDate;
+		return DateConverter.convertToDMY(orderDate);
 	}
 
 	public void setOrderDate(String orderDate) {

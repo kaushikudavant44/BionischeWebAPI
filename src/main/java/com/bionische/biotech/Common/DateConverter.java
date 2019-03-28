@@ -17,9 +17,12 @@ public class DateConverter {
 	public static String convertToYMD(String date) {
 		
 		String convertedDate=null;
+		if(date!=null) {
 		try {
 			SimpleDateFormat ymdSDF = new SimpleDateFormat("yyyy-MM-dd");
 			SimpleDateFormat dmySDF = new SimpleDateFormat("dd-MM-yyyy");
+			
+			
 			Date dmyDate = dmySDF.parse(date);
 			
 			convertedDate=ymdSDF.format(dmyDate);
@@ -28,7 +31,7 @@ public class DateConverter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		}
 		return convertedDate;
 
 	}
@@ -37,15 +40,37 @@ public static String convertToDMY(String date) {
 		
 		String convertedDate=null;
 		try {
-			SimpleDateFormat ymdSDF = new SimpleDateFormat("yyyy-mm-dd");
-			SimpleDateFormat ymdSDF2 = new SimpleDateFormat("yyyy-mm-dd");
-
 			
-			SimpleDateFormat dmySDF = new SimpleDateFormat("dd-mm-yyyy");
+			if (date.matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")) {
+	               
+		        System.out.println("date format is y-m-d ");
+		        
+		        SimpleDateFormat ymdSDF2 = new SimpleDateFormat("yyyy-MM-dd");
 
-			Date ymdDate = ymdSDF2.parse(date);
+				
+				SimpleDateFormat dmySDF = new SimpleDateFormat("dd-MM-yyyy");
+
+				Date ymdDate = ymdSDF2.parse(date);
+				
+				convertedDate=dmySDF.format(ymdDate);
+		            
+		        }else {
+		            System.out.println("date format is   y-m-d H:m:s ");
+
+		            
+		            SimpleDateFormat ymdSDF2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+					
+					SimpleDateFormat dmySDF = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+					Date ymdDate = ymdSDF2.parse(date);
+					
+					convertedDate=dmySDF.format(ymdDate);
+		            
+		        }
 			
-			convertedDate=dmySDF.format(ymdDate);
+			SimpleDateFormat ymdSDF = new SimpleDateFormat("yyyy-MM-dd");
+			
 			
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -60,7 +85,7 @@ public static java.sql.Date convertToSqlDate(String date) {
 		
 		java.sql.Date convertedDate=null;
 		try {
-			SimpleDateFormat ymdSDF = new SimpleDateFormat("yyyy-mm-dd");
+			SimpleDateFormat ymdSDF = new SimpleDateFormat("yyyy-MM-dd");
 			SimpleDateFormat dmySDF = new SimpleDateFormat("dd-MM-yyyy");
 
 			Date dmyDate = dmySDF.parse(date);

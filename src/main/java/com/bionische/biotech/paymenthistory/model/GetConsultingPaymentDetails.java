@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 public class GetConsultingPaymentDetails {
 
@@ -31,7 +33,6 @@ public class GetConsultingPaymentDetails {
 	@Column(name="payment_status")
     private int paymentStatus;
 	
-	
 	@Column(name="txn_id")
     private String txnId;
 
@@ -46,8 +47,6 @@ public class GetConsultingPaymentDetails {
 	@Column(name="payment_date")
     private String paymentDate;
 
-	
-	
 
 	public int getAppointId() {
 		return appointId;
@@ -142,7 +141,7 @@ public class GetConsultingPaymentDetails {
 
 
 	public String getPaymentDate() {
-		return paymentDate;
+		return DateConverter.convertToDMY(paymentDate);
 	}
 
 

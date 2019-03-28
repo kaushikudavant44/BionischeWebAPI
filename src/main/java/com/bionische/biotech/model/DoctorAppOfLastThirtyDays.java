@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 public class DoctorAppOfLastThirtyDays {
 	
@@ -21,7 +23,7 @@ public class DoctorAppOfLastThirtyDays {
 	
 
 	public String getAppDate() {
-		return appDate;
+		return DateConverter.convertToDMY(appDate);
 	}
 
 	public void setAppDate(String appDate) {

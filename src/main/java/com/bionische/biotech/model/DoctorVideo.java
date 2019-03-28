@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.bionische.biotech.Common.DateConverter;
+
 
 @Entity
 @Table(name="video_calldetails")
@@ -101,7 +103,7 @@ public class DoctorVideo {
 	 * @return the datetime
 	 */
 	public String getDatetime() {
-		return datetime;
+		return DateConverter.convertToDMY(datetime);
 	}
 	/**
 	 * @param datetime the datetime to set

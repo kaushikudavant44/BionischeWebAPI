@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 @Table(name="t_pharmacy_prescription_receipt")
 public class PharmacyPrescriptionReceipt {
@@ -57,7 +59,7 @@ public class PharmacyPrescriptionReceipt {
 	}
 
 	public String getDate() {
-		return date;
+		return DateConverter.convertToDMY(date);
 	}
 
 	public void setDate(String date) {
@@ -67,7 +69,7 @@ public class PharmacyPrescriptionReceipt {
  
 
 	public String getFromDate() {
-		return fromDate;
+		return DateConverter.convertToDMY(fromDate);
 	}
 
 	public void setFromDate(String fromDate) {
@@ -75,7 +77,7 @@ public class PharmacyPrescriptionReceipt {
 	}
 
 	public String getToDate() {
-		return toDate;
+		return DateConverter.convertToDMY(toDate);
 	}
 
 	public void setToDate(String toDate) {
@@ -115,7 +117,7 @@ public class PharmacyPrescriptionReceipt {
 	}
 
 	public String getCreatedDate() {
-		return createdDate;
+		return DateConverter.convertToDMY(createdDate);
 	}
 
 	public void setCreatedDate(String createdDate) {

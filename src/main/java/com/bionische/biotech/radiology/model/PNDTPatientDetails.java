@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
 @Table(name = "pndt_patient_details")
 public class PNDTPatientDetails {
@@ -285,7 +287,7 @@ public class PNDTPatientDetails {
 	}
 
 	public String getPregWomenObtainDate() {
-		return pregWomenObtainDate;
+		return DateConverter.convertToDMY(pregWomenObtainDate);
 	}
 
 	public void setPregWomenObtainDate(String pregWomenObtainDate) {

@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.bionische.biotech.Common.DateConverter;
+
 @Entity
  
 public class LabSuscriptionReceipt {
@@ -97,7 +99,7 @@ public class LabSuscriptionReceipt {
 	}
 
 	public String getCreatedDate() {
-		return createdDate;
+		return DateConverter.convertToDMY(createdDate);
 	}
 
 	public void setCreatedDate(String createdDate) {

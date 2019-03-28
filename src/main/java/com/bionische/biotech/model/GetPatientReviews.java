@@ -3,6 +3,8 @@ package com.bionische.biotech.model;
 import java.util.Date;
 import java.util.List;
 
+import com.bionische.biotech.Common.DateConverter;
+
 public class GetPatientReviews {
 	
 	private int patientId;
@@ -14,7 +16,7 @@ public class GetPatientReviews {
 	private String createDate;
 
 	public String getCreateDate() {
-		return createDate;
+		return DateConverter.convertToDMY(createDate);
 	}
 
 	public void setCreateDate(String createDate) {
