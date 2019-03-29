@@ -39,6 +39,7 @@ public class DateConverter {
 public static String convertToDMY(String date) {
 		
 		String convertedDate=null;
+		if(date!=null) {
 		try {
 			
 			if (date.matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")) {
@@ -75,6 +76,7 @@ public static String convertToDMY(String date) {
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
 		}
 
 		return convertedDate;
