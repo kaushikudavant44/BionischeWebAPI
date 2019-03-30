@@ -207,7 +207,7 @@ System.out.println(e.getMessage());
 
 	@RequestMapping(value = { "/labLoginProcess" }, method = RequestMethod.POST)
 	public @ResponseBody LabLogin labLoginProcess(@RequestParam("userName") String userName,
-			@RequestParam("password") String password) {
+			@RequestParam("password") String password,@RequestParam("token") String token) {
 
 		LabDetails labDetails = new LabDetails();
 
@@ -228,7 +228,7 @@ System.out.println(e.getMessage());
 				}
 				System.out.println(hashedPass);
 				if (labDetails.getPassword().equals(hashedPass)) {
-					labDetails.setPassword("");
+					
 					labLogin.setLabDetails(labDetails);
 					info.setError(false);
 					info.setMessage("Login Successfull");
@@ -244,12 +244,13 @@ System.out.println(e.getMessage());
 						labSuscriptionInfo.setError(false);
 						labSuscriptionInfo.setMessage(labSubscriptionDetailsRes.getPackageExpDate());
 						labLogin.setLabSuscriptionInfo(labSuscriptionInfo);
+						labDetailsRepository.updateLabToken(labDetails.getLabId(), token);
 					} else {
 						labSuscriptionInfo.setError(true);
 						labSuscriptionInfo.setMessage("Lab Suscription is pendding");
 						labLogin.setLabSuscriptionInfo(labSuscriptionInfo);
 					}
-
+					labDetails.setPassword("");
 				} else {
 					info.setError(true);
 					info.setMessage("Please enter valid credential");

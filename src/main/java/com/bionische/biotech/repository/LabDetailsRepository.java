@@ -84,4 +84,8 @@ public interface LabDetailsRepository extends JpaRepository<LabDetails, Integer>
 	@Query(value="SELECT l.* FROM lab_details l WHERE l.string3=:referal",nativeQuery=true)
 	LabDetails findByString3(@Param("referal")String referal);
 	
+	@Transactional
+	@Modifying
+	@Query("UPDATE LabDetails a SET a.token =:token  WHERE a.labId=:labId")
+	int updateLabToken(@Param("labId")int labId, @Param("token")String token);
 }
