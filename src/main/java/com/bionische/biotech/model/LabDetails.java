@@ -1,22 +1,150 @@
 package com.bionische.biotech.model;
+
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
-@Table(name="lab_details")
+@Table(name = "lab_details")
 public class LabDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="lab_id")
+	@Column(name = "lab_id")
 	private int labId;
-	@Column(name="city_id")
+	@Column(name = "city_id")
 	private int cityId;
-	@Column(name="state_id")
+	@Column(name = "state_id")
 	private int stateId;
+
+	@Column(name = "country_id")
+	private int countryId;
+
+	@Column(name = "user_name")
+	private String userName;
+
+	@Column(name = "password")
+	private String password;
+
+	@Column(name = "lab_name")
+	private String labName;
+
+	@Column(name = "address")
+	private String address;
+
+	@Column(name = "from_time")
+	private String fromTime;
+
+	@Column(name = "to_time")
+	private String toTime;
+
+	@Column(name = "owner")
+	private String owner;
+
+	@Column(name = "lic_no")
+	private String licenceNo;
+
+	@Column(name = "photo")
+	private String photo;
+
+	@Column(name = "del_status")
+	private int delStatus;
+
+	@Column(name = "contact")
+	private String contact;
+
+	@Column(name = "email")
+	private String email;
+
+	@Column(name = "lat")
+	private double lat;
+
+	@Column(name = "longitude")
+	private double longitude;
+
+	@Column(name = "int_1")
+	private int int1;
+
+	@Column(name = "int_2")
+	private int int2;
+
+	@Column(name = "int_3")
+	private int int3;
+
+	@Column(name = "string1")
+	private String string1;
+
+	@Column(name = "string2")
+	private String string2;
+
+	@Column(name = "string3")
+	private String string3;
+
+	@Column(name = "tests_types")
+	private String teststypes;
+	
+	@Column(name = "token")
+	private String token;
+	
+	@Column(name = "is_radiologist")
+	private int isRadiologist;
+	
+	@Column(name="created_date",updatable=false)
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreatedDate
+	private Date createDate;
+	
+	@Column(name="last_modified_date")
+	@LastModifiedDate
+	@Temporal(TemporalType.TIMESTAMP)
+	@UpdateTimestamp
+	private Date lastModifiedDate;
+	
+	
+	
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public Date getLastModifiedDate() {
+		return lastModifiedDate;
+	}
+
+	public void setLastModifiedDate(Date lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public int getIsRadiologist() {
+		return isRadiologist;
+	}
+
+	public void setIsRadiologist(int isRadiologist) {
+		this.isRadiologist = isRadiologist;
+	}
+
 	public int getStateId() {
 		return stateId;
 	}
@@ -33,75 +161,6 @@ public class LabDetails {
 		this.countryId = countryId;
 	}
 
-	@Column(name="country_id")
-	private int countryId;
-		
-	@Column(name="user_name")
-	private String userName;
-	
-	@Column(name="password")
-	private String password;
-	
-	
-		@Column(name="lab_name")
-	private String labName;
-		
-		@Column(name="address")
-	private String address;
-		
-		@Column(name="from_time")
-	private String fromTime;
-		
-		@Column(name="to_time")
-	private String toTime;
-		
-		@Column(name="owner")
-	private String owner;
-		
-		@Column(name="lic_no")
-	private String licenceNo;
-		
-		@Column(name="photo")
-	private String photo;
-		
-		@Column(name="del_status")
-	private int delStatus;
-		
-		@Column(name="contact")
-		private String contact;
-		
-		@Column(name="email")
-		private String email;
-
-		@Column(name="lat")
-		private double lat;
-		
-		@Column(name="longitude")
-		private double longitude;
-		
-		
-		
-		@Column(name="int_1")
-	private int int1;
-		
-		@Column(name="int_2")
-	private int int2;
-		
-		@Column(name="int_3")
-	private int int3;
-		
-		@Column(name="string1")
-	private String string1;
-		
-		@Column(name="string2")
-	private String string2;
-		
-		@Column(name="string3")
-	private String string3;
-		
-		@Column(name="tests_types")
-	private String teststypes;
-	
 	public int getLabId() {
 		return labId;
 	}
@@ -157,8 +216,6 @@ public class LabDetails {
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
-
-	 
 
 	public String getLicenceNo() {
 		return licenceNo;
@@ -232,10 +289,6 @@ public class LabDetails {
 		this.string3 = string3;
 	}
 
-	 
-
-	
-
 	public String getTeststypes() {
 		return teststypes;
 	}
@@ -300,13 +353,12 @@ public class LabDetails {
 				+ ", photo=" + photo + ", delStatus=" + delStatus + ", contact=" + contact + ", email=" + email
 				+ ", lat=" + lat + ", longitude=" + longitude + ", int1=" + int1 + ", int2=" + int2 + ", int3=" + int3
 				+ ", string1=" + string1 + ", string2=" + string2 + ", string3=" + string3 + ", teststypes="
-				+ teststypes + "]";
+				+ teststypes + ", token=" + token + ", isRadiologist=" + isRadiologist + ", createDate=" + createDate
+				+ ", lastModifiedDate=" + lastModifiedDate + "]";
 	}
 
 	
-	 
 
 	
-	
-	
+
 }
