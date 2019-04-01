@@ -25,7 +25,38 @@
 	</properties>
 
 	<dependencies>
-	
+	<dependency>
+    <groupId>com.itextpdf</groupId>
+    <artifactId>itextpdf</artifactId>
+    <version>5.0.6</version>
+</dependency>
+<dependency>
+    <groupId>com.itextpdf</groupId>
+    <artifactId>layout</artifactId>
+    <version>7.0.0</version>
+</dependency>
+<dependency>
+    <groupId>com.itextpdf</groupId>
+    <artifactId>kernel</artifactId>
+    <version>7.0.0</version>
+</dependency>
+<dependency>
+    <groupId>com.itextpdf</groupId>
+    <artifactId>zugferd</artifactId>
+    <version>2.0.1</version>
+</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.firebase/firebase-server-sdk -->
+<dependency>
+    <groupId>com.google.firebase</groupId>
+    <artifactId>firebase-server-sdk</artifactId>
+    <version>3.0.3</version>
+</dependency>
+		<!-- https://mvnrepository.com/artifact/com.notnoop.apns/apns -->
+<dependency>
+    <groupId>com.notnoop.apns</groupId>
+    <artifactId>apns</artifactId>
+    <version>1.0.0.Beta6</version>
+</dependency>
 		
 	<dependency>
     <groupId>org.springframework.security</groupId>
@@ -38,7 +69,11 @@
 			<version>1.9.13</version>
 		</dependency>
 		
-		
+		<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-mail</artifactId>
+    <version>2.0.1.RELEASE</version>
+</dependency>
  
 	
 		<dependency>

@@ -3,6 +3,7 @@ package com.bionische.biotech.controller;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -22,11 +23,7 @@ import com.bionische.biotech.model.DoctorCollectionAndReportDetail;
 import com.bionische.biotech.model.DoctorPatientMeeting;
 import com.bionische.biotech.model.GetCartProducts;
 import com.bionische.biotech.model.GetMedicalOrderDetails;
-import com.bionische.biotech.model.GetRatingCount;
 import com.bionische.biotech.model.Info;
-import com.bionische.biotech.model.LabNotification;
-import com.bionische.biotech.model.LabTests;
-import com.bionische.biotech.model.LabTestsList;
 import com.bionische.biotech.model.PatientAddressList;
 import com.bionische.biotech.model.PatientCart;
 import com.bionische.biotech.model.PatientDetails;
@@ -44,7 +41,6 @@ import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.PharmacyDayOrderDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionToMedicalRepository;
 import com.bionische.biotech.service.DoctorPatientMeetingService;
-import com.bionische.biotech.service.PrescriptionOrderService;
 
 @RestController
 public class DoctorPatientMeetingApiConrtoller {
@@ -308,14 +304,10 @@ public class DoctorPatientMeetingApiConrtoller {
 
 	@RequestMapping(value = { "/getLastThirtyDaysAppointment" }, method = RequestMethod.POST)
 	public @ResponseBody List<DoctorAppOfLastThirtyDays> getLastThirtyDaysAppointment(
-			@RequestParam("doctorId") int doctorId) {
+			@RequestParam("doctorId") int doctorId, @RequestParam("month")int month,@RequestParam("year")int year) {
 
-		int month = 1;
-		Date date = new Date(0);
-
-		date = java.sql.Date.valueOf(LocalDate.now().minus(month, ChronoUnit.MONTHS));
-		System.out.println(doctorAppOfLastThirtyDaysRepository.getLastThirtyDaysAppointment(doctorId, date));
-		return doctorAppOfLastThirtyDaysRepository.getLastThirtyDaysAppointment(doctorId, date);
+	 
+		return doctorAppOfLastThirtyDaysRepository.getLastThirtyDaysAppointment(doctorId, month,year);
 	}
 
 	@RequestMapping(value = { "/getPharmacyDayOrderDetails" }, method = RequestMethod.POST)
