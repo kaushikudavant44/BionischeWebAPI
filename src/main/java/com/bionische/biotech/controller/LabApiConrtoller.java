@@ -160,7 +160,7 @@ LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 		
 		try {
 			
-			labTestsListRes=labTestsRepository.findByDelStatus(0);
+			labTestsListRes=labTestsRepository.findByDelStatusAndInt1(0,0);
 			System.out.println("Test List "+labTestsListRes.toString());
 			
 			if(labTestsListRes!=null)
@@ -816,6 +816,52 @@ public @ResponseBody List<LabTests> getAllLabTypes() {
 	 List<LabTests> labList=labTypesRepository.findByDelStatus(0);
 	
 	return labList;
+}
+
+
+@RequestMapping(value = { "/getRadiologistLabTypes" }, method = RequestMethod.GET)
+public @ResponseBody List<LabTests> getRadiologistLabTypes() {
+	
+	 List<LabTests> labList=labTypesRepository.findByDelStatusAndInt1(0,1);
+	
+	return labList;
+}
+
+@RequestMapping(value = { "/getRadiologistLabTestTypes" }, method = RequestMethod.GET)
+public @ResponseBody LabTestsList getRadiologistLabTestTypes()
+{
+ 
+	LabTestsList labTestsList=new LabTestsList();
+	List<LabTests> labTestsListRes =new ArrayList<LabTests>();
+	Info info=new Info();
+ 
+	
+	try {
+		
+		labTestsListRes=labTestsRepository.findByDelStatusAndInt1(0,1);
+		System.out.println("Test List "+labTestsListRes.toString());
+		
+		if(labTestsListRes!=null)
+		{
+			labTestsList.setLabTestsList(labTestsListRes);
+			info.setError(false);
+			info.setMessage("Success");
+			labTestsList.setInfo(info);
+		}
+		else {
+			info.setError(true);
+			info.setMessage("Failed");
+			labTestsList.setInfo(info);
+			
+		}
+		
+	}catch (Exception e) {
+		System.out.println(e.getMessage());
+		info.setError(true);
+		info.setMessage("Failed");
+		labTestsList.setInfo(info);
+	}		
+	return labTestsList;
 }
 
 /** insert patient Report*/

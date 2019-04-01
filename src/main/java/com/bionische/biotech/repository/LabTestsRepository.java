@@ -12,7 +12,10 @@ import com.bionische.biotech.model.LabTests;
 
 public interface LabTestsRepository extends JpaRepository<LabTests, Integer> {
 
+	
 	List<LabTests> findByDelStatus(int delStatus);
+	
+	List<LabTests> findByDelStatusAndInt1(int delStatus,int int1);
 
 	List<LabTests> findAll();
 
