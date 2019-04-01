@@ -91,6 +91,10 @@ public class MedicalDetails {
 		 
 	@Column(name="string3")
     private String string3;
+	
+	@Column(name="token")
+    private String token;
+
 
 
 	public int getCityId() {
@@ -313,18 +317,28 @@ public class MedicalDetails {
 	}
 
 
+	public String getToken() {
+		return token;
+	}
+
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+
 	@Override
 	public String toString() {
-		return "MedicalDetails [cityId=" + cityId + ", stateId=" + stateId + ", countryId=" + countryId + ", medicalId="
-				+ medicalId + ", medicalName=" + medicalName + ", address=" + address + ", owner=" + owner
+		return "MedicalDetails [medicalId=" + medicalId + ", stateId=" + stateId + ", countryId=" + countryId
+				+ ", cityId=" + cityId + ", medicalName=" + medicalName + ", address=" + address + ", owner=" + owner
 				+ ", licenceNo=" + licenceNo + ", photo=" + photo + ", delStatus=" + delStatus + ", contact=" + contact
 				+ ", email=" + email + ", latitude=" + latitude + ", longitude=" + longitude + ", userName=" + userName
 				+ ", password=" + password + ", int1=" + int1 + ", int2=" + int2 + ", int3=" + int3 + ", string1="
-				+ string1 + ", string2=" + string2 + ", string3=" + string3 + "]";
+				+ string1 + ", string2=" + string2 + ", string3=" + string3 + ", token=" + token + "]";
 	}
-		
+
+
 	 
-	
 
 	
 	}

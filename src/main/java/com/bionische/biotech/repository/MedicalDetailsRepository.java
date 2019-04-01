@@ -62,4 +62,10 @@ public interface MedicalDetailsRepository extends JpaRepository<MedicalDetails, 
 	
 	@Query(value="SELECT m.* FROM medical_details m WHERE m.string3=:referal",nativeQuery=true)
 	MedicalDetails findByString3(@Param("referal")String referal);
+
+	 
+	@Transactional
+	@Modifying
+	@Query("UPDATE MedicalDetails a SET a.token =:token  WHERE a.medicalId=:medicalId")
+	int updateToken(@Param("medicalId")int medicalId,@Param("token")String token);
 }

@@ -12,11 +12,13 @@ import com.bionische.biotech.Common.DateConverter;
 public class DoctorAppOfLastThirtyDays {
 	
 	
-	@Column(name="app_date")
-	private String appDate;
+	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name="app_date")
+	private String appDate;
+	
 	@Column(name="total_app")
 	private int totalApp;
 

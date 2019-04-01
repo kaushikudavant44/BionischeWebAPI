@@ -39,4 +39,6 @@ public interface SendFcmNotificationService {
 	
 	public ResponseEntity<String> notifyiOSUser(String deviceToken,String title, String message,String timeStamp, int notificationType);
 	
+	public ResponseEntity<String> notificationOnWeb(String deviceToken,String title, String message, String clickAction);
+	
 }

@@ -112,7 +112,7 @@ public class MedicalApiController {
 	
 	
 	@RequestMapping(value = { "/medicalLoginProcess" }, method = RequestMethod.POST)
-	public @ResponseBody MedicalLogin medicalLoginProcess(@RequestParam("userName") String userName,@RequestParam("password") String password) {
+	public @ResponseBody MedicalLogin medicalLoginProcess(@RequestParam("userName") String userName,@RequestParam("password") String password, @RequestParam("token") String token) {
 		
 		
 		MedicalDetails medicalDetails=new MedicalDetails();
@@ -141,7 +141,7 @@ public class MedicalApiController {
 			System.out.println("List "+medicalDetails.toString());
 			if(medicalDetails.getPassword().equals(hashedPass))
 			{
-				medicalDetails.setPassword("");
+			
 				medicalLogin.setMedicalDetails(medicalDetails);
 				info.setError(false);
 				
@@ -157,6 +157,8 @@ public class MedicalApiController {
 					pharmacySuscriptionInfo.setError(false);
 					pharmacySuscriptionInfo.setMessage(pharmacySubscriptionDetailsRes.getPackageExpDate());
 					medicalLogin.setPharmacySuscriptionInfo(pharmacySuscriptionInfo);
+					medicalDetailsRepository.updateToken(medicalDetails.getMedicalId(),token);
+					medicalDetails.setPassword("");
 				}
 				else
 				{

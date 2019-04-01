@@ -38,27 +38,7 @@ public class FcmMessagingApiController {
 
 	
 	
-	@RequestMapping(value = { "/updateWebToken" }, method = RequestMethod.POST)
-	public @ResponseBody Info updateWebToken(@RequestParam("userType")int userType, @RequestParam("userId")int userId) {
-		Info info=new Info();
-		
-		if(userType==1)
-		{
-			doctorDetailsRepository.updateDoctorWebTokenByDoctorId(userId, "");
-		}
-		else if(userType==2) {
-			 patientDetailsRepository.updateWebToken(userId, "");
-		}
-		else if(userType==3) {
-			 
-		}
-		else if(userType==4) {
-			 
-		}
-		
-		return info;
-	}
-	
+
 	@RequestMapping(value = { "/sendMessageToDoctor" }, method = RequestMethod.POST)
 	public @ResponseBody Info sendMessageToDoctor(@RequestBody FcmNotification fcmNotification) {
 		RestTemplate restTemplate = new RestTemplate();

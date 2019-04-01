@@ -28,6 +28,7 @@ import com.bionische.biotech.repository.DoctorProfilePasswordRepository;
 import com.bionische.biotech.repository.DoctorSubscriptionDetailsRepository;
 import com.bionische.biotech.repository.LabDetailsRepository;
 import com.bionische.biotech.repository.LabSubscriptionDetailsRepository;
+import com.bionische.biotech.repository.MedicalDetailsRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.PatientSuscriptionDetailsRepository;
 import com.bionische.biotech.service.UpdateTokenAndDeviceTypeService;
@@ -55,6 +56,8 @@ public class LoginApiController {
 	LabSubscriptionDetailsRepository labSubscriptionDetailsRepository;
 	@Autowired
 	DoctorProfilePasswordRepository doctorProfilePasswordRepository;
+	@Autowired
+	MedicalDetailsRepository medicalDetailsRepository;
 	
 	@RequestMapping(value = { "/getPatientDetailsByIdAndUpdateToken" }, method = RequestMethod.POST)
 	public @ResponseBody PatientDetails getPatientDetailsByIdAndUpdateToken(@RequestParam("patientId") int patientId, @RequestParam("token") String token)
@@ -592,4 +595,26 @@ System.out.println(e.getMessage());
 		}
 		return info;
 	}
+	
+	@RequestMapping(value = { "/updateWebToken" }, method = RequestMethod.POST)
+	public @ResponseBody Info updateWebToken(@RequestParam("userType")int userType, @RequestParam("userId")int userId) {
+		Info info=new Info();
+		
+		if(userType==1)
+		{
+			doctorDetailsRepository.updateDoctorWebTokenByDoctorId(userId, "");
+		}
+		else if(userType==2) {
+			 patientDetailsRepository.updateWebToken(userId, "");
+		}
+		else if(userType==3) {
+			labDetailsRepository.updateLabToken(userId, "");
+		}
+		else if(userType==4) {
+			medicalDetailsRepository.updateToken(userId,"");
+		}
+		
+		return info;
+	}
+	
 }

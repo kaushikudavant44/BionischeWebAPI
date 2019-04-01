@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.Common.Constants;
 import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.insurance.model.GetInsuranceDetails;
 import com.bionische.biotech.insurance.model.GetPlanDetailsList;
@@ -849,6 +850,8 @@ public class AdminPanelController {
 			 {
 				 info.setError(false);
 				 info.setMessage("Lab DelStatus Update Successfully");
+				 LabDetails labDetails=	 labDetailsRepository.findByLabId(labId);
+				 sendFcmNotificationService.notificationOnWeb(labDetails.getToken(), "Lab Certificate Rejected ", "You are uploaded Lab certificate Rejected from Bionische please upload valid file", Constants.SITE_URL);
 			 }
 			 else 
 			 {
@@ -871,6 +874,9 @@ public class AdminPanelController {
 			 {
 				 info.setError(false);
 				 info.setMessage("Lab DelStatus Update Successfully");
+				 LabDetails labDetails=	 labDetailsRepository.findByLabId(labId);
+				 sendFcmNotificationService.notificationOnWeb(labDetails.getToken(), "Lab Certificate Accepted ", "You are uploaded Lab certificate Accepted from Bionische", Constants.SITE_URL);
+		
 			 }
 			 else 
 			 {
@@ -918,7 +924,9 @@ public class AdminPanelController {
 			 {
 				 info.setError(false);
 				 info.setMessage("medical DelStatus Update Successfully");
-				 
+				 MedicalDetails medicalDetails=medicalDetailsRepository.findByMedicalId(medicalId);
+				 sendFcmNotificationService.notificationOnWeb(medicalDetails.getToken(), "Pharmacy Certificate Rejected ", "You are uploaded Pharmacy certificate Rejected from Bionische please upload valid file", Constants.SITE_URL);
+					
 			 }
 			 else 
 			 {
@@ -941,6 +949,9 @@ public class AdminPanelController {
 			 {
 				 info.setError(false);
 				 info.setMessage("Pharmacy DelStatus Update Successfully");
+				 MedicalDetails medicalDetails=medicalDetailsRepository.findByMedicalId(medicalId);
+				 sendFcmNotificationService.notificationOnWeb(medicalDetails.getToken(), "Pharmacy Certificate Accepted ", "You are uploaded Pharmacy certificate Accept from Bionische Now you can use Application", Constants.SITE_URL);
+			
 			 }
 			 else 
 			 {

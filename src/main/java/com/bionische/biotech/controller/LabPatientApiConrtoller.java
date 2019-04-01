@@ -185,6 +185,10 @@ public class LabPatientApiConrtoller {
 		labNotification.setString1("Appointment Booked");
 		labNotification.setInt1(labAppointmentDetailsRes.getPatientId());
 		labNotificationRepository.save(labNotification);
+		String msg=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+" has booked appointment on DATE "+labAppointmentDetailsRes.getLabAppDate()+" and TIME "+appointmentTime.getTime();
+	
+		LabDetails labDetails=labDetailsRepository.findByLabId(labAppointmentDetails.getLabId());
+		sendFcmNotificationService.notificationOnWeb(labDetails.getToken(),"New Appointment Booked", msg, "");
 		}
 		return labAppointmentDetailsRes;
 		}
@@ -223,6 +227,7 @@ public class LabPatientApiConrtoller {
 				else if(status==2) {
 				patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been Cancel");		
 				patientNotification.setString1("Appointment Cancel");
+				
 				}
 				else if(status==3) {
 					patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been Reject By Lab");
@@ -252,9 +257,13 @@ public class LabPatientApiConrtoller {
 				String confirmAppointmentNotification="";
 				if(status==1)
 				  confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been confirmed for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
-				else if(status==2)
-					  confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been Canceled for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
-				else if(status==3)
+				else if(status==2) {
+					
+					confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been Canceled for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
+					String msg=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+" has cancel appointment ";
+					LabDetails labDetails=labDetailsRepository.findByLabId(getLabAppointment.getLabId());
+					sendFcmNotificationService.notificationOnWeb(labDetails.getToken(),"  Appointment Cancel", msg, "");
+		  }else if(status==3)
 					confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" your appointment of "+getLabAppointment.getLabName()+" lab has been Reject By Lab for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime();
 				else if(status==5)
 					confirmAppointmentNotification="Hello, "+patientDetails.getfName()+" "+patientDetails.getlName()+" Your Reports has been uploaded by "+getLabAppointment.getLabName()+"Please find your report on profile. Note: To view your reports please do payment if pending. Thank you !!";
@@ -389,8 +398,12 @@ public class LabPatientApiConrtoller {
 				 
 				if(status==1)
 				patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been confirmed for "+getLabAppointment.getLabTestName()+" on DATE "+getLabAppointment.getDate()+" and TIME "+getLabAppointment.getTime());					
-				else if(status==2)
-				patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been Cancel");					
+				else if(status==2) {
+				patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been Cancel");		
+				String msg=getPatientContactDetailsById.getfName()+" "+getPatientContactDetailsById.getlName()+" has cancel appointment ";
+				LabDetails labDetails=labDetailsRepository.findByLabId(getLabAppointment.getLabId());
+				sendFcmNotificationService.notificationOnWeb(labDetails.getToken()," Appointment Cancel", msg, "");
+		  }
 				else if(status==3)
 					patientNotification.setNotification("Your Appointment of "+getLabAppointment.getLabName()+"lab has been Reject By Lab");
 				
@@ -684,6 +697,8 @@ public class LabPatientApiConrtoller {
 				sendTextMessageService.sendTextSms("Transaction Id"+labAppointmentDetails.getTxnId()+" "+patientDetails.getfName()+" "+patientDetails.getlName()+" your lab report payment "+reportAmount+" rs. done successfully for lab"+ labDetails.getLabName()+".", patientDetails.getContactNo());
 				sendTextMessageService.sendTextSms("Transaction Id"+labAppointmentDetails.getTxnId()+" "+labDetails.getLabName()+" your lab report payment "+reportAmount+" rs. done successfully by ."+patientDetails.getfName()+" "+patientDetails.getlName()+".", labDetails.getContact());
 				
+				 	 String msg="Transaction Id"+labAppointmentDetails.getTxnId()+" "+labDetails.getLabName()+" Appointment payment "+reportAmount+" rs. done successfully by ."+patientDetails.getfName()+" "+patientDetails.getlName()+", "+ labDetails.getContact();
+				sendFcmNotificationService.notificationOnWeb(labDetails.getToken(),"New Appointment Booked", msg, "");
 			}
 			else {
 				info.setError(true);

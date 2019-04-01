@@ -10,25 +10,42 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.Common.Constants;
 import com.bionische.biotech.model.GetMedicalOrderDetails;
 import com.bionische.biotech.model.GetPrescriptionDetailsForOrder;
 import com.bionische.biotech.model.Info;
+import com.bionische.biotech.model.MedicalDetails;
 import com.bionische.biotech.model.PrescriptionOrderDetails;
 import com.bionische.biotech.model.PrescriptionToMedical;
+import com.bionische.biotech.repository.MedicalDetailsRepository;
 import com.bionische.biotech.service.PrescriptionOrderService;
+import com.bionische.biotech.service.SendFcmNotificationService;
 
 @RestController
 public class PrescriptionOrderApiController {
 
 	@Autowired
 	PrescriptionOrderService prescriptionOrderService;
- 
+	@Autowired
+	MedicalDetailsRepository medicalDetailsRepository;
+	@Autowired
+	SendFcmNotificationService sendFcmNotificationService;
 	
 	@RequestMapping(value = { "/insertOrderPrescription" }, method = RequestMethod.POST)
 	public @ResponseBody PrescriptionToMedical insertOrderPrescription(@RequestBody PrescriptionToMedical prescriptionToMedical) {
   
-		
-		return prescriptionOrderService.orderPrescription(prescriptionToMedical);
+		try {
+			PrescriptionToMedical prescriptionToMedicalRes=prescriptionOrderService.orderPrescription(prescriptionToMedical);
+			
+			MedicalDetails medicalDetails=medicalDetailsRepository.findByMedicalId(prescriptionToMedicalRes.getMedicalId());
+			String message="Customer order medicine. Order Id :- "+prescriptionToMedicalRes.getRequestToMedicalId();
+			sendFcmNotificationService.notificationOnWeb(medicalDetails.getToken(), "New Order Received", message, Constants.SITE_URL);
+			return prescriptionToMedicalRes;
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+		return null;
 	}
 	
 	@RequestMapping(value = { "/getMedicalOrderDetailsByMedicalIdAndStatus" }, method = RequestMethod.POST)
