@@ -2629,6 +2629,8 @@ public class RestApiController {
 		Info info = new Info();
 		try {
 			doctorCertificateDetailsRepository.save(doctorCertificateDetails);
+			
+			doctorDetailsRepository.updateDoctorDelStatus(doctorCertificateDetails.getDoctorId(), 2);
 			info.setError(false);
 			info.setMessage("success");
 		} catch (Exception e) {

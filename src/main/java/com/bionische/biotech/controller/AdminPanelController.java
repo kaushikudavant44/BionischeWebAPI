@@ -803,6 +803,19 @@ public class AdminPanelController {
 		return info;
 	} 
 	
+	@RequestMapping(value = { "/getLastRejectDoctorCertificate" }, method = RequestMethod.POST)
+	public @ResponseBody DoctorCertificateDetails getLastRejectDoctorCertificate(@RequestParam("doctorId") int doctorId) {
+		 
+		try {
+			return doctorCertificateDetailsRepository.getLastRejectedDoctorCertificate(doctorId);
+			 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	} 
+	
+	
 	@RequestMapping(value = { "/getDoctorPendingVerificationList" }, method = RequestMethod.GET)
 	public @ResponseBody List<DoctorCertificateDetails> getDoctorPendingVerificationList() {
 		List<DoctorCertificateDetails> doctorCertificateDetailsList=new ArrayList<DoctorCertificateDetails>();
