@@ -2648,6 +2648,7 @@ public class RestApiController {
 			labCertificateDetailsRepository.save(labCertificateDetails);
 			info.setError(false);
 			info.setMessage("success");
+			labDetailsRepository.updateLabDelStatus(labCertificateDetails.getLabId(), 2);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			info.setError(true);
@@ -2662,6 +2663,8 @@ public class RestApiController {
 		Info info = new Info();
 		try {
 			pharmacyCertificateDetailsRepository.save(pharmacyCertificateDetails);
+			
+			medicalDetailsRepository.updateMedicalDelStatus(pharmacyCertificateDetails.getMedicalId(), 2);
 			info.setError(false);
 			info.setMessage("success");
 		} catch (Exception e) {

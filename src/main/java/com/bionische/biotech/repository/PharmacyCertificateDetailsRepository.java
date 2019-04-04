@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bionische.biotech.model.DoctorCertificateDetails;
 import com.bionische.biotech.model.PharmacyCertificateDetails;
 
 public interface PharmacyCertificateDetailsRepository extends JpaRepository<PharmacyCertificateDetails, Integer>{
@@ -28,6 +29,9 @@ public interface PharmacyCertificateDetailsRepository extends JpaRepository<Phar
 			+ "c.create_date, c.last_modified_date,c.message, c.int_1, c.del_status from m_pharmacy_certificate_details c, medical_details d where c.del_status=0 AND d.medical_id=c.medical_id",nativeQuery=true)
 	List<PharmacyCertificateDetails> getPharmacyPendingVerificationList();
 
+	@Query(value=" SELECT * from m_pharmacy_certificate_details WHERE medical_id=:medicalId AND del_status=1 ORDER BY cetrificate_id DESC  LIMIT 1",nativeQuery=true)
+	PharmacyCertificateDetails getLastRejectedPharmacyCertificate(@Param("medicalId")int medicalId);
+ 
 	 
 
 	  

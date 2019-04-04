@@ -1,5 +1,8 @@
 package com.bionische.biotech.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -7,7 +10,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -15,8 +17,10 @@ import org.springframework.web.client.RestTemplate;
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.FcmNotification;
 import com.bionische.biotech.model.Info;
+import com.bionische.biotech.model.PatientCallDetails;
 import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
+import com.bionische.biotech.repository.PatientCallDetailsRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
 
 @RestController
@@ -31,7 +35,8 @@ public class FcmMessagingApiController {
 	PatientDetailsRepository patientDetailsRepository;
 	@Autowired
 	DoctorDetailsRepository doctorDetailsRepository;
- 
+	@Autowired
+	PatientCallDetailsRepository patientCallDetailsRepository;
 
 	String androidFcmKey = "AAAA1rouwjc:APA91bFNBiVkWLcIgrtQBHrssxBBPfMBZgmwS6KVQ5AlrMpH1UYHU9wYn_rQqC0_W1-nN6yOO_igWzzzCUHRV6enWaa6-LUV9YVOiXyEAQLDixXZQ9TcbqxO637LNTDVt2fJ3Ale1lSh";
 	String androidFcmUrl = "https://fcm.googleapis.com/fcm/send";
@@ -79,6 +84,17 @@ public class FcmMessagingApiController {
 
 			PatientDetails patientDetails = patientDetailsRepository.findByPatientId(fcmNotification.getData().getId());
 			int toDeviceType = patientDetails.getInt1();
+			
+			if(fcmNotification.getData().getType().equals("2")) //Video call
+			{
+				PatientCallDetails patientCallDetails=new PatientCallDetails();
+				patientCallDetails.setDatetime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+				patientCallDetails.setDoctorId(fcmNotification.getData().getFromId());
+				patientCallDetails.setPatientId(fcmNotification.getData().getId());
+				patientCallDetails.setStatus(0);
+				patientCallDetailsRepository.save(patientCallDetails);
+			}
+				
 			if (toDeviceType == 0)
 				fcmNotification.getData().setToDeviceType(1);
 			else

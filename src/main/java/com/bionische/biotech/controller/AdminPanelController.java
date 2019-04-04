@@ -46,6 +46,7 @@ import com.bionische.biotech.model.PackageOffers;
 import com.bionische.biotech.model.PharmacyCertificateDetails;
 import com.bionische.biotech.model.RatingDetails;
 import com.bionische.biotech.model.TermsAndConditions;
+import com.bionische.biotech.model.UserQueryDetails;
 import com.bionische.biotech.repository.AdminDetailsRepository;
 import com.bionische.biotech.repository.AppointmentTimeRepository;
 import com.bionische.biotech.repository.DoctorCertificateDetailsRepository;
@@ -65,6 +66,7 @@ import com.bionische.biotech.repository.PackageOffersRepository;
 import com.bionische.biotech.repository.PharmacyCertificateDetailsRepository;
 import com.bionische.biotech.repository.RatingDetailsRepository;
 import com.bionische.biotech.repository.TermsAndConditionsRepository;
+import com.bionische.biotech.repository.UserQueryDetailsRepository;
 import com.bionische.biotech.service.PrescriptionOrderService;
 import com.bionische.biotech.service.SendFcmNotificationService;
 import com.bionische.biotech.stemcell.model.GetStemCellsDetails;
@@ -154,6 +156,8 @@ public class AdminPanelController {
 	
 	@Autowired
 	SendFcmNotificationService sendFcmNotificationService;
+	@Autowired
+	UserQueryDetailsRepository userQueryDetailsRepository;
 	/*
 	 * 
 	 * @RequestMapping(value = { "/getDoctorAppointmentDetailsByPatientId" }, method
@@ -173,7 +177,23 @@ public class AdminPanelController {
 	 * return getDoctorAppointmentDetailsList; }
 	 */
 
-	
+	@RequestMapping(value = { "/insertUserQuery" }, method = RequestMethod.POST)
+	public @ResponseBody Info insertUserQuery(@RequestBody UserQueryDetails userQueryDetails) {
+		Info info=new Info();
+		info.setError(true);
+		UserQueryDetails uerQueryDetailsres=userQueryDetailsRepository.save(userQueryDetails);
+		if(uerQueryDetailsres!=null)
+		{
+			info.setError(false);
+			info.setMessage("Your query submitted succesfully, We will get back to you soon");
+		}
+		else {
+			info.setError(true);
+			info.setMessage("Problem in submitted Query");
+		}
+		
+		return info;
+	}
 	
 	@RequestMapping(value = { "/getVerificationPendingCount" }, method = RequestMethod.GET)
 	public @ResponseBody GetVerificationPendingCount getVerificationPendingCount() {
@@ -814,6 +834,32 @@ public class AdminPanelController {
 		}
 		return null;
 	} 
+	
+	
+	@RequestMapping(value = { "/getLastRejectPharmacyCertificate" }, method = RequestMethod.POST)
+	public @ResponseBody PharmacyCertificateDetails getLastRejectPharmacyCertificate(@RequestParam("medicalId") int medicalId) {
+		 
+		try {
+			return pharmacyCertificateDetailsRepository.getLastRejectedPharmacyCertificate(medicalId);
+			 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	} 
+	
+	@RequestMapping(value = { "/getLastRejectLabCertificate" }, method = RequestMethod.POST)
+	public @ResponseBody LabCertificateDetails getLastRejectLabCertificate(@RequestParam("labId") int labId) {
+		 
+		try {
+			return labCertificateDetailsRepository.getLastRejectedLabCertificate(labId);
+			 
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return null;
+	} 
+	
 	
 	
 	@RequestMapping(value = { "/getDoctorPendingVerificationList" }, method = RequestMethod.GET)

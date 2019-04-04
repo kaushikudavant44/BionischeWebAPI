@@ -132,9 +132,10 @@ public class RatingDetails {
 	public String toString() {
 		return "RatingDetails [ratingReviewId=" + ratingReviewId + ", doctorId=" + doctorId + ", rating=" + rating
 				+ ", review=" + review + ", patientId=" + patientId + ", patientName=" + patientName + ", int1=" + int1
-				+ ", int2=" + int2 + ", string1=" + string1 + ", string2=" + string2 + ", delStatus=" + delStatus + "]";
+				+ ", int2=" + int2 + ", string1=" + string1 + ", string2=" + string2 + ", delStatus=" + delStatus
+				+ ", createDate=" + createDate + "]";
 	}
-	
+	 
 	
 	 
 

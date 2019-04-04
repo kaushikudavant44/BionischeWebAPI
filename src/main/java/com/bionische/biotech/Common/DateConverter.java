@@ -38,11 +38,12 @@ public class DateConverter {
 	
 public static String convertToDMY(String date) {
 		
-		String convertedDate=null;
+		String convertedDate=date;
 		if(date!=null) {
 		try {
-			
-			if (date.matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")) {
+			if(date.matches("([0-9]{4})-([0-9]{2})-([0-9]{2})") || date.matches("([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})"))
+			{
+				if (date.matches("([0-9]{4})-([0-9]{2})-([0-9]{2})")) {
 	               
 		        System.out.println("date format is y-m-d ");
 		        
@@ -71,7 +72,7 @@ public static String convertToDMY(String date) {
 		        }
 			
 			SimpleDateFormat ymdSDF = new SimpleDateFormat("yyyy-MM-dd");
-			
+			}
 			
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

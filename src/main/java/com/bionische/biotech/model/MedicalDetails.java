@@ -92,7 +92,7 @@ public class MedicalDetails {
 	@Column(name="string3")
     private String string3;
 	
-	@Column(name="token")
+	@Column(name="token", nullable=true)
     private String token;
 
 

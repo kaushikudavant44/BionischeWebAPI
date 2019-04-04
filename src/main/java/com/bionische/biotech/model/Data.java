@@ -9,7 +9,7 @@ public class Data {
     private int fromDeviceType;
     private int toDeviceType;
     private int id;
-
+    private int fromId;
      
 
 	public int getId() {
@@ -52,12 +52,20 @@ public class Data {
 		this.fromFcm = fromFcm;
 	}
 
+	public int getFromId() {
+		return fromId;
+	}
+
+	public void setFromId(int fromId) {
+		this.fromId = fromId;
+	}
+
 	@Override
 	public String toString() {
 		return "Data [type=" + type + ", fromFcm=" + fromFcm + ", fromDeviceType=" + fromDeviceType + ", toDeviceType="
-				+ toDeviceType + ", id=" + id + "]";
+				+ toDeviceType + ", id=" + id + ", fromId=" + fromId + "]";
 	}
-
+ 
 	 
 
 }

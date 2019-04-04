@@ -19,12 +19,12 @@ public interface MedicalDetailsRepository extends JpaRepository<MedicalDetails, 
 
 	MedicalDetails findByMedicalId(int medicalId);
 	
-	@Query(value="SELECT m.medical_id,m.medical_name,m.address,m.contact ,m.city_id,m.state_id,m.country_id,m.licence_no,m.photo,m.del_status,m.owner,m.email,m.latitude,m.longitude,m.username,m.password,m.int_1,m.int_2,m.int_3,m.string1,m.string2,s.package_exp_date AS string3  FROM medical_details m,t_pharmacy_subscription_details s WHERE m.medical_id=:medicalId AND s.medical_id=:medicalId",nativeQuery=true)
+	@Query(value="SELECT m.medical_id,m.medical_name,m.address,m.contact ,m.city_id,m.state_id,m.country_id,m.licence_no,m.photo,m.del_status,m.owner,m.email,m.latitude,m.longitude,m.username,m.password,m.int_1,m.int_2,m.int_3,m.string1,m.string2,s.package_exp_date AS string3 , m.token FROM medical_details m,t_pharmacy_subscription_details s WHERE m.medical_id=:medicalId AND s.medical_id=:medicalId",nativeQuery=true)
 	MedicalDetails getMedicalsDetailsByMedicalId(@Param("medicalId")int medicalId);
 	
 	MedicalDetails findByUserNameAndDelStatus(String uName, int i);
 	
-	@Query(value="SELECT m.medical_id,m.medical_name,m.address,m.contact ,m.city_id,m.state_id,m.country_id,m.licence_no,m.photo,m.del_status,m.owner,m.email,m.latitude,m.longitude,m.username,m.password,m.int_1,m.int_2,m.int_3,m.string1,m.string2,m.string3   FROM prescription_to_medical p,medical_details m,t_pharmacy_subscription_details ms WHERE p.patient_id=:patientId AND p.medical_id=m.medical_id AND ms.package_exp_date>=NOW() AND m.medical_id=ms.medical_id AND ms.txn_status=1 GROUP BY m.medical_id",nativeQuery=true)
+	@Query(value="SELECT m.medical_id,m.medical_name,m.address,m.contact ,m.city_id,m.state_id,m.country_id,m.licence_no,m.photo,m.del_status,m.owner,m.email,m.latitude,m.longitude,m.username,m.password,m.int_1,m.int_2,m.int_3,m.string1,m.string2,m.string3 , m.token   FROM prescription_to_medical p,medical_details m,t_pharmacy_subscription_details ms WHERE p.patient_id=:patientId AND p.medical_id=m.medical_id AND ms.package_exp_date>=NOW() AND m.medical_id=ms.medical_id AND ms.txn_status=1 GROUP BY m.medical_id",nativeQuery=true)
 	List<MedicalDetails> getMedicalsDetailsByPatient(@Param("patientId")int patientId);
 	
 	@Query(value="SELECT * FROM medical_details m,t_pharmacy_subscription_details ms WHERE m.int_3=:pincode and m.int_2=:deliveryStatus and m.del_status=0  AND ms.package_exp_date>=NOW() AND m.medical_id=ms.medical_id AND ms.txn_status=1",nativeQuery=true)
