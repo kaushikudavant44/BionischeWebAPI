@@ -104,6 +104,9 @@ public class VpsFileUploadApiController {
 			}
 		
 		try {
+			if(! Files.exists(path)) {
+				Files.createDirectories(path.getParent());
+				}
 			
 			Files.write(path, bytes);
 			info.setError(false);
