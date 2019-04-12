@@ -24,7 +24,6 @@ import com.bionische.biotech.Common.DateConverter;
 @Entity
 @Table(name="prescription_to_medical")
 @EntityListeners(AuditingEntityListener.class)
-
 public class PrescriptionToMedical {
 	
 	@Id

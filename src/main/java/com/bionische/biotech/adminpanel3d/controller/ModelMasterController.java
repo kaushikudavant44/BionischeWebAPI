@@ -71,14 +71,15 @@ public class ModelMasterController {
 	@RequestMapping(value = { "/get3DModelCategory" }, method = RequestMethod.GET)
 	public @ResponseBody List<Category3DModel> get3DModelCategory()
 	{
+		
 	
 		List<Category3DModel> category3DModelList=new ArrayList<Category3DModel>();
 		try {
 			category3DModelList=category3DModelRepository.findAll();
-	
+			System.out.println("category3DModelList="+category3DModelList.toString());
 		
 		}catch (Exception e) {
-			System.out.println(e.getMessage());// TODO: handle exception
+		e.printStackTrace();
 		}
 		
 		return category3DModelList;

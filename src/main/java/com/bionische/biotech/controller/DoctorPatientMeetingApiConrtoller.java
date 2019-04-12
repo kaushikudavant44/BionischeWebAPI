@@ -23,6 +23,7 @@ import com.bionische.biotech.model.DoctorCollectionAndReportDetail;
 import com.bionische.biotech.model.DoctorPatientMeeting;
 import com.bionische.biotech.model.GetCartProducts;
 import com.bionische.biotech.model.GetMedicalOrderDetails;
+import com.bionische.biotech.model.GetSelfUploadedPrescriptionToMedical;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.PatientAddressList;
 import com.bionische.biotech.model.PatientCart;
@@ -41,6 +42,7 @@ import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.PharmacyDayOrderDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionToMedicalRepository;
 import com.bionische.biotech.service.DoctorPatientMeetingService;
+import com.bionische.biotech.stemcell.repository.GetSelfUploadedPrescriptionToMedicalRepository;
 
 @RestController
 public class DoctorPatientMeetingApiConrtoller {
@@ -83,6 +85,9 @@ public class DoctorPatientMeetingApiConrtoller {
 
 	@Autowired
 	PharmacyDayOrderDetailsRepository pharmacyDayOrderDetailsRepository;
+	
+	@Autowired
+	GetSelfUploadedPrescriptionToMedicalRepository getSelfUploadedPrescriptionToMedicalRepository;
 
 	// insert specialization
 	@RequestMapping(value = { "/insertDoctoPatientMeeting" }, method = RequestMethod.POST)
@@ -274,7 +279,13 @@ public class DoctorPatientMeetingApiConrtoller {
 
 		return getMedicalOrderDetailsRepository.getPatientOrderDetailsByRequestId(requestId);
 	}
-
+	@RequestMapping(value = { "/getPatientOrderBillDetailsByRequestId" }, method = RequestMethod.POST)
+	public @ResponseBody GetSelfUploadedPrescriptionToMedical getPatientOrderBillDetailsByRequestId(
+			@RequestParam("requestId") int requestId) {
+			
+		return getSelfUploadedPrescriptionToMedicalRepository.getPatientOrderDetailsByRequestId(requestId);
+	}
+	
 	@RequestMapping(value = { "/getPatientPaymentConcultingDetails" }, method = RequestMethod.POST)
 	public @ResponseBody Info getPatientPaymentConcultingDetails(@RequestParam("appointId") int appointId) {
 

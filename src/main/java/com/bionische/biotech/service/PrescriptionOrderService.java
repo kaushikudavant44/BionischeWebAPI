@@ -7,11 +7,15 @@ import com.bionische.biotech.model.GetPrescriptionDetailsForOrder;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.PrescriptionOrderDetails;
 import com.bionische.biotech.model.PrescriptionToMedical;
+import com.bionische.biotech.model.SelfUploadedPrescriptionToMedical;
 
 public interface PrescriptionOrderService {
 
 	
 	PrescriptionToMedical orderPrescription(PrescriptionToMedical prescriptionToMedical);
+	
+	
+	
 	List<GetMedicalOrderDetails> getMedicalOrderDetailsByMedicalIdAndStatus(int medicalId,int status);
 	List<GetPrescriptionDetailsForOrder> getPrescriptionDetailsForOrder(int requestId);
 	Info updateMedicalOrderStatusAndAmount(int requestId, int status, float totAmount);
