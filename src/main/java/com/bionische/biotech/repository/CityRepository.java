@@ -12,7 +12,7 @@ import com.bionische.biotech.model.City;
 
 public interface CityRepository extends JpaRepository<City, Integer>{
 	
-	List<City> findByStateId(int stateId);
+	List<City> findByStateIdOrderByCityNameAsc(int stateId);
 	
 	City findByCityId(int cityId);
 

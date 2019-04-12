@@ -9,5 +9,5 @@ import com.bionische.biotech.model.State;
 
 public interface StateRepository extends JpaRepository<State, Integer>{
 	
-	List<State> findByCountryId(int countryId);
+	List<State> findByCountryIdOrderByStateNameAsc(int countryId);
 }

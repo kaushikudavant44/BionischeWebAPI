@@ -772,7 +772,7 @@ public class RestApiController {
 	@RequestMapping(value = { "/getAllCityByStateId" }, method = RequestMethod.POST)
 	public @ResponseBody List<City> getAllCityByStateId(@RequestParam("stateId") int stateId) {
 
-		List<City> cityList = cityRepository.findByStateId(stateId);
+		List<City> cityList = cityRepository.findByStateIdOrderByCityNameAsc(stateId);
 
 		return cityList;
 	}
@@ -1282,7 +1282,7 @@ public class RestApiController {
 	public @ResponseBody List<State> getAllStateByCountryId(@RequestParam("countryId") int countryId) {
 
 		System.out.println("czemeee" + countryId);
-		List<State> stateList = stateRepository.findByCountryId(countryId);
+		List<State> stateList = stateRepository.findByCountryIdOrderByStateNameAsc(countryId);
 
 		System.out.println("stateList:" + stateList.toString());
 		return stateList;
@@ -1293,7 +1293,7 @@ public class RestApiController {
 	@RequestMapping(value = { "/getAllCountry" }, method = RequestMethod.GET)
 	public @ResponseBody List<Country> getAllCountry() {
 
-		List<Country> countryList = countryRepository.findAll();
+		List<Country> countryList = countryRepository.getAllOrderByCountryName();
 
 		System.out.println("countryList:" + countryList.toString());
 		return countryList;

@@ -58,7 +58,16 @@ public class PatientPersonalHistoryApiController {
 	PatientPsychologicalHistoryRepository patientPsychologicalHistoryRepository;
 	@Autowired
 	PatientTreatementHistoryRepository patientTreatementHistoryRepository;
+	
 	 
+	
+	@RequestMapping(value = { "/getPastHistoryIIlness" }, method = RequestMethod.GET)
+	public @ResponseBody List<PatientPastHistoryIIlness> getPastHistoryIIlness()
+	{
+		return patientPastHistoryIIlnessRepository.findAll();
+		
+	}
+	
 	@RequestMapping(value = { "/insertPersonalHistoryDetails" }, method = RequestMethod.POST)
 	public @ResponseBody PatientPersonalHistory insertPersonalHistoryDetails(@RequestBody PatientPersonalHistory patientPersonalHistory)
 	{
@@ -89,6 +98,10 @@ public class PatientPersonalHistoryApiController {
 	@RequestMapping(value = { "/insertPatientPastHistory" }, method = RequestMethod.POST)
 	public @ResponseBody PatientPastHistory insertPatientPastHistory(@RequestBody PatientPastHistory patientPastHistory)
 	{
+		System.out.println(patientPastHistory.toString());
+		PatientPastHistory patientPastHistoryres=patientPastHistoryRepository.findByPatientId(patientPastHistory.getPatientId());
+		if(patientPastHistoryres!=null)
+			patientPastHistory.setPatientPastHistoryId(patientPastHistoryres.getPatientPastHistoryId());
 		return patientPastHistoryRepository.save(patientPastHistory);
 		
 	}
@@ -122,6 +135,62 @@ public class PatientPersonalHistoryApiController {
 		
 	}
 	
+	@RequestMapping(value = { "/getPatientAllHistory" }, method = RequestMethod.POST)
+	public @ResponseBody PatientAllPersonalHistory getPatientAllHistory(@RequestParam("patientId") int patientId)
+	{
+		PatientAllPersonalHistory patientAllPersonalHistory=new PatientAllPersonalHistory();
+		try {
+		PatientHistoryChiefComplaints patientHistoryChiefComplaints=patientHistoryChiefComplaintsRepository.findByPatientId(patientId);
+		patientAllPersonalHistory.setPatientHistoryChiefComplaints(patientHistoryChiefComplaints);
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+		try {
+		PatientPersonalHistory patientPersonalHistory=patientPersonalHistoryRepository.findByPatientId(patientId);
+		patientAllPersonalHistory.setPatientPersonalHistory(patientPersonalHistory);
+	}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+		try {
+		PatientFamilyHistory patientFamilyHistory=patientFamilyHistoryRepository.findByPatientId(patientId);
+		patientAllPersonalHistory.setPatientFamilyHistory(patientFamilyHistory);
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+		try {
+		PatientTreatementHistory patientTreatementHistory=patientTreatementHistoryRepository.findByPatientId(patientId);
+		patientAllPersonalHistory.setPatientTreatementHistoryp(patientTreatementHistory);
+	}
+	catch (Exception e) {
+		System.out.println(e.getMessage());// TODO: handle exception
+	}
+		try {
+			patientAllPersonalHistory.setPatientPsychologicalHistory(patientPsychologicalHistoryRepository.findByPatientId(patientId));
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+		try {
+			patientAllPersonalHistory.setMenstrualObstetricHistory(menstrualObstetricHistoryRepository.findByPatientId(patientId));
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+		
+		try {
+			List<PatientPastHistoryIIlness> patientPastHistoryIIlnessList=patientPastHistoryIIlnessRepository.getPastHistory(patientId);
+		System.out.println("patientPastHistoryIIlnessList   "+patientPastHistoryIIlnessList.toString());
+			patientAllPersonalHistory.setPatientPastHistoryIIlnessList(patientPastHistoryIIlnessList);
+		
+	}catch (Exception e) {
+		System.out.println(e.getMessage());// TODO: handle exception
+	}
+		 
+		return patientAllPersonalHistory;
+	}
 	
 	@RequestMapping(value = { "/insertPatientPersonalDetails" }, method = RequestMethod.POST)
 	public @ResponseBody PatientAllPersonalHistory insertPatientPersonalDetails(@RequestBody PatientAllPersonalHistory patientAllPersonalHistory)

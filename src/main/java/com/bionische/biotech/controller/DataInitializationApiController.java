@@ -40,7 +40,7 @@ public class DataInitializationApiController {
 			 { 
 				 List<City> citylist=new ArrayList<City>();
 				 
-			  citylist=cityRepository.findByStateId(stateAndCityList.get(i).getStateId());
+			  citylist=cityRepository.findByStateIdOrderByCityNameAsc(stateAndCityList.get(i).getStateId());
 			  
 			  stateAndCityList.get(i).setCityList(citylist);
 			 }
