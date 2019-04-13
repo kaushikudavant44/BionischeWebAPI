@@ -33,4 +33,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter  {
 					.hasRole("USER").antMatchers("/**").hasRole("ADMIN").and()
 					.csrf().disable().headers().frameOptions().disable();
 		}
-}
+} 
