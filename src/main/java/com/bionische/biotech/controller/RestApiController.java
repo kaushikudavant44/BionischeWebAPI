@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.Common.Constants;
 import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.ewallet.model.ReferalDetails;
 import com.bionische.biotech.ewallet.model.WalletDetails;
@@ -1348,9 +1349,12 @@ public class RestApiController {
 				String confirmAppointmentNotification = "Your Appointment has been confirmed by Dr."
 						+ getAppointmentDetails.getDoctorName() + " on DATE " + getAppointmentDetails.getDate()
 						+ " and TIME " + getAppointmentDetails.getTime();
+				sendFcmNotificationService.notificationOnWeb(patientDetails.getWebToken(), "BIONISCHE", confirmAppointmentNotification, Constants.SITE_URL);
 				if (patientDetails.getInt1() == 0) {
 					sendFcmNotificationService.notifyUser(patientDetails.getString2(), "BIONISCHE",
 							confirmAppointmentNotification, DateConverter.currentDateAndTime(), 11);
+					
+					
 				} else if (patientDetails.getInt1() == 1) {
 
 					sendFcmNotificationService.notifyiOSUser(patientDetails.getString2(), "BIONISCHE",
@@ -1948,13 +1952,26 @@ public class RestApiController {
 		DoctorDetails doctorDetails = new DoctorDetails();
 		try {
 			doctorDetails = doctorDetailsRepository.getLoginUserName(userName);
-
+if(doctorDetails!=null)
+{
+ 
+	      
+	 
+	String otp = String.valueOf(Constants.generateOTP(6));
+	sendTextMessageService.sendTextSms("One Time Password is "+otp+" for Forgot Password", doctorDetails.getContactNo());
+	doctorDetails.setPassword(otp);
+	String contactNo="******"+doctorDetails.getContactNo().substring(doctorDetails.getContactNo().length()-4, doctorDetails.getContactNo().length());
+	doctorDetails.setContactNo(contactNo);
+}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 		return doctorDetails;
 
 	}
+	
+	
+	
 
 	@RequestMapping(value = { "/pharmacyDetailsByUsrname" }, method = RequestMethod.POST)
 	public @ResponseBody MedicalDetails pharmacyDetailsByUsrname(@RequestParam("userName") String userName)
@@ -2143,7 +2160,7 @@ public class RestApiController {
 			}
 			res = doctorDetailsRepository.updateNewPasswordByuserName(userName, hashedPass);
 			if (res > 0) {
-				info.setMessage("success");
+				info.setMessage("Password Successfully Change");
 				info.setError(false);
 			} else {
 				info.setMessage("Failed to change password!");

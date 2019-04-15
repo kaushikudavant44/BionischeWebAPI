@@ -1,7 +1,6 @@
 package com.bionische.biotech.service;
 
 import java.io.IOException;
-
 import java.io.InputStream;
 import java.util.Arrays;
 
@@ -19,6 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.client.RestTemplate;
 
+import com.bionische.biotech.Common.Constants;
+import com.bionische.biotech.model.Data;
+import com.bionische.biotech.model.FcmNotification;
+import com.bionische.biotech.model.Notification;
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsNotification;
 import com.notnoop.apns.ApnsService;
@@ -138,17 +141,34 @@ public class SendFcmNotificationServiceImpl implements SendFcmNotificationServic
 				   HttpHeaders httpHeaders = new HttpHeaders();
 				   httpHeaders.set("Authorization", "key=" + androidFcmKey);
 				   httpHeaders.set("Content-Type", "application/json");
-				   JSONObject data = new JSONObject();
-				   JSONObject json = new JSONObject();
+				//   JSONObject data = new JSONObject();
+				//   JSONObject json = new JSONObject();
 
 				   
 				   String image="";
-				  
+				  /*
 				   data.put("title",title);
-				   data.put("message",message);
+				   data.put("body",message);
 				   data.put("image",image);
-				   data.put("click_action",clickAction);
+				   data.put("click_action",clickAction);*/
 				  
+				   
+				   FcmNotification fcmNotification=new FcmNotification();
+				   
+				   fcmNotification.setTo(deviceToken);
+				   Data data=new Data();
+				   data.setFromDeviceType(0);
+				   data.setFromFcm("");
+				   data.setType("");
+				   Notification notification=new Notification();
+				   
+				   notification.setBody(message);
+				   notification.setClick_action(Constants.SITE_URL);
+				   notification.setIcon(Constants.BIONISCHE_ICON);
+				   notification.setTitle(title);
+				   
+				   fcmNotification.setData(data);
+				   fcmNotification.setNotification(notification);
 				   
 				   
 			/*	   msg.put("title", "Title");
@@ -156,13 +176,13 @@ public class SendFcmNotificationServiceImpl implements SendFcmNotificationServic
 				   msg.put("notificationType", "Test");
 				   msg.put("data", data );*/
 				   
-				  
+				/*  
 
 				   json.put("data", data);
 				   json.put("to", deviceToken);
-				   System.out.println(json.toString());
+				   System.out.println(json.toString());*/
 
-				   HttpEntity<String> httpEntity = new HttpEntity<String>(json.toString(),httpHeaders);
+				   HttpEntity<FcmNotification> httpEntity = new HttpEntity<FcmNotification>(fcmNotification, httpHeaders);
 				   response = restTemplate.postForObject(androidFcmUrl,httpEntity,String.class);
 				   System.out.println(response);
 					return new ResponseEntity<>(response, HttpStatus.OK);

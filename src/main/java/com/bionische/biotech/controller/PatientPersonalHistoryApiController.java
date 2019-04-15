@@ -71,6 +71,10 @@ public class PatientPersonalHistoryApiController {
 	@RequestMapping(value = { "/insertPersonalHistoryDetails" }, method = RequestMethod.POST)
 	public @ResponseBody PatientPersonalHistory insertPersonalHistoryDetails(@RequestBody PatientPersonalHistory patientPersonalHistory)
 	{
+		
+		PatientPersonalHistory patientPersonalHistoryRes=patientPersonalHistoryRepository.findByPatientId(patientPersonalHistory.getPatientId());
+	if(patientPersonalHistoryRes!=null)
+		patientPersonalHistory.setPersonalHistoryId(patientPersonalHistoryRes.getPersonalHistoryId());
 		return patientPersonalHistoryRepository.save(patientPersonalHistory);
 		
 	}
@@ -78,6 +82,9 @@ public class PatientPersonalHistoryApiController {
 	@RequestMapping(value = { "/insertMenstrualObstetricHistory" }, method = RequestMethod.POST)
 	public @ResponseBody MenstrualObstetricHistory insertMenstrualObstetricHistory(@RequestBody MenstrualObstetricHistory menstrualObstetricHistory)
 	{
+		MenstrualObstetricHistory menstrualObstetricHistoryRes=menstrualObstetricHistoryRepository.findByPatientId(menstrualObstetricHistory.getPatientId());
+	if(menstrualObstetricHistoryRes!=null)
+		menstrualObstetricHistory.setMenstrualObstetricHistoryId(menstrualObstetricHistoryRes.getMenstrualObstetricHistoryId());
 		return menstrualObstetricHistoryRepository.save(menstrualObstetricHistory);
 		
 	}
@@ -85,12 +92,17 @@ public class PatientPersonalHistoryApiController {
 	@RequestMapping(value = { "/insertPatientFamilyHistory" }, method = RequestMethod.POST)
 	public @ResponseBody PatientFamilyHistory insertPatientFamilyHistory(@RequestBody PatientFamilyHistory patientFamilyHistory)
 	{
+		PatientFamilyHistory patientFamilyHistoryRes=patientFamilyHistoryRepository.findByPatientId(patientFamilyHistory.getPatientId());
+	if(patientFamilyHistoryRes!=null)
+		patientFamilyHistory.setFamilyHistoryId(patientFamilyHistoryRes.getFamilyHistoryId());
 		return patientFamilyHistoryRepository.save(patientFamilyHistory);
 		
 	}
 	@RequestMapping(value = { "/insertPatientHistoryChiefComplaints" }, method = RequestMethod.POST)
 	public @ResponseBody PatientHistoryChiefComplaints insertPatientHistoryChiefComplaints(@RequestBody PatientHistoryChiefComplaints patientHistoryChiefComplaints)
 	{
+		PatientHistoryChiefComplaints patientHistoryChiefComplaintsRes=patientHistoryChiefComplaintsRepository.findByPatientId(patientHistoryChiefComplaints.getPatientId());
+		patientHistoryChiefComplaints.setChiefcomplaintsId(patientHistoryChiefComplaintsRes.getChiefcomplaintsId());
 		return patientHistoryChiefComplaintsRepository.save(patientHistoryChiefComplaints);
 		
 	}
@@ -105,7 +117,7 @@ public class PatientPersonalHistoryApiController {
 		return patientPastHistoryRepository.save(patientPastHistory);
 		
 	}
-	@RequestMapping(value = { "/insertPatientPastHistoryList" }, method = RequestMethod.POST)
+	/*@RequestMapping(value = { "/insertPatientPastHistoryList" }, method = RequestMethod.POST)
 	public @ResponseBody Info insertPatientPastHistoryList(@RequestBody List<PatientPastHistory> patientPastHistoryList)
 	{ 
 		Info info=new Info();
@@ -113,7 +125,7 @@ public class PatientPersonalHistoryApiController {
 		 patientPastHistoryRepository.save(patientPastHistory);
 		
 		return info;
-	}
+	}*/
 	@RequestMapping(value = { "/insertPatientPastHistoryIIlness" }, method = RequestMethod.POST)
 	public @ResponseBody PatientPastHistoryIIlness insertPatientPastHistoryIIlness(@RequestBody PatientPastHistoryIIlness patientPastHistoryIIlness)
 	{
@@ -124,13 +136,19 @@ public class PatientPersonalHistoryApiController {
 	@RequestMapping(value = { "/insertPatientPsychologicalHistory" }, method = RequestMethod.POST)
 	public @ResponseBody PatientPsychologicalHistory insertPatientPsychologicalHistory(@RequestBody PatientPsychologicalHistory patientPsychologicalHistory)
 	{
-		return patientPsychologicalHistoryRepository.save(patientPsychologicalHistory);
+		PatientPsychologicalHistory patientPsychologicalHistoryRes=patientPsychologicalHistoryRepository.findByPatientId(patientPsychologicalHistory.getPatientId());
+	if(patientPsychologicalHistoryRes!=null)
+		patientPsychologicalHistory.setPsychologicaLHistoryId(patientPsychologicalHistoryRes.getPsychologicaLHistoryId());
+				return patientPsychologicalHistoryRepository.save(patientPsychologicalHistory);
 		
 	}
 	
 	@RequestMapping(value = { "/insertPatientTreatementHistory" }, method = RequestMethod.POST)
 	public @ResponseBody PatientTreatementHistory insertPatientTreatementHistory(@RequestBody PatientTreatementHistory patientTreatementHistory)
 	{
+		PatientTreatementHistory patientTreatementHistoryRes=patientTreatementHistoryRepository.findByPatientId(patientTreatementHistory.getpatientId());
+	if(patientTreatementHistoryRes!=null)
+		patientTreatementHistory.settreatementHistoryId(patientTreatementHistoryRes.gettreatementhistoryId());
 		return patientTreatementHistoryRepository.save(patientTreatementHistory);
 		
 	}

@@ -9,7 +9,7 @@ import com.bionische.biotech.model.GetDoctorDetails;
 
 public interface GetDoctorDetailsRepository extends JpaRepository<GetDoctorDetails, Integer>{
 	
-	@Query(value="SELECT a.appoint_id,a.doctor_id,d.f_name,d.l_name,d.m_name,d.hospital_Id FROM doctor_details d, doctor_appointment a WHERE d.doctor_id=a.doctor_id AND appoint_id=:appointId",nativeQuery=true)
+	@Query(value="SELECT a.appoint_id,a.doctor_id,d.f_name,d.l_name,d.m_name,a.hospital_Id FROM doctor_details d, doctor_appointment a WHERE d.doctor_id=a.doctor_id AND appoint_id=:appointId",nativeQuery=true)
 	GetDoctorDetails findByAppointmentId(@Param("appointId") int appointId);
 
 }

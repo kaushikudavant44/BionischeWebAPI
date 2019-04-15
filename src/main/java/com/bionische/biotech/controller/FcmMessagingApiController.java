@@ -152,7 +152,7 @@ public class FcmMessagingApiController {
 	
 	
 	
-	Info sendToAndroidUser(FcmNotification fcmNotification) {
+	Info  sendToAndroidUser(FcmNotification fcmNotification) {
 		 
 
 		RestTemplate restTemplate = new RestTemplate();
