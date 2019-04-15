@@ -13,17 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bionische.biotech.Common.Constants;
 import com.bionische.biotech.model.GetMedicalOrderDetails;
 import com.bionische.biotech.model.GetPrescriptionDetailsForOrder;
-import com.bionische.biotech.model.GetSelfUploadedPrescriptionToMedical;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.MedicalDetails;
 import com.bionische.biotech.model.PrescriptionOrderDetails;
 import com.bionische.biotech.model.PrescriptionToMedical;
 import com.bionische.biotech.model.SelfUploadedPrescriptionToMedical;
+import com.bionische.biotech.repository.GetMedicalOrderDetailsRepository;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
+import com.bionische.biotech.repository.PrescriptionToMedicalRepository;
 import com.bionische.biotech.service.PrescriptionOrderService;
-import com.bionische.biotech.service.SelfUploadedPrescriptionToMedicalService;
 import com.bionische.biotech.service.SendFcmNotificationService;
-import com.bionische.biotech.stemcell.repository.GetSelfUploadedPrescriptionToMedicalRepository;
 import com.bionische.biotech.stemcell.repository.SelfUploadedPrescriptionToMedicalRepository;
 
 @RestController
@@ -36,12 +35,16 @@ public class PrescriptionOrderApiController {
 	@Autowired
 	SendFcmNotificationService sendFcmNotificationService;
 	
-	@Autowired
-	SelfUploadedPrescriptionToMedicalRepository selfUploadedPrescriptionToMedicalRepository;
+	/*@Autowired
+	SelfUploadedPrescriptionToMedicalRepository selfUploadedPrescriptionToMedicalRepository;*/
+	
+	
 	
 	@Autowired
-	GetSelfUploadedPrescriptionToMedicalRepository getSelfUploadedPrescriptionToMedicalRepository;
+	GetMedicalOrderDetailsRepository getMedicalOrderDetailsRepository;
 	
+	@Autowired
+	PrescriptionToMedicalRepository prescriptionToMedicalRepository;
 	
 	@RequestMapping(value = { "/insertOrderPrescription" }, method = RequestMethod.POST)
 	public @ResponseBody PrescriptionToMedical insertOrderPrescription(@RequestBody PrescriptionToMedical prescriptionToMedical) {
@@ -61,7 +64,7 @@ public class PrescriptionOrderApiController {
 	}
 	
 	
-	@RequestMapping(value = { "/insertUploadedOrderPrescription" }, method = RequestMethod.POST)
+	/*@RequestMapping(value = { "/insertUploadedOrderPrescription" }, method = RequestMethod.POST)
 	public @ResponseBody SelfUploadedPrescriptionToMedical insertUploadedOrderPrescription(@RequestBody SelfUploadedPrescriptionToMedical selfUploadedPrescriptionToMedical) {
   
 		try {
@@ -76,7 +79,7 @@ public class PrescriptionOrderApiController {
 			System.out.println(e.getMessage());// TODO: handle exception
 		}
 		return null;
-	}
+	}*/
 	
 	@RequestMapping(value = { "/getMedicalOrderDetailsByMedicalIdAndStatus" }, method = RequestMethod.POST)
 	public @ResponseBody List<GetMedicalOrderDetails> getMedicalOrderDetailsByMedicalIdAndStatus(@RequestParam("medicalId")int medicalId,@RequestParam("status")int status) {
@@ -86,10 +89,10 @@ public class PrescriptionOrderApiController {
 	}
 	
 	@RequestMapping(value = { "/getUploadedPrescriptionMedicalOrderDetailsByMedicalIdAndStatus" }, method = RequestMethod.POST)
-	public @ResponseBody List<GetSelfUploadedPrescriptionToMedical> getUploadedPrescriptionMedicalOrderDetailsByMedicalIdAndStatus(@RequestParam("medicalId")int medicalId,@RequestParam("status")int status) {
+	public @ResponseBody List<GetMedicalOrderDetails> getUploadedPrescriptionMedicalOrderDetailsByMedicalIdAndStatus(@RequestParam("medicalId")int medicalId,@RequestParam("status")int status) {
   
 		
-		return getSelfUploadedPrescriptionToMedicalRepository.getUploadedPrescriptionMedicalOrderDetailsByMedicalIdAndStatus(medicalId, status);
+		return getMedicalOrderDetailsRepository.getUploadedPrescriptionMedicalOrderDetailsByMedicalIdAndStatus(medicalId, status);
 	}
 	
 	@RequestMapping(value = { "/getMedicalOrderDetailsByMedicalIdAndStatusAndDate" }, method = RequestMethod.POST)
@@ -100,10 +103,10 @@ public class PrescriptionOrderApiController {
 	}
 	
 	@RequestMapping(value = { "/getUploadedPrescriptionMedicalOrderDetailsByMedicalIdAndStatusAndDate" }, method = RequestMethod.POST)
-	public @ResponseBody List<GetSelfUploadedPrescriptionToMedical> getUploadedPrescriptionMedicalOrderDetailsByMedicalIdAndStatusAndDate(@RequestParam("medicalId")int medicalId,@RequestParam("status")int status,@RequestParam("fromDate")String fromDate,@RequestParam("toDate")String toDate) {
+	public @ResponseBody List<GetMedicalOrderDetails> getUploadedPrescriptionMedicalOrderDetailsByMedicalIdAndStatusAndDate(@RequestParam("medicalId")int medicalId,@RequestParam("status")int status,@RequestParam("fromDate")String fromDate,@RequestParam("toDate")String toDate) {
   
 		
-		return getSelfUploadedPrescriptionToMedicalRepository.getMedicalOrderDetailsByMedicalIdAndStatusAndDate(medicalId, status, fromDate, toDate);
+		return getMedicalOrderDetailsRepository.getUploadedMedicalOrderDetailsByMedicalIdAndStatusAndDate(medicalId, status, fromDate, toDate);
 	}
 	
 
@@ -134,7 +137,7 @@ public class PrescriptionOrderApiController {
 	public @ResponseBody int updateUploadedPrescriptionMedicalOrderStatusAndAmount(@RequestParam("requestId")int requestId, @RequestParam("status")int status,@RequestParam("totAmount")float totAmount) {
   
 	
-		return selfUploadedPrescriptionToMedicalRepository.updateMedicalOrderStatusAndAmount(requestId,status,totAmount);
+		return prescriptionToMedicalRepository.updateMedicalOrderStatusAndAmount(requestId,status,totAmount);
 	}
 	
 	@RequestMapping(value = { "/updateMedicineOrderPaidStatus" }, method = RequestMethod.POST)
@@ -144,12 +147,12 @@ public class PrescriptionOrderApiController {
 		return prescriptionOrderService.updateMedicineOrderPaidStatus(requestId,paidStatus);
 	}
 	
-	@RequestMapping(value = { "/updateUploadedPrescriptionMedicineOrderPaidStatus" }, method = RequestMethod.POST)
+	/*@RequestMapping(value = { "/updateUploadedPrescriptionMedicineOrderPaidStatus" }, method = RequestMethod.POST)
 	public @ResponseBody int updateUploadedPrescriptionMedicineOrderPaidStatus(@RequestParam("requestId")int requestId, @RequestParam("paidStatus")int paidStatus) {
   
 		
 		return selfUploadedPrescriptionToMedicalRepository.updateMedicineOrderPaidStatus(requestId,paidStatus);
-	}
+	}*/
 	
 
 	@RequestMapping(value = { "/updateMedicineOrderDeliveredStatus" }, method = RequestMethod.POST)
@@ -159,12 +162,12 @@ public class PrescriptionOrderApiController {
 		return prescriptionOrderService.updateMedicineOrderDeliveredStatus(requestId,status);
 	}
 	
-	@RequestMapping(value = { "/updateUploadedPrescriptionMedicineOrderDeliveredStatus" }, method = RequestMethod.POST)
+	/*@RequestMapping(value = { "/updateUploadedPrescriptionMedicineOrderDeliveredStatus" }, method = RequestMethod.POST)
 	public @ResponseBody int updateUploadedPrescriptionMedicineOrderDeliveredStatus(@RequestParam("requestId")int requestId, @RequestParam("status")int status) {
   
 		
 		return selfUploadedPrescriptionToMedicalRepository.updateMedicineOrderDeliveredStatus(requestId,status);
-	}
+	}*/
 	
 	
 	@RequestMapping(value = { "/getMedicalCancelledOrderByMedicalIdAndStatus" }, method = RequestMethod.POST)
@@ -172,6 +175,14 @@ public class PrescriptionOrderApiController {
   
 		
 		return prescriptionOrderService.getMedicalCancelledOrderByMedicalIdAndStatus(medicalId, status);
+	}
+	
+	
+	@RequestMapping(value = { "/getPrescriptionMedicalCancelledOrderByMedicalIdAndStatus" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetMedicalOrderDetails> getPrescriptionMedicalCancelledOrderByMedicalIdAndStatus(@RequestParam("medicalId")int medicalId,@RequestParam("status")int status) {
+  
+		
+		return getMedicalOrderDetailsRepository.getUploadedPrescriptionMedicalOrderDetailsByMedicalIdAndStatus(medicalId, status);
 	}
 	
 	

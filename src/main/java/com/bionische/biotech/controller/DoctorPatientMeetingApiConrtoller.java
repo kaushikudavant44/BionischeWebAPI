@@ -29,6 +29,7 @@ import com.bionische.biotech.model.PatientAddressList;
 import com.bionische.biotech.model.PatientCart;
 import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.PharmacyDayOrderDetails;
+import com.bionische.biotech.model.SelfUploadedPrescriptionToMedical;
 import com.bionische.biotech.repository.AppointmentDetailsRepository;
 import com.bionische.biotech.repository.ConsultingDetailsRepository;
 import com.bionische.biotech.repository.DoctorAppOfLastThirtyDaysRepository;
@@ -43,6 +44,7 @@ import com.bionische.biotech.repository.PharmacyDayOrderDetailsRepository;
 import com.bionische.biotech.repository.PrescriptionToMedicalRepository;
 import com.bionische.biotech.service.DoctorPatientMeetingService;
 import com.bionische.biotech.stemcell.repository.GetSelfUploadedPrescriptionToMedicalRepository;
+import com.bionische.biotech.stemcell.repository.SelfUploadedPrescriptionToMedicalRepository;
 
 @RestController
 public class DoctorPatientMeetingApiConrtoller {
@@ -88,6 +90,10 @@ public class DoctorPatientMeetingApiConrtoller {
 	
 	@Autowired
 	GetSelfUploadedPrescriptionToMedicalRepository getSelfUploadedPrescriptionToMedicalRepository;
+	
+	@Autowired
+	SelfUploadedPrescriptionToMedicalRepository selfUploadedPrescriptionToMedicalRepository;
+	
 
 	// insert specialization
 	@RequestMapping(value = { "/insertDoctoPatientMeeting" }, method = RequestMethod.POST)
@@ -253,7 +259,32 @@ public class DoctorPatientMeetingApiConrtoller {
 		}
 		return info;
 	}
+	
+	
+	@RequestMapping(value = { "/cancelUploadedPrescriptionOrder" }, method = RequestMethod.POST)
+	public @ResponseBody Info cancelUploadedPrescriptionOrder(@RequestParam("medicalRequestId") int medicalRequestId) {
+		Info info = new Info();
+		int res = 0;
 
+		try {
+
+			res = selfUploadedPrescriptionToMedicalRepository.updateMedicineOrderDeliveredStatus(medicalRequestId, 3);
+			if (res > 0) {
+				info.setError(false);
+				info.setMessage("success");
+
+			} else {
+				info.setError(true);
+				info.setMessage("failed");
+			}
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return info;
+	}
+	
+	
 	@RequestMapping(value = { "/getPatientOrderDetailsByPatientIdAndDate" }, method = RequestMethod.POST)
 	public @ResponseBody List<GetMedicalOrderDetails> getPatientOrderDetailsByPatientIdAndDate(
 			@RequestParam("patientId") int patientId, @RequestParam("month") int month) {
@@ -265,6 +296,22 @@ public class DoctorPatientMeetingApiConrtoller {
 
 		return getMedicalOrderDetailsRepository.getPatientOrderDetailsByPatientId(patientId, date);
 	}
+	
+	
+	@RequestMapping(value = { "/getUploadedPrescriptionPatientOrderDetailsByPatientIdAndDate" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetMedicalOrderDetails> getUploadedPrescriptionPatientOrderDetailsByPatientIdAndDate(
+			@RequestParam("patientId") int patientId, @RequestParam("month") int month) {
+
+		Date date = new Date(0);
+		if (month != 0) {
+			date = java.sql.Date.valueOf(LocalDate.now().minus(month, ChronoUnit.MONTHS));
+		}
+
+		System.out.println("date is= "+date);
+		
+		return getMedicalOrderDetailsRepository.getUploadedPrescriptionPatientOrderDetailsByPatientId(patientId, date);
+	}
+	
 
 	@RequestMapping(value = { "/getPatientAllOrderDetailsByPatientId" }, method = RequestMethod.POST)
 	public @ResponseBody List<GetMedicalOrderDetails> getPatientAllOrderDetailsByPatientId(
@@ -279,11 +326,20 @@ public class DoctorPatientMeetingApiConrtoller {
 
 		return getMedicalOrderDetailsRepository.getPatientOrderDetailsByRequestId(requestId);
 	}
+	
+	@RequestMapping(value = { "/getUploadedPresPatientOrderDetailsByRequestId" }, method = RequestMethod.POST)
+	public @ResponseBody GetMedicalOrderDetails getUploadedPresPatientOrderDetailsByRequestId(
+			@RequestParam("requestId") int requestId) {
+
+		return getMedicalOrderDetailsRepository.getPatientOrderDetailsBillByRequestId(requestId);
+		
+	}
+	
 	@RequestMapping(value = { "/getPatientOrderBillDetailsByRequestId" }, method = RequestMethod.POST)
-	public @ResponseBody GetSelfUploadedPrescriptionToMedical getPatientOrderBillDetailsByRequestId(
+	public @ResponseBody GetMedicalOrderDetails getPatientOrderBillDetailsByRequestId(
 			@RequestParam("requestId") int requestId) {
 			
-		return getSelfUploadedPrescriptionToMedicalRepository.getPatientOrderDetailsByRequestId(requestId);
+		return getMedicalOrderDetailsRepository.getPatientOrderDetailsBillByRequestId(requestId);
 	}
 	
 	@RequestMapping(value = { "/getPatientPaymentConcultingDetails" }, method = RequestMethod.POST)

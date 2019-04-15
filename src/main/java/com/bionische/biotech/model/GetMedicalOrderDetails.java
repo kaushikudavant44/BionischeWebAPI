@@ -80,8 +80,19 @@ public class GetMedicalOrderDetails {
 	@Column(name="payment_date")
 	private String paymentDate;
 	
+	@Column(name="string_1")
+	private String string1;
 	
 	
+	
+	public String getString1() {
+		return string1;
+	}
+
+	public void setString1(String string1) {
+		this.string1 = string1;
+	}
+
 	public String getPaymentDate() {
 		return DateConverter.convertToDMY(paymentDate);
 	}
@@ -273,8 +284,10 @@ public class GetMedicalOrderDetails {
 				+ ", deliveryType=" + deliveryType + ", totalAmt=" + totalAmt + ", pincode=" + pincode
 				+ ", patientContact=" + patientContact + ", paymentStatus=" + paymentStatus + ", delStatus=" + delStatus
 				+ ", status=" + status + ", address=" + address + ", email=" + email + ", contact=" + contact
-				+ ", paymentDate=" + paymentDate + "]";
+				+ ", paymentDate=" + paymentDate + ", string1=" + string1 + "]";
 	}
+
+	
 
 	
 

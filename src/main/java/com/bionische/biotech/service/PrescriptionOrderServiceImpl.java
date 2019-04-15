@@ -78,6 +78,8 @@ public class PrescriptionOrderServiceImpl implements PrescriptionOrderService {
 
 		PrescriptionToMedical prescriptionToMedicalRes = prescriptionToMedicalRepository.save(prescriptionToMedical);
 
+		if(prescriptionToMedical.getInt2()==0) {
+		
 		List<PrescriptionDetails> prescriptionDetailsList = prescriptionDetailsRepository
 				.findByMeetingId(prescriptionToMedicalRes.getMeetId());
 
@@ -95,17 +97,19 @@ public class PrescriptionOrderServiceImpl implements PrescriptionOrderService {
 
 			PrescriptionOrderDetails prescriptionOrderDetailsRes = prescriptionOrderDetailsRepository
 					.save(prescriptionOrderDetails);
-			GetPatientContactDetailsById getPatientContactDetailsById = getPatientContactDetailsByIdRepository
-					.getPatientContactDetailsById(prescriptionToMedical.getPatientId());
-
-			sendEMailService.sendMail("Your Order has been successfully Place",
-					getPatientContactDetailsById.getfName() + " " + getPatientContactDetailsById.getlName()
-							+ " Your order has been successfully place. \n To view your order "
-							+ ConstantFileUploadPath.FRONTEND_URL
-							+ "showMyOrder/ \n We will notify you about order status\n Thank you.",
-					getPatientContactDetailsById.getEmail());
+			
 
 		}
+		}
+		GetPatientContactDetailsById getPatientContactDetailsById = getPatientContactDetailsByIdRepository
+				.getPatientContactDetailsById(prescriptionToMedical.getPatientId());
+
+		sendEMailService.sendMail("Your Order has been successfully Place",
+				getPatientContactDetailsById.getfName() + " " + getPatientContactDetailsById.getlName()
+						+ " Your order has been successfully place. \n To view your order "
+						+ ConstantFileUploadPath.FRONTEND_URL
+						+ "showMyOrder/ \n We will notify you about order status\n Thank you.",
+				getPatientContactDetailsById.getEmail());
 
 		return prescriptionToMedicalRes;
 	}
