@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.Common.Constants;
 import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.AppointmentTimeList;
 import com.bionische.biotech.model.DoctorDetails;
@@ -56,6 +57,7 @@ import com.bionische.biotech.repository.TransactionDetailsRepository;
 import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.SendEMailService;
 import com.bionische.biotech.service.SendFcmNotificationService;
+import com.bionische.biotech.service.SendTextMessageService;
 import com.bionische.biotech.service.SharingReportToDoctorService;
 
 @RestController
@@ -75,6 +77,8 @@ public class LabApiConrtoller {
 	@Autowired
 	LabTestsRepository labTestsRepository;
 	 
+	@Autowired
+	SendTextMessageService sendTextMessageService;
 	
 	@Autowired
 	AppointmentTimeRepository appointmentTimeRepository;
@@ -615,7 +619,19 @@ public @ResponseBody LabDetails getLabDetailsByUsrname(@RequestParam("userName")
 	Info info=new Info();
  try {
 	 labDetailsRes=	labDetailsRepository.findByUserNameAndDelStatus(uName,0);
-	
+	 if(labDetailsRes!=null)
+	 {
+	  
+	 	      
+	 	 
+	 	String otp = String.valueOf(Constants.generateOTP(6));
+	 	sendTextMessageService.sendTextSms("One Time Password is "+otp+" for Forgot Password", labDetailsRes.getContact());
+	 	labDetailsRes.setPassword(otp);
+	 	String contactNo="******"+labDetailsRes.getContact().substring(labDetailsRes.getContact().length()-4, labDetailsRes.getContact().length());
+	 	labDetailsRes.setContact(contactNo);
+	 }
+	 
+	 
 	
  }
  catch (Exception e) {
