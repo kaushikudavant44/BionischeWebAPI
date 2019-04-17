@@ -1920,27 +1920,30 @@ public class RestApiController {
 	}
 	// Get Patient username details
 
-	@RequestMapping(value = { "/getUserNameForForgetPwd" }, method = RequestMethod.POST)
-	public @ResponseBody Info getUserNameForForgetPwd(@RequestParam("userName") String uName)
+	@RequestMapping(value = { "/getPatientByUserNameForForgotPassword" }, method = RequestMethod.POST)
+	public @ResponseBody PatientDetails getPatientByUserNameForForgotPassword(@RequestParam("userName") String uName)
 
 	{
-		PatientDetails patientDetailsRes = new PatientDetails();
-		Info info = new Info();
+ 
 		try {
 
-			patientDetailsRes = patientDetailsRepository.findByUserNameAndDelStatus(uName, 0);
+			PatientDetails patientDetailsRes = patientDetailsRepository.findByUserNameAndDelStatus(uName, 0);
 			if (patientDetailsRes != null) {
-				info.setMessage(patientDetailsRes.getEmail());
-				info.setError(false);
-			} else {
-				info.setMessage("Failed");
-				info.setError(true);
-			}
+				 
+				 
+				String otp = String.valueOf(Constants.generateOTP(6));
+				sendTextMessageService.sendTextSms("One Time Password is "+otp+" for Forgot Password", patientDetailsRes.getContactNo());
+				patientDetailsRes.setPassword(otp);
+				String contactNo="******"+patientDetailsRes.getContactNo().substring(patientDetailsRes.getContactNo().length()-4, patientDetailsRes.getContactNo().length());
+				patientDetailsRes.setContactNo(contactNo);
+				return patientDetailsRes;
+				
+			} 
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		return info;
+		return null;
 
 	}
 
@@ -1982,6 +1985,18 @@ if(doctorDetails!=null)
 		try {
 			medicalDetails = medicalDetailsRepository.findByUserNameAndDelStatus(userName, 0);
 
+			if(medicalDetails!=null)
+			{
+			 
+				      
+				 
+				String otp = String.valueOf(Constants.generateOTP(6));
+				sendTextMessageService.sendTextSms("One Time Password is "+otp+" for Forgot Password", medicalDetails.getContact());
+				medicalDetails.setPassword(otp);
+				String contactNo="******"+medicalDetails.getContact().substring(medicalDetails.getContact().length()-4, medicalDetails.getContact().length());
+				medicalDetails.setContact(contactNo);
+			}
+			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
