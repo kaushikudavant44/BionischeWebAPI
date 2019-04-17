@@ -33,6 +33,8 @@ import com.bionische.biotech.model.LabSubscriptionDetails;
 import com.bionische.biotech.model.LabTests;
 import com.bionische.biotech.model.LabTestsList;
 import com.bionische.biotech.model.PateintReportPaymentDetails;
+import com.bionische.biotech.model.lab.RadiologistPndtDetails;
+import com.bionische.biotech.radiology.repository.RadiologistPndtDetailsRepository;
 import com.bionische.biotech.repository.AppointmentTimeRepository;
 import com.bionische.biotech.repository.BabyBornReportsRepository;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
@@ -118,6 +120,9 @@ public class LabApiConrtoller {
 	
 	@Autowired
 	LabAppointmentCountRepository labAppointmentCountRepository;
+	
+	@Autowired
+	RadiologistPndtDetailsRepository radiologistPndtDetailsRepository;
 
 @Autowired
 LabTestsRepository labTypesRepository;
@@ -197,6 +202,20 @@ LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 		e.printStackTrace();
 		}
 		return labDetailsList;
+	}
+	
+	@RequestMapping(value = { "/getRadiologistUserNameAndPasswordByLabId" }, method = RequestMethod.POST)
+	public @ResponseBody RadiologistPndtDetails getRadiologistUserNameAndPasswordByLabId(@RequestParam("labId") int labId) {
+		
+		return radiologistPndtDetailsRepository.findByLabId(labId);
+	}
+	
+	
+	@RequestMapping(value = { "/insertRadiologistUserNameAndPassword" }, method = RequestMethod.POST)
+	public @ResponseBody RadiologistPndtDetails insertRadiologistUserNameAndPassword(@RequestBody RadiologistPndtDetails radiologistPndtDetails) {
+	
+		
+		return radiologistPndtDetailsRepository.save(radiologistPndtDetails);
 	}
 	/*   Ganesh 2019-02-19
 	 * 
