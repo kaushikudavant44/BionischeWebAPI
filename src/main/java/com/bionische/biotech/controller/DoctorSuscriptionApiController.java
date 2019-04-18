@@ -91,7 +91,7 @@ System.out.println("doctorSubscriptionDetailsRes "+doctorSubscriptionDetailsRes.
 
 		try {
 			doctorSubscriptionDetailsRes = doctorSubscriptionDetailsRepository
-					.findByPackageExpDateGreaterThanEqualAndDoctorIdAndTxnStatus(date, doctorId, 0);
+					.findTop1ByPackageExpDateGreaterThanEqualAndDoctorIdAndTxnStatusOrderBySuscriptionIdDesc(date, doctorId, 0);
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());// TODO: handle exception

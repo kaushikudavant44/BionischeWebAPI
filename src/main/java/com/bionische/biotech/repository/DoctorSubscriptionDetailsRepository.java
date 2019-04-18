@@ -12,7 +12,7 @@ public interface DoctorSubscriptionDetailsRepository extends JpaRepository<Docto
 
 	DoctorSubscriptionDetails save(DoctorSubscriptionDetails doctorSubscriptionDetails);
 	
-	DoctorSubscriptionDetails findByPackageExpDateGreaterThanEqualAndDoctorIdAndTxnStatus(String date, int doctorId,int txnStatus);
+	DoctorSubscriptionDetails findTop1ByPackageExpDateGreaterThanEqualAndDoctorIdAndTxnStatusOrderBySuscriptionIdDesc(String date, int doctorId,int txnStatus);
 	
 	@Query(value=" SELECT * from t_doctor_subscription_details where created_date BETWEEN :fromDate AND :toDate AND txn_status!=0 AND doctor_id=:doctorId",nativeQuery=true)
 	List<DoctorSubscriptionDetails> findByCreatedDateBetweenAndTxnStatusNotAndDoctorId(@Param("doctorId")int doctorId, @Param("fromDate")String fromDate, @Param("toDate")String toDate);
