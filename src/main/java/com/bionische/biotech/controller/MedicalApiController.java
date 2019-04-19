@@ -150,7 +150,7 @@ public class MedicalApiController {
 				
 				Info pharmacySuscriptionInfo =new Info();
 				pharmacySuscriptionInfo.setError(true);
-				PharmacySubscriptionDetails pharmacySubscriptionDetailsRes=pharmacySubscriptionDetailsRepository.findByPackageExpDateGreaterThanEqualAndMedicalIdAndTxnStatus(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), medicalDetails.getMedicalId(),1);
+				PharmacySubscriptionDetails pharmacySubscriptionDetailsRes=pharmacySubscriptionDetailsRepository.findTop1ByPackageExpDateGreaterThanEqualAndMedicalIdAndTxnStatusOrderBySuscriptionIdDesc(new SimpleDateFormat("yyyy-MM-dd").format(new Date()), medicalDetails.getMedicalId(),1);
 				
 				if(pharmacySubscriptionDetailsRes!=null)
 				{
