@@ -163,7 +163,7 @@ public class SendFcmNotificationServiceImpl implements SendFcmNotificationServic
 				   Notification notification=new Notification();
 				   
 				   notification.setBody(message);
-				   notification.setClick_action(Constants.SITE_URL);
+				   notification.setClick_action(clickAction);
 				   notification.setIcon(Constants.BIONISCHE_ICON);
 				   notification.setTitle(title);
 				   

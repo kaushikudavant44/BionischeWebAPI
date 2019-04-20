@@ -44,7 +44,7 @@ public class AdvertisementApiController {
 		
 		Info info=new Info();
 		info.setError(true);
-		int res= advertiseDetailsRepository.removeAdvertise(1, adsId);
+		int res= advertiseDetailsRepository.updateStatus(1, adsId);
 		 if(res>0)
 		 {
 			 info.setError(false);
@@ -57,4 +57,5 @@ public class AdvertisementApiController {
 		 return info;
 	}
 	
+
 }

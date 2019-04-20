@@ -1,7 +1,9 @@
 package com.bionische.biotech.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ import com.bionische.biotech.model.AdminDetails;
 import com.bionische.biotech.model.AdminLogin;
 import com.bionische.biotech.model.DoctorCertificateDetails;
 import com.bionische.biotech.model.DoctorDetails;
+import com.bionische.biotech.model.GetAdvertiseDetails;
 import com.bionische.biotech.model.GetDocAvailableTimeDetails;
 import com.bionische.biotech.model.GetDoctorHospitalDetails;
 import com.bionische.biotech.model.GetLabRatingReview;
@@ -48,9 +51,11 @@ import com.bionische.biotech.model.RatingDetails;
 import com.bionische.biotech.model.TermsAndConditions;
 import com.bionische.biotech.model.UserQueryDetails;
 import com.bionische.biotech.repository.AdminDetailsRepository;
+import com.bionische.biotech.repository.AdvertiseDetailsRepository;
 import com.bionische.biotech.repository.AppointmentTimeRepository;
 import com.bionische.biotech.repository.DoctorCertificateDetailsRepository;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
+import com.bionische.biotech.repository.GetAdvertiseDetailsRepository;
 import com.bionische.biotech.repository.GetDocAvailableTimeDetailsRepository;
 import com.bionische.biotech.repository.GetDoctorHospitalDetailsRepository;
 import com.bionische.biotech.repository.GetLabRatingReviewRepository;
@@ -68,7 +73,9 @@ import com.bionische.biotech.repository.RatingDetailsRepository;
 import com.bionische.biotech.repository.TermsAndConditionsRepository;
 import com.bionische.biotech.repository.UserQueryDetailsRepository;
 import com.bionische.biotech.service.PrescriptionOrderService;
+import com.bionische.biotech.service.SendEMailService;
 import com.bionische.biotech.service.SendFcmNotificationService;
+import com.bionische.biotech.service.SendTextMessageService;
 import com.bionische.biotech.stemcell.model.GetStemCellsDetails;
 import com.bionische.biotech.stemcell.repository.GetStemCellsDetailsRepository;
 
@@ -158,6 +165,14 @@ public class AdminPanelController {
 	SendFcmNotificationService sendFcmNotificationService;
 	@Autowired
 	UserQueryDetailsRepository userQueryDetailsRepository;
+	@Autowired
+	GetAdvertiseDetailsRepository getAdvertiseDetailsRepository;
+	@Autowired
+	AdvertiseDetailsRepository advertiseDetailsRepository;
+	@Autowired
+	SendTextMessageService sendTextMessageService;
+	@Autowired
+	SendEMailService sendEMailService;
 	/*
 	 * 
 	 * @RequestMapping(value = { "/getDoctorAppointmentDetailsByPatientId" }, method
@@ -194,6 +209,67 @@ public class AdminPanelController {
 		
 		return info;
 	}
+	
+
+	@RequestMapping(value = { "/getUnsolveUserQuery" }, method = RequestMethod.GET)
+	public @ResponseBody List<UserQueryDetails> getUnsolveUserQuery() {
+		 
+		try {
+		List<UserQueryDetails> uerQueryDetailsList=userQueryDetailsRepository.findByStatusOrderByTicketNoDesc(0);
+		 
+		return uerQueryDetailsList;
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+		return null;
+	}
+	
+	
+	
+	@RequestMapping(value = { "/sendReplayToUserQuery" }, method = RequestMethod.GET)
+	public @ResponseBody Info sendReplayToUserQuery(@RequestParam("ticketNo")int ticketNo, @RequestParam("reply")String reply) {
+		 
+		try {
+			String dateTime=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		int res=userQueryDetailsRepository.sendReplyToUserQuery(ticketNo, reply, dateTime);
+		 if(res>0)
+		 {
+			 
+			 UserQueryDetails userQueryDetails= userQueryDetailsRepository.findByTicketNo(ticketNo);
+			 Info info=new Info();
+			 info.setError(false);
+			 info.setMessage("Reply sent on users mail");
+			 
+			 try {
+				 sendEMailService.sendMail("Bionische # : "+ticketNo +" Details", reply, userQueryDetails.getEmail());
+			 }catch (Exception e) {
+				System.out.println("Email "+e.getMessage());// TODO: handle exception
+			}
+			 return info;
+		 }
+		
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+		return null;
+	}
+	
+	@RequestMapping(value = { "/getSolveUserQuery" }, method = RequestMethod.GET)
+	public @ResponseBody List<UserQueryDetails> getSolveUserQuery() {
+		 
+		try {
+		List<UserQueryDetails> uerQueryDetailsList=userQueryDetailsRepository.findByStatusOrderByTicketNoDesc(1);
+		 
+		return uerQueryDetailsList;
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+		return null;
+	}
+	
 	
 	@RequestMapping(value = { "/getVerificationPendingCount" }, method = RequestMethod.GET)
 	public @ResponseBody GetVerificationPendingCount getVerificationPendingCount() {
@@ -1172,4 +1248,37 @@ public class AdminPanelController {
 		}
 		return info; 
 	} 
+	
+	
+
+	@RequestMapping(value = { "/getPendingVerificationAdvertise" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetAdvertiseDetails> getPendingVerificationAdvertise(@RequestParam("userType")int userType) {
+		
+		return getAdvertiseDetailsRepository.getByFromTypeAndDelStatus(userType,2);
+	}
+	
+	@RequestMapping(value = { "/getApprovedAdvertise" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetAdvertiseDetails> getApprovedAdvertise(@RequestParam("userType")int userType) {
+		
+		return getAdvertiseDetailsRepository.getByFromTypeAndDelStatus(userType,0);
+	}
+	
+	
+	@RequestMapping(value = { "/changeAdvertiseStatus" }, method = RequestMethod.POST)
+	public @ResponseBody Info changeAdvertiseStatus(@RequestParam("adsId")int adsId,@RequestParam("delStatus")int delStatus) {
+		
+		int res= advertiseDetailsRepository.updateStatus(adsId,delStatus);
+		if(res>0)
+		{
+			Info info=new Info();
+			info.setError(false);
+			if(delStatus==1)
+			info.setMessage("Reject/Delete Successufully");
+			else if(delStatus==0)
+				info.setMessage("Approved Successufully");
+			return info;
+		}
+		return null;
+	}
+	
 }

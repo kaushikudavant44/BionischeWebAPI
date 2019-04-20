@@ -26,6 +26,12 @@ public class UserQueryDetails {
 	
 	private String message;
 
+	private String reply;
+	
+	private String generatedDate;
+	
+	private String replyDate;
+	
 	public int getTicketNo() {
 		return ticketNo;
 	}
@@ -74,11 +80,37 @@ public class UserQueryDetails {
 		this.message = message;
 	}
 
+	public String getReply() {
+		return reply;
+	}
+
+	public void setReply(String reply) {
+		this.reply = reply;
+	}
+
+	public String getGeneratedDate() {
+		return generatedDate;
+	}
+
+	public void setGeneratedDate(String generatedDate) {
+		this.generatedDate = generatedDate;
+	}
+
+	public String getReplyDate() {
+		return replyDate;
+	}
+
+	public void setReplyDate(String replyDate) {
+		this.replyDate = replyDate;
+	}
+
 	@Override
 	public String toString() {
 		return "UserQueryDetails [ticketNo=" + ticketNo + ", status=" + status + ", name=" + name + ", email=" + email
-				+ ", phone=" + phone + ", message=" + message + "]";
+				+ ", phone=" + phone + ", message=" + message + ", reply=" + reply + ", generatedDate=" + generatedDate
+				+ ", replyDate=" + replyDate + "]";
 	}
-	
+
+	 
 	
 }

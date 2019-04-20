@@ -129,12 +129,18 @@ public class HospitalApiController {
 	@RequestMapping(value = { "/insertDoctorHospital" }, method = RequestMethod.POST)
 	public @ResponseBody DoctorHospitalDetails insertDoctorHospital(@RequestBody DoctorHospitalDetails doctorHospitalDetails) {
 	
-		DoctorHospitalDetails doctorHospitalDetailsRes = new DoctorHospitalDetails();
+		 
 
 		try {
-			doctorHospitalDetailsRes = doctorHospitalDetailsRepository.save(doctorHospitalDetails);
+			DoctorHospitalDetails doctorHospitalDetailsResponse=doctorHospitalDetailsRepository.findByDoctorIdAndHospitalId(doctorHospitalDetails.getDoctorId(),doctorHospitalDetails.getHospitalId());
+			if(doctorHospitalDetailsResponse!=null) { 
+				doctorHospitalDetails.setId(doctorHospitalDetailsResponse.getId());
+				if(doctorHospitalDetailsResponse.getDelStatus()==1)
+					doctorHospitalDetails.setDelStatus(0);
+			}
+			DoctorHospitalDetails	doctorHospitalDetailsRes = doctorHospitalDetailsRepository.save(doctorHospitalDetails);
 			System.out.println(doctorHospitalDetailsRes.toString());
-
+			return doctorHospitalDetailsRes;
 		}
 
 		catch (Exception e) {
@@ -142,7 +148,7 @@ public class HospitalApiController {
 
 		}
 
-		return doctorHospitalDetailsRes;
+		return null;
 	}
 	
 	@RequestMapping(value = { "/getAllHospitalByType" }, method = RequestMethod.POST)

@@ -1065,9 +1065,17 @@ public class RestApiController {
 
 				GetPatientContactDetailsById getPatientContactDetailsById = getPatientContactDetailsByIdRepository
 						.getPatientContactDetailsByDoctorAppointId(appId);
+				
+				if (status == 3 || status==2) {
 				MESSAGE = getPatientContactDetailsById.getfName() + " " + getPatientContactDetailsById.getlName()
-						+ ", your doctor consult appointment cancel because of some issue reschedule your appointment https://www.bionische.com/showBookDoctorAppointment?appPatientId=1&currency=&doctorCity=1&countryId=1&stateId=1&CityId=1&specId=1&appDate="
+						+ ", your doctor consult appointment cancel because of some issue reschedule your appointment"+ Constants.SITE_URL+"showBookDoctorAppointment?appPatientId=1&currency=&doctorCity=1&countryId=1&stateId=1&CityId=1&specId=1&appDate="
 						+ formatter.format(date) + "&consultType=1&submit=Submit";
+				}
+				else if(status == 1) {
+				MESSAGE = getPatientContactDetailsById.getfName() + " " + getPatientContactDetailsById.getlName()
+				+ ", your appointment with Dr. "+getAppointmentDetails.getDoctorName()+" is completed. Please login to your Biocare account for prescription & other details."+Constants.SITE_URL;
+				 
+				}
 				sendTextMessageService.sendTextSms(MESSAGE, getPatientContactDetailsById.getContactNo());
 
 				sendEMailService.sendMail("APPOINTMENT CANCEL", MESSAGE, getPatientContactDetailsById.getEmail());
@@ -2815,9 +2823,10 @@ if(doctorDetails!=null)
 	public @ResponseBody Info sendOtpOnMobile(@RequestParam("contactNo") String contactNo) {
 		Info info = new Info();
 		// create instance of Random class
-		Random rand = new Random();
+		 
 		// Generate random integers in range 0 to 999
-		int generatedOTP = rand.nextInt(1000000);
+		String generatedOTP=String.valueOf(Constants.generateOTP(6));
+		 
 
 		MESSAGE = generatedOTP + " is your One Time Password for verification of user mobile number";
 		try {

@@ -506,9 +506,9 @@ public class ConsultingDetailsController {
 				}
 				PatientDetails patientDetails=patientDetailsRepository.findByPatientId(appointmentDetails.getPatientId());
 				DoctorDetails doctorDetails=doctorDetailsRepository.findByDoctorId(appointmentDetails.getDoctorId());
-				
+				if(appointmentDetails.getTxnId().equals("0"))
 				sendTextMessageService.sendTextSms("Transaction Id"+appointmentDetails.getTxnId()+" "+patientDetails.getfName()+" "+patientDetails.getlName()+" your consulting payment "+consultingAmount+" rs. successfully done for doctor "+doctorDetails.getfName()+" "+doctorDetails.getlName()+".", patientDetails.getContactNo());
-				sendTextMessageService.sendTextSms("Transaction Id"+appointmentDetails.getTxnId()+" Dr. "+doctorDetails.getfName()+" "+doctorDetails.getlName()+"  your consulting payment "+consultingAmount+" rs. successfully paid by "+patientDetails.getfName()+" "+patientDetails.getlName()+".", doctorDetails.getContactNo());
+				//sendTextMessageService.sendTextSms("Transaction Id"+appointmentDetails.getTxnId()+" Dr. "+doctorDetails.getfName()+" "+doctorDetails.getlName()+"  your consulting payment "+consultingAmount+" rs. successfully paid by "+patientDetails.getfName()+" "+patientDetails.getlName()+".", doctorDetails.getContactNo());
 			
 			
 			} else {
