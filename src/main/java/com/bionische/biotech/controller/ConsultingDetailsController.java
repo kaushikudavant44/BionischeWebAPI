@@ -566,6 +566,30 @@ public class ConsultingDetailsController {
 		}
 		return info;
 	}
+	
+	@RequestMapping(value = { "/getPrescriptionByMeetId" }, method = RequestMethod.POST)
+	public @ResponseBody List<PrescriptionDetails> getPrescriptionByMeetId(@RequestParam("meetId") int meetingId)
+
+	{
+
+		List<PrescriptionDetails> PrescriptionDetails = new ArrayList<PrescriptionDetails>();
+		Info info = new Info();
+		try {
+
+			PrescriptionDetails = prescriptionDetailsRepository.findByMeetingId(meetingId);
+
+			System.out.println("prescription list " + PrescriptionDetails.toString());
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println(e.getMessage());
+
+		}
+
+		return PrescriptionDetails;
+	}
+	
+	
 }
 
 
