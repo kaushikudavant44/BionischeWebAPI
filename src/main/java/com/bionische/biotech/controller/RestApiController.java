@@ -56,6 +56,7 @@ import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabCertificateDetails;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.MedicalDetails;
+import com.bionische.biotech.model.OtpSessionDetails;
 import com.bionische.biotech.model.PatientAddress;
 import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.PatientMemberRelation;
@@ -1929,10 +1930,10 @@ public class RestApiController {
 	// Get Patient username details
 
 	@RequestMapping(value = { "/getPatientByUserNameForForgotPassword" }, method = RequestMethod.POST)
-	public @ResponseBody PatientDetails getPatientByUserNameForForgotPassword(@RequestParam("userName") String uName)
+	public @ResponseBody OtpSessionDetails getPatientByUserNameForForgotPassword(@RequestParam("userName") String uName)
 
 	{
- 
+		OtpSessionDetails otpSessionDetails=new OtpSessionDetails();
 		try {
 
 			PatientDetails patientDetailsRes = patientDetailsRepository.findByUserNameAndDelStatus(uName, 0);
@@ -1944,40 +1945,47 @@ public class RestApiController {
 				patientDetailsRes.setPassword(otp);
 				String contactNo="******"+patientDetailsRes.getContactNo().substring(patientDetailsRes.getContactNo().length()-4, patientDetailsRes.getContactNo().length());
 				patientDetailsRes.setContactNo(contactNo);
-				return patientDetailsRes;
+				
+				otpSessionDetails.setId(patientDetailsRes.getPatientId());
+				otpSessionDetails.setContactNo(contactNo);
+				otpSessionDetails.setOtp(otp);
+				otpSessionDetails.setUserName(uName);
+			 
 				
 			} 
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		return null;
+		return otpSessionDetails;
 
 	}
 
 	@RequestMapping(value = { "/doctorDetailsByUsrname" }, method = RequestMethod.POST)
-	public @ResponseBody DoctorDetails doctorDetailsByUsrname(@RequestParam("userName") String userName)
+	public @ResponseBody OtpSessionDetails doctorDetailsByUsrname(@RequestParam("userName") String userName)
 
 	{
-		Info info = new Info();
+		OtpSessionDetails otpSessionDetails=new OtpSessionDetails();
+		 
 		DoctorDetails doctorDetails = new DoctorDetails();
 		try {
 			doctorDetails = doctorDetailsRepository.getLoginUserName(userName);
 if(doctorDetails!=null)
 {
- 
-	      
+	
+	String contactNo="******"+doctorDetails.getContactNo().substring(doctorDetails.getContactNo().length()-4, doctorDetails.getContactNo().length());
+	otpSessionDetails.setContactNo(contactNo);
 	 
 	String otp = String.valueOf(Constants.generateOTP(6));
 	sendTextMessageService.sendTextSms("One Time Password is "+otp+" for Forgot Password", doctorDetails.getContactNo());
-	doctorDetails.setPassword(otp);
-	String contactNo="******"+doctorDetails.getContactNo().substring(doctorDetails.getContactNo().length()-4, doctorDetails.getContactNo().length());
-	doctorDetails.setContactNo(contactNo);
+	otpSessionDetails.setOtp(otp);
+	otpSessionDetails.setUserName(userName);
+	otpSessionDetails.setId(doctorDetails.getDoctorId());
 }
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		return doctorDetails;
+		return otpSessionDetails;
 
 	}
 	
