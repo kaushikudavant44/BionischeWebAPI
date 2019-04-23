@@ -1,5 +1,8 @@
 package com.bionische.biotech.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,12 +17,13 @@ import com.bionische.biotech.model.GetBabyBornReports;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.VaccinationPatientDetails;
+import com.bionische.biotech.model.lab.PatientReportsDetails;
 import com.bionische.biotech.repository.BabyBornReportsRepository;
 import com.bionische.biotech.repository.FamilyDetailsRepository;
 import com.bionische.biotech.repository.GetBabyBornReportsRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.VaccinationPatientDetailsRepository;
-
+import com.bionische.biotech.repository.lab.PatientReportsDetailsRepository;
 @RestController
 public class BabyBornReportsController {
 
@@ -29,6 +33,9 @@ public class BabyBornReportsController {
 	
 	@Autowired
 	VaccinationPatientDetailsRepository vaccinationPatientDetailsRepository;
+	
+	@Autowired
+	PatientReportsDetailsRepository patientReportsDetailsRepository;
 	  
 		@Autowired
 		FamilyDetailsRepository familyDetailsRepository;
@@ -81,6 +88,21 @@ public class BabyBornReportsController {
 		try {
 		BabyBornReports babyBornReportsRes=babyBornReportsRepository.save(babyBornReports);
 		
+		PatientReportsDetails patientReportsDetails=new PatientReportsDetails();
+				
+		patientReportsDetails.setAppointmentId(babyBornReportsRes.getBabyReportId());
+		Date date=new Date();
+		SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+		patientReportsDetails.setDate(simpleDateFormat.format(date));
+		patientReportsDetails.setDelStatus(0);
+		patientReportsDetails.setFileName("Baby Report");
+		patientReportsDetails.setFileType(8);
+		patientReportsDetails.setLabId(0);
+		patientReportsDetails.setLabTestId(1);
+		patientReportsDetails.setPatientId(babyBornReportsRes.getPatientId());
+		patientReportsDetails.setStatus(1);
+		PatientReportsDetails patientReportsDetailsRes=patientReportsDetailsRepository.save(patientReportsDetails);
+		
 		info.setError(true);
 		info.setMessage("Problem in insert");
 		if(babyBornReportsRes!=null)
@@ -128,6 +150,27 @@ public class BabyBornReportsController {
 			System.out.println(e.getMessage());// TODO: handle exception
 		}
 		return getBabyBornReports;
+		
+		
+	}
+	
+	
+	@RequestMapping(value = { "/getBabyBornReportsByReportId" }, method = RequestMethod.POST)
+	public @ResponseBody BabyBornReports getBabyBornReportsByReportId(@RequestParam("reportId") int reportId)
+	{
+	
+		BabyBornReports babyBornReports =new BabyBornReports();
+		PatientReportsDetails patientReportsDetails=patientReportsDetailsRepository.findByReportIdAndStatus(reportId, 1);
+				
+		try {
+			
+			babyBornReports=babyBornReportsRepository.findByBabyReportId(patientReportsDetails.getAppointmentId());
+	
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+		return babyBornReports;
 		
 		
 	}

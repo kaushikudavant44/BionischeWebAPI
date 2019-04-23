@@ -627,7 +627,11 @@ public class LabPatientApiConrtoller {
 	public @ResponseBody List<GetPatientReports> getPatientReportsByPatientId(@RequestParam("patientId")int patientId, @RequestParam("fromDate")String fromDate,@RequestParam("toDate")String toDate) {
 	 
 		try {
+			
+			
 		return getPatientReportsRepository.getReportsByPatientIdAndDate(patientId, fromDate, toDate);
+		
+		
 		}
 		catch (Exception e) {
 			System.out.println(e.getMessage());
