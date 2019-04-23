@@ -192,6 +192,39 @@ public class AdminPanelController {
 	 * return getDoctorAppointmentDetailsList; }
 	 */
 
+	@RequestMapping(value = { "/adminloginProcess" }, method = RequestMethod.POST)
+	public @ResponseBody AdminLogin patientLoginProcess(@RequestParam("email") String email,
+			@RequestParam("password") String password) {
+
+		System.out.println("dttfy;" + email);
+		AdminDetails adminDetails = new AdminDetails();
+
+		AdminLogin adminLogin = new AdminLogin();
+		Info info = new Info();
+
+		adminDetails = adminDetailsRepository.findByEmail(email);
+		if (adminDetails != null) {
+			info.setError(true);
+			if (adminDetails.getPassword().equals(password)) {
+				adminLogin.setAdminDetails(adminDetails);
+				info.setError(false);
+				info.setMessage("Login Successfull");
+				adminLogin.setInfo(info);
+			} else {
+				info.setError(true);
+				info.setMessage("Please enter valid credential");
+				adminLogin.setInfo(info);
+			}
+		} else {
+			info.setError(true);
+			info.setMessage("Invalid User");
+			adminLogin.setInfo(info);
+		}
+
+		System.out.println("res " + adminLogin.toString());
+		return adminLogin;
+	}
+	
 	@RequestMapping(value = { "/insertUserQuery" }, method = RequestMethod.POST)
 	public @ResponseBody Info insertUserQuery(@RequestBody UserQueryDetails userQueryDetails) {
 		Info info=new Info();
@@ -628,38 +661,7 @@ public class AdminPanelController {
 
 	}
 
-	@RequestMapping(value = { "/adminloginProcess" }, method = RequestMethod.POST)
-	public @ResponseBody AdminLogin patientLoginProcess(@RequestParam("email") String email,
-			@RequestParam("password") String password) {
-
-		System.out.println("dttfy;" + email);
-		AdminDetails adminDetails = new AdminDetails();
-
-		AdminLogin adminLogin = new AdminLogin();
-		Info info = new Info();
-
-		adminDetails = adminDetailsRepository.findByEmail(email);
-		if (adminDetails != null) {
-			info.setError(true);
-			if (adminDetails.getPassword().equals(password)) {
-				adminLogin.setAdminDetails(adminDetails);
-				info.setError(false);
-				info.setMessage("Login Successfull");
-				adminLogin.setInfo(info);
-			} else {
-				info.setError(true);
-				info.setMessage("Please enter valid credential");
-				adminLogin.setInfo(info);
-			}
-		} else {
-			info.setError(true);
-			info.setMessage("Invalid User");
-			adminLogin.setInfo(info);
-		}
-
-		System.out.println("res " + adminLogin.toString());
-		return adminLogin;
-	}
+	
 
 	@RequestMapping(value = { "/getMedicalOrderDetailsByMedicalIdAndDate" }, method = RequestMethod.POST)
 	public @ResponseBody List<GetMedicalOrderDetails> getMedicalOrderDetailsByMedicalIdAndDate(
@@ -844,6 +846,7 @@ public class AdminPanelController {
 			 {
 				 info.setError(false);
 				 info.setMessage("Doctor DelStatus Update Successfully");
+				 sendEMailService.sendMail("Document Verification", "Your Verification Completed. Welcome to Bionische", doctorDetails.getEmail());
 				 
 				 if(doctorDetails.getInt1()==0) {
 				 sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "Bionische", "Your Verification Completed. Welcome to Bionische", DateConverter.currentDateAndTime(),1);
@@ -878,7 +881,8 @@ public class AdminPanelController {
 			 {
 				 info.setError(false);
 				 info.setMessage("Doctor DelStatus Update Successfully");
-				 
+				 sendEMailService.sendMail("Document Verification Reject", "Your Verification Reject. Because "+message+". Please Upload valid document", doctorDetails.getEmail());
+					
 				 if(doctorDetails.getInt1()==0) {
 				 sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "Bionische", msg, DateConverter.currentDateAndTime(),2);
 				 }else if(doctorDetails.getInt1()==1) {
@@ -983,9 +987,12 @@ public class AdminPanelController {
 			labCertificateDetailsRepository.updateCertificateDelStatus(labId, 1, message);
 			 if(res>0)
 			 {
+				 
 				 info.setError(false);
 				 info.setMessage("Lab DelStatus Update Successfully");
 				 LabDetails labDetails=	 labDetailsRepository.findByLabId(labId);
+				 sendEMailService.sendMail("Document Verification Reject", "Your Verification Reject. Because "+message+". Please Upload valid document", labDetails.getEmail());
+					
 				 sendFcmNotificationService.notificationOnWeb(labDetails.getToken(), "Lab Certificate Rejected ", "You are uploaded Lab certificate Rejected from Bionische please upload valid file", Constants.SITE_URL);
 			 }
 			 else 
@@ -1010,6 +1017,8 @@ public class AdminPanelController {
 				 info.setError(false);
 				 info.setMessage("Lab DelStatus Update Successfully");
 				 LabDetails labDetails=	 labDetailsRepository.findByLabId(labId);
+				 sendEMailService.sendMail("Document Verification", "Your Verification Completed. Welcome to bionische. Now you can access your Biocare account.", labDetails.getEmail());
+					
 				 sendFcmNotificationService.notificationOnWeb(labDetails.getToken(), "Lab Certificate Accepted ", "You are uploaded Lab certificate Accepted from Bionische", Constants.SITE_URL);
 		
 			 }
@@ -1060,6 +1069,8 @@ public class AdminPanelController {
 				 info.setError(false);
 				 info.setMessage("medical DelStatus Update Successfully");
 				 MedicalDetails medicalDetails=medicalDetailsRepository.findByMedicalId(medicalId);
+				 sendEMailService.sendMail("Document Verification Reject", "Your Verification Reject. Because "+message+". Please Upload valid document", medicalDetails.getEmail());
+					
 				 sendFcmNotificationService.notificationOnWeb(medicalDetails.getToken(), "Pharmacy Certificate Rejected ", "You are uploaded Pharmacy certificate Rejected from Bionische please upload valid file", Constants.SITE_URL);
 					
 			 }
@@ -1085,6 +1096,8 @@ public class AdminPanelController {
 				 info.setError(false);
 				 info.setMessage("Pharmacy DelStatus Update Successfully");
 				 MedicalDetails medicalDetails=medicalDetailsRepository.findByMedicalId(medicalId);
+				 sendEMailService.sendMail("Document Verification", "Your Verification Completed. Welcome to bionische. Now you can access your Biocare account.", medicalDetails.getEmail());
+					
 				 sendFcmNotificationService.notificationOnWeb(medicalDetails.getToken(), "Pharmacy Certificate Accepted ", "You are uploaded Pharmacy certificate Accept from Bionische Now you can use Application", Constants.SITE_URL);
 			
 			 }
