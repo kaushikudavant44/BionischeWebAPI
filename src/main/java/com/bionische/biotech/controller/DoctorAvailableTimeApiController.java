@@ -1,9 +1,11 @@
 package com.bionische.biotech.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -344,5 +346,20 @@ public  Info deleteDoctorLeave(@RequestParam("leaveId")int leaveId) {
 }
  
 
-
+@RequestMapping(value = { "/getDoctorAvailabledStatusForFirstTime"}, method = RequestMethod.POST)
+public  Info getDoctorAvailabledStatusForFirstTime(@RequestParam("doctorId")int doctorId) {
+	
+	Info info=new Info();
+	info.setError(true);
+	info.setMessage("Your Availabled Time not set. Please set first Availabled Time first.");
+	String date=new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+	int res=fixDoctorAppointScheduleRepository.getAvalableTimeStatus(doctorId, date);
+	System.out.println("getAvalableTimeStatus  :"+res);
+	if(res>0)
+	{
+		info.setError(false);
+		info.setMessage("Your Availabled Time Set.");
+	}
+	return info;
+}
 }

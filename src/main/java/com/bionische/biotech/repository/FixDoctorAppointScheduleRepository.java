@@ -24,4 +24,9 @@ public interface FixDoctorAppointScheduleRepository extends JpaRepository<FixDoc
 
 	FixDoctorAppointSchedule findByDoctorIdAndClinicIdAndDelStatus(int doctorId, int clinicId, int delStatus);
 	List<FixDoctorAppointSchedule> findByDoctorIdAndDelStatus(int doctorId, int delStatus);
+
+	@Query(value="SELECT CASE WHEN (SELECT COUNT(a.doc_available_time_id) FROM doc_available_time a"
+			+ " WHERE a.doctor_id=:doctorId && a.date=:date)THEN 11 WHEN (SELECT COUNT(f.schedule_id) FROM fix_doctor_schedule f"
+			+ " WHERE f.doctor_id=:doctorId && f.del_status=0)>0 THEN 1 ELSE 0 END AS time_status", nativeQuery=true)
+	int getAvalableTimeStatus(@Param("doctorId")int doctorId, @Param("date")String date);
 }
