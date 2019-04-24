@@ -1,5 +1,6 @@
 package com.bionische.biotech.ewallet.controller;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -235,10 +236,12 @@ public class UserWalletApiController {
 		
 	try {
 	System.out.println(userId+" And "+userType);
-	
+		
+	GetWalletTransactionDetails getWalletTransactionDetails=new GetWalletTransactionDetails();
+		
 		getWalletTransactionDetailsList=getWalletTransactionDetailsRepository.getWalletTransactionDetails(userId,userType);
 		
-	
+		
 		
 		System.out.println("wallet details ="+getWalletTransactionDetailsList.toString());
 	}

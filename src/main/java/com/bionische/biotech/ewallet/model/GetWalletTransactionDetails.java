@@ -8,7 +8,6 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -16,6 +15,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
  @EntityListeners(AuditingEntityListener.class)
@@ -54,6 +55,8 @@ public class GetWalletTransactionDetails {
 	@LastModifiedDate
 	@Temporal(TemporalType.TIMESTAMP)
 	@UpdateTimestamp
+	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm a z")
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy HH:mm:ss", timezone="GMT+5:30")
 	private Date lastModifiedDate;
 	
 	@Column(name="to_user_type")
@@ -117,7 +120,7 @@ public class GetWalletTransactionDetails {
 	public void setToUserId(int toUserId) {
 		this.toUserId = toUserId;
 	}
-
+	
 	public Date getCreateDate() {
 		return createDate;
 	}
