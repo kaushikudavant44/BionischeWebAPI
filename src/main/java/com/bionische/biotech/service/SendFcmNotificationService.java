@@ -33,6 +33,8 @@ public interface SendFcmNotificationService {
 	 *        notificationType is 18=Review and Rating
 	 *        notificationType is 19=Lab Shared report with you
 	 *        notificationType is 20=Medicine Deliverd Successful
+	 *          notificationType is 25=Video Share
+	 *        
 	 * @return
 	 */
 	public ResponseEntity<String> notifyUser(String deviceToken,String title, String message,String timeStamp, int notificationType);

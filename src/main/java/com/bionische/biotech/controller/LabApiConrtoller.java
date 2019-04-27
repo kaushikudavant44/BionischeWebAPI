@@ -351,10 +351,14 @@ LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 		}
 
 	@RequestMapping(value = { "/getLabAppointmentTime" }, method = RequestMethod.POST)
-	public @ResponseBody AppointmentTimeList getLabAppointmentTime(@RequestParam("labId") int labId, @RequestParam("date") String date, @RequestParam("fromTime") int fromTime, @RequestParam("toTime") int toTime) 
+	public @ResponseBody AppointmentTimeList getLabAppointmentTime(@RequestParam("labId") int labId, @RequestParam("date") String date) 
 		{
 		AppointmentTimeList appointmentTimeList=new AppointmentTimeList();
 		
+		
+		LabDetails labDetails=labDetailsRepository.findByLabId(labId);
+	int fromTime=Integer.parseInt(labDetails.getFromTime());
+	int toTime=Integer.parseInt(labDetails.getToTime());
 		List<AppointmentTime> appointmentTime=new ArrayList<>();
 		List<AppointmentTime> allAppointmentTime=new ArrayList<>();
 		

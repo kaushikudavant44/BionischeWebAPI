@@ -14,6 +14,8 @@ import javax.persistence.TemporalType;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 @Table(name="lab_notification")
 @EntityListeners(AuditingEntityListener.class)
@@ -76,7 +78,7 @@ public class LabNotification {
 	public void setLabId(int labId) {
 		this.labId = labId;
 	}
-
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy HH:mm:ss", timezone="GMT+5:30")
 	public Date getDateTime() {
 		return dateTime;
 	}
