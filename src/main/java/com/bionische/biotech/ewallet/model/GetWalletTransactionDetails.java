@@ -56,7 +56,6 @@ public class GetWalletTransactionDetails {
 	@Temporal(TemporalType.TIMESTAMP)
 	@UpdateTimestamp
 	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm a z")
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy HH:mm:ss", timezone="GMT+5:30")
 	private Date lastModifiedDate;
 	
 	@Column(name="to_user_type")
@@ -129,6 +128,7 @@ public class GetWalletTransactionDetails {
 		this.createDate = createDate;
 	}
 
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy HH:mm:ss", timezone="GMT+5:30")
 	public Date getLastModifiedDate() {
 		return lastModifiedDate;
 	}
