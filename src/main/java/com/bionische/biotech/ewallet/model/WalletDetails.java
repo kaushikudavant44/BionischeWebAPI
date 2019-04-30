@@ -57,7 +57,7 @@ public class WalletDetails {
 	@UpdateTimestamp
 	private Date lastModifiedDate;
 	
-	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy HH:mm:ss", timezone="GMT+5:30")
+	
 	public Date getCreateDate() {
 		return createDate;
 	}

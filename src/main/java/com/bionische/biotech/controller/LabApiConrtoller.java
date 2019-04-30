@@ -56,6 +56,7 @@ import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.PatientNotificationRepository;
 import com.bionische.biotech.repository.SharingReportWithDocRepository;
 import com.bionische.biotech.repository.TransactionDetailsRepository;
+import com.bionische.biotech.repository.WalletDetailsRepository;
 import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.SendEMailService;
 import com.bionische.biotech.service.SendFcmNotificationService;
@@ -156,7 +157,8 @@ CreateDirectoryService createDirectoryService;
 @Autowired
 LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 
-
+@Autowired
+WalletDetailsRepository walletDetailsRepository;
 	
 	@RequestMapping(value = { "/getAllLabTests" }, method = RequestMethod.GET)
 	public @ResponseBody LabTestsList getAllLabTests()

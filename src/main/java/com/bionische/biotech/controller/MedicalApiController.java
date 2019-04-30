@@ -15,13 +15,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.ewallet.model.WalletDetails;
 import com.bionische.biotech.model.Info;
-import com.bionische.biotech.model.LabSubscriptionDetails;
 import com.bionische.biotech.model.MedicalDetails;
 import com.bionische.biotech.model.MedicalLogin;
 import com.bionische.biotech.model.PharmacySubscriptionDetails;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
 import com.bionische.biotech.repository.PharmacySubscriptionDetailsRepository;
+import com.bionische.biotech.repository.WalletDetailsRepository;
 import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.SendEMailService;
 @RestController
@@ -36,6 +37,9 @@ public class MedicalApiController {
 	CreateDirectoryService createDirectoryService;
 	@Autowired
 	PharmacySubscriptionDetailsRepository pharmacySubscriptionDetailsRepository;
+	
+	@Autowired
+	WalletDetailsRepository walletDetailsRepository;
 	
 	private static final char[] CHARSET_AZ_09 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
 	
@@ -359,6 +363,18 @@ public class MedicalApiController {
 					try {
 						pharmacySubscriptionDetailsRes=pharmacySubscriptionDetailsRepository.save(pharmacySubscriptionDetails);
 				  
+						try {
+						WalletDetails walletDetails = walletDetailsRepository.findByUserIdAndUserType(pharmacySubscriptionDetailsRes.getMedicalId(), 3);	
+							
+						WalletDetails walletDetails1=new WalletDetails();
+						walletDetails1.setUserId(pharmacySubscriptionDetailsRes.getMedicalId());
+						walletDetails1.setUserType(3);
+						walletDetails1.setWalletAmount(0);
+						
+						walletDetails1 = walletDetailsRepository.save(walletDetails1);
+						}catch (Exception e) {
+						e.printStackTrace();
+						}
 					}
 					catch (Exception e) {
 						System.out.println(e.getMessage());// TODO: handle exception 

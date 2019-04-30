@@ -281,7 +281,19 @@ public class RestApiController {
 	@RequestMapping(value = { "/insertPatientSuscriptionDetails" }, method = RequestMethod.POST)
 	public @ResponseBody PatientSuscriptionDetails insertPatientSuscriptionDetails(
 			@RequestBody PatientSuscriptionDetails patientSuscriptionDetails) {
-		return patientSuscriptionDetailsRepository.save(patientSuscriptionDetails);
+		
+		
+		patientSuscriptionDetails=patientSuscriptionDetailsRepository.save(patientSuscriptionDetails);
+		
+		WalletDetails walletDetails=new WalletDetails();
+		walletDetails.setUserId(patientSuscriptionDetails.getPatientId());
+		walletDetails.setUserType(1);
+		walletDetails.setWalletAmount(0);
+		
+		walletDetails =walletDetailsRepository.save(walletDetails); 
+				
+				
+		return patientSuscriptionDetails;
 
 	}
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bionische.biotech.Common.DateConverter;
+import com.bionische.biotech.ewallet.model.WalletDetails;
 import com.bionische.biotech.model.DoctorDetails;
 import com.bionische.biotech.model.DoctorSubscriptionDetails;
 import com.bionische.biotech.model.GetPromoCodeValidRes;
@@ -16,6 +17,7 @@ import com.bionische.biotech.model.Info;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
 import com.bionische.biotech.repository.DoctorSubscriptionDetailsRepository;
 import com.bionische.biotech.repository.GetPromoCodeValidResRepository;
+import com.bionische.biotech.repository.WalletDetailsRepository;
 import com.bionische.biotech.service.SendFcmNotificationService;
 
 @RestController
@@ -32,6 +34,9 @@ public class DoctorSuscriptionApiController {
 
 	@Autowired
 	DoctorDetailsRepository doctorDetailsRepository;
+	
+	@Autowired
+	WalletDetailsRepository walletDetailsRepository;
 
 	@RequestMapping(value = { "/insertDoctorSuscriptionDetails" }, method = RequestMethod.POST)
 	public @ResponseBody Info insertDoctorSuscriptionDetails(
@@ -43,7 +48,24 @@ public class DoctorSuscriptionApiController {
 					.save(doctorSubscriptionDetails);
 			DoctorDetails doctorDetails = doctorDetailsRepository
 					.findByDoctorId(doctorSubscriptionDetailsRes.getDoctorId());
-System.out.println("doctorSubscriptionDetailsRes "+doctorSubscriptionDetailsRes.toString());
+
+			try {
+			WalletDetails walletDetails = walletDetailsRepository.findByUserIdAndUserType(doctorSubscriptionDetailsRes.getDoctorId(), 0);
+		
+		if(walletDetails==null) {
+		
+			WalletDetails walletDetails1=new WalletDetails();
+			walletDetails1.setUserId(doctorDetails.getDoctorId());
+			walletDetails1.setUserType(0);
+			walletDetails1.setWalletAmount(0);
+		
+			walletDetails1 = walletDetailsRepository.save(walletDetails1);
+			
+		}
+		
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
 			String subscriptionNotification = "Dr. "+doctorDetails.getfName()+" "+doctorDetails.getlName()+" you subscribe with bionische successfully.";
 			if (doctorSubscriptionDetailsRes != null) {
 				info.setError(false);
@@ -74,6 +96,9 @@ System.out.println("doctorSubscriptionDetailsRes "+doctorSubscriptionDetailsRes.
 				info.setError(true);
 				info.setMessage("Failed to insert Doctor Suscription details");
 			}
+			
+			
+			
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());// TODO: handle exception
