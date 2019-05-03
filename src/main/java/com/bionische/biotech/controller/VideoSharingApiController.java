@@ -58,7 +58,7 @@ public class VideoSharingApiController {
 			  patientNotification.setNotification(msg);
 			  patientNotification.setStatus(0);
 			  patientNotification.setString2("videoshare");
-			  patientNotification.setString2(videoSharingRes.getTitle()+" Video Shared ");
+			  patientNotification.setString1(videoSharingRes.getTitle()+" Video Shared ");
 			  patientNotification.setInt1(videoSharingRes.getVideoId());
 				patientNotificationRepository.save(patientNotification);
 				
