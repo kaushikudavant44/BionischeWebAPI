@@ -419,7 +419,7 @@ System.out.println(e.getMessage());
 					info.setMessage("Login Successfull");
 					int updatePatientTokenAndDevice = patientDetailsRepository
 							.updatePatientTokenAsString2ByPatientId(patientDetails.getPatientId(), token, deviceType);
-					patientDetails.setPassword("");
+					 
 					patientLogin.setPatientDetails(patientDetails);
 					patientLogin.setInfo(info);
 					Info suscriptionInfo = new Info();
@@ -482,7 +482,7 @@ System.out.println(e.getMessage());
 					
 					updateTokenAndDeviceTypeService.updateDoctorTokenAslocationByDoctorId(doctorDetails.getDoctorId(),
 							token, deviceType);
-					doctorDetails.setPassword("");
+				 
 					doctorLogin.setDoctorDetails(doctorDetails);
 					
 					info.setError(false);

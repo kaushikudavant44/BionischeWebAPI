@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.DocAvailableTime;
 import com.bionische.biotech.model.DoctorLeavesDetails;
@@ -106,7 +107,8 @@ public class DoctorAvailableTimeApiController {
 	info.setError(true);
 	DocAvailableTime docAvailableTime1 =new DocAvailableTime();
 	try {
-	docAvailableTime1 = docAvailableTimeRepository.getAvailableTimeByDoctorIdAndHospitalId(docAvailableTime.getDoctorId(), docAvailableTime.getDate(), docAvailableTime.getHospitalId());
+		String date=DateConverter.convertToYMD(docAvailableTime.getDate());
+	docAvailableTime1 = docAvailableTimeRepository.getAvailableTimeByDoctorIdAndHospitalId(docAvailableTime.getDoctorId(),date , docAvailableTime.getHospitalId());
 	if(docAvailableTime1!=null)
 	{
 		docAvailableTime.setDocAvailableId(docAvailableTime1.getDocAvailableId());
