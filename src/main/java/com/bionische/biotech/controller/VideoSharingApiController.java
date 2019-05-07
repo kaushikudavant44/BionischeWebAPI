@@ -1,7 +1,6 @@
 package com.bionische.biotech.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,10 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.model.DoctorDetails;
+import com.bionische.biotech.model.GetVideoShared;
 import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.PatientNotification;
 import com.bionische.biotech.model.VideoSharing;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
+import com.bionische.biotech.repository.GetVideoSharedRepository;
 import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.PatientNotificationRepository;
 import com.bionische.biotech.repository.VideoSharingRepository;
@@ -42,6 +43,8 @@ public class VideoSharingApiController {
 	SendEMailService sendEMailService;
 	@Autowired
 	PatientNotificationRepository patientNotificationRepository;
+	@Autowired
+	GetVideoSharedRepository getVideoSharedRepository;
 	
 	@RequestMapping(value = { "/uploadVideo" }, method = RequestMethod.POST)
 	public @ResponseBody VideoSharing uploadVideo(@RequestBody VideoSharing videoSharing) {
@@ -91,7 +94,7 @@ public class VideoSharingApiController {
 	
 	
 	
-	@RequestMapping(value = { "/getSharedVideoById" }, method = RequestMethod.POST)
+	/*@RequestMapping(value = { "/getSharedVideoById" }, method = RequestMethod.POST)
 	public @ResponseBody VideoSharing getSharedVideoById(@RequestParam("videoId")int videoId) {
 		
 		try {
@@ -101,5 +104,30 @@ public class VideoSharingApiController {
 			// TODO: handle exception
 		}
 		return null;
+	}*/
+
+	@RequestMapping(value = { "/getSharedVideoById" }, method = RequestMethod.POST)
+	public @ResponseBody GetVideoShared getSharedVideoById(@RequestParam("videoId")int videoId) {
+		
+		try {
+			return getVideoSharedRepository.getSharedVideoById(videoId);
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+		return null;
 	}
+	
+	@RequestMapping(value = { "/getLast10SharedVideo" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetVideoShared> getLast10SharedVideo(@RequestParam("patientId")int patientId) {
+		
+		try {
+			return getVideoSharedRepository.getLast10SharedVideo(patientId);
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+		return null;
+	}
+	
 }
