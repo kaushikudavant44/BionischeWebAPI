@@ -1,5 +1,7 @@
 package com.bionische.biotech.radiology.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +14,10 @@ public interface PndtPatientRepository extends JpaRepository<PNDTPatientDetails,
 	
 	PNDTPatientDetails findByPndtId(int pndtId);
 	
-	@Query(value="SELECT * FROM pndt_patient_details p WHERE p.patient_id=:patientId ORDER BY p.pndt_id DESC LIMIT 1",nativeQuery=true)
-	PNDTPatientDetails findByPndtPatientDetailsByPatientId(@Param("patientId")int patientId);
+	@Query(value="SELECT * FROM pndt_patient_details p WHERE p.patient_name=:patientName ORDER BY p.pndt_id DESC LIMIT 1",nativeQuery=true)
+	PNDTPatientDetails findByPndtPatientDetailsByPatientName(@Param("patientName")String patientName);
+	
+	
+	List<PNDTPatientDetails> findPndtPatientDetailsByLabId(int labId);
 }
  

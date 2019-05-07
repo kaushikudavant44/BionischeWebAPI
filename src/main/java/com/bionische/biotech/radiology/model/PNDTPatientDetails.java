@@ -20,9 +20,9 @@ public class PNDTPatientDetails {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "pndt_id")
 	private int pndtId;
-
-	@Column(name = "patient_id")
-	private int patientId;
+	
+	@Column(name = "patient_name")
+	private String patientName;
 
 	@Column(name = "state")
 	private String state;
@@ -111,11 +111,11 @@ public class PNDTPatientDetails {
 	@Column(name = "del_status")
 	private int delStatus;
 
-	@Column(name = "int_1")
-	private int int_1;
+	@Column(name = "lab_id")
+	private int labId;
 
-	@Column(name = "int_2")
-	private int int_2;
+	@Column(name = "patient_type")
+	private int patientType;
 
 	@Column(name = "string1")
 	private int string1;
@@ -150,20 +150,24 @@ public class PNDTPatientDetails {
 		this.delStatus = delStatus;
 	}
 
-	public int getInt_1() {
-		return int_1;
+	
+
+	public int getLabId() {
+		return labId;
 	}
 
-	public void setInt_1(int int_1) {
-		this.int_1 = int_1;
+	public void setLabId(int labId) {
+		this.labId = labId;
 	}
 
-	public int getInt_2() {
-		return int_2;
+	
+
+	public int getPatientType() {
+		return patientType;
 	}
 
-	public void setInt_2(int int_2) {
-		this.int_2 = int_2;
+	public void setPatientType(int patientType) {
+		this.patientType = patientType;
 	}
 
 	public int getString1() {
@@ -174,12 +178,16 @@ public class PNDTPatientDetails {
 		this.string1 = string1;
 	}
 
-	public int getPatientId() {
-		return patientId;
+	
+
+	
+
+	public String getPatientName() {
+		return patientName;
 	}
 
-	public void setPatientId(int patientId) {
-		this.patientId = patientId;
+	public void setPatientName(String patientName) {
+		this.patientName = patientName;
 	}
 
 	public String getState() {
@@ -416,7 +424,7 @@ public class PNDTPatientDetails {
 
 	@Override
 	public String toString() {
-		return "PNDTPatientDetails [pndtId=" + pndtId + ", patientId=" + patientId + ", state=" + state
+		return "PNDTPatientDetails [pndtId=" + pndtId + ", patientName=" + patientName + ", state=" + state
 				+ ", numberOfChild=" + numberOfChild + ", numberOfMaleChild=" + numberOfMaleChild
 				+ ", numberOfFemaleChild=" + numberOfFemaleChild + ", relativeType=" + relativeType + ", relativeName="
 				+ relativeName + ", address=" + address + ", refDoctor=" + refDoctor + ", selfDoctor=" + selfDoctor
@@ -430,9 +438,15 @@ public class PNDTPatientDetails {
 				+ complicationInvasiveProc + ", additionalTestRecommended=" + additionalTestRecommended
 				+ ", resultOfProcedure=" + resultOfProcedure + ", dateResOfProcedure=" + dateResOfProcedure
 				+ ", invasivePreNatalDiagnoProc=" + invasivePreNatalDiagnoProc + ", indicationMTPabnormality="
-				+ indicationMTPabnormality + ", delStatus=" + delStatus + ", int_1=" + int_1 + ", int_2=" + int_2
-				+ ", string1=" + string1 + ", indicationsModelList=" + indicationsModelList + ", childsModelList="
-				+ childsModelList + "]";
+				+ indicationMTPabnormality + ", delStatus=" + delStatus + ", labId=" + labId + ", patientType="
+				+ patientType + ", string1=" + string1 + ", indicationsModelList=" + indicationsModelList
+				+ ", childsModelList=" + childsModelList + "]";
 	}
+
+	
+
+	
+
+	
 
 }

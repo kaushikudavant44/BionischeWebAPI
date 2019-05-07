@@ -2917,33 +2917,52 @@ if(doctorDetails!=null)
 	}
 
 	@RequestMapping(value = { "/isReferalCorrect" }, method = RequestMethod.POST)
-	public @ResponseBody ReferalDetails isReferalCorrect(@RequestParam("referal") String referal) {
+	public @ResponseBody Info isReferalCorrect(@RequestParam("referal") String referal) {
 
-		ReferalDetails referalDetails = new ReferalDetails();
-
+	//	ReferalDetails referalDetails = new ReferalDetails();
+		Info info =new Info();
 		try {
 
-			referalDetails = referalDetailsRepository.findByReferal(referal);
+			ReferalDetails referalDetails = referalDetailsRepository.findByReferal(referal);
 
+			if (referalDetails != null) {
+				info.setMessage("Code Applied Successfuly");
+				info.setError(false);
+			} else {
+				info.setMessage("Wrong Code please try again");
+				info.setError(true);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return referalDetails;
+		return info;
 	}
 
 	@RequestMapping(value = { "/isPatientReferalCorrect" }, method = RequestMethod.POST)
-	public @ResponseBody PatientDetails isPatientReferalCorrect(@RequestParam("referal") String referal) {
+	public @ResponseBody Info isPatientReferalCorrect(@RequestParam("referal") String referal) {
 
-		PatientDetails patientDetails = new PatientDetails();
-
+	Info info=new Info();
+		
 		try {
 
-			patientDetails = patientDetailsRepository.findByReferal(referal);
+			PatientDetails patientDetails = patientDetailsRepository.findByReferal(referal);
 
+			if(patientDetails!=null) {
+				
+				info.setMessage("Code Applied Successfuly");
+				info.setError(false);
+				
+			}else {
+				
+				info.setMessage("Wrong Code please try again");
+				info.setError(true);
+				
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return patientDetails;
+		return info;
 	}
 
 	@RequestMapping(value = { "/getUserWalletDetails" }, method = RequestMethod.POST)
