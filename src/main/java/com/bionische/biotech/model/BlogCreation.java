@@ -13,6 +13,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name = "t_blogs")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BlogCreation {
+	
+	
+	
+	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
