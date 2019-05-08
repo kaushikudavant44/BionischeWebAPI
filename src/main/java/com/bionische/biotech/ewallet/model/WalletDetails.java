@@ -20,6 +20,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 @Entity
 @Table(name="m_wallet_details")
@@ -55,7 +57,7 @@ public class WalletDetails {
 	@UpdateTimestamp
 	private Date lastModifiedDate;
 	
-
+	
 	public Date getCreateDate() {
 		return createDate;
 	}
@@ -64,6 +66,7 @@ public class WalletDetails {
 		this.createDate = createDate;
 	}
 
+	@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd-MM-yyyy HH:mm:ss", timezone="GMT+5:30")
 	public Date getLastModifiedDate() {
 		return lastModifiedDate;
 	}

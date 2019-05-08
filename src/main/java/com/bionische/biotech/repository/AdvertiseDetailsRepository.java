@@ -21,8 +21,12 @@ public interface AdvertiseDetailsRepository extends JpaRepository<AdvertiseDetai
 	@Transactional
 	@Modifying
 	@Query("UPDATE AdvertiseDetails  SET delStatus =:delStatus WHERE adsId=:adsId")
-	int removeAdvertise(@Param("delStatus")int delStatus, @Param("adsId")int adsId);
+	int updateStatus(@Param("adsId")int adsId,@Param("delStatus")int delStatus);
 
 	@Query(value=" SELECT * from t_advertise_details where del_status!=1 AND ads_from=:adsFrom AND from_type=:userType",nativeQuery=true)
 	List<AdvertiseDetails> getByAdsFromAndFromTypeAndDelStatus( @Param("adsFrom")int adsFrom,  @Param("userType")int userType);
+
+	@Query(value=" SELECT * from t_advertise_details where del_status=:delStatus  AND from_type=:userType",nativeQuery=true)
+	List<AdvertiseDetails> getByFromTypeAndDelStatus( @Param("delStatus")int delStatus,  @Param("userType")int userType);
+ 
 }

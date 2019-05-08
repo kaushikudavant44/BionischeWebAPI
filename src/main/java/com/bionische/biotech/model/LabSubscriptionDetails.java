@@ -90,7 +90,7 @@ public class LabSubscriptionDetails {
 	}
 
 	public String getPackageExpDate() {
-		return packageExpDate;
+		return DateConverter.convertToDMY(packageExpDate);
 	}
 
 	public void setPackageExpDate(String packageExpDate) {

@@ -1,9 +1,11 @@
 package com.bionische.biotech.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.Common.DateConverter;
 import com.bionische.biotech.model.AppointmentTime;
 import com.bionische.biotech.model.DocAvailableTime;
 import com.bionische.biotech.model.DoctorLeavesDetails;
@@ -104,7 +107,8 @@ public class DoctorAvailableTimeApiController {
 	info.setError(true);
 	DocAvailableTime docAvailableTime1 =new DocAvailableTime();
 	try {
-	docAvailableTime1 = docAvailableTimeRepository.getAvailableTimeByDoctorIdAndHospitalId(docAvailableTime.getDoctorId(), docAvailableTime.getDate(), docAvailableTime.getHospitalId());
+		String date=DateConverter.convertToYMD(docAvailableTime.getDate());
+	docAvailableTime1 = docAvailableTimeRepository.getAvailableTimeByDoctorIdAndHospitalId(docAvailableTime.getDoctorId(),date , docAvailableTime.getHospitalId());
 	if(docAvailableTime1!=null)
 	{
 		docAvailableTime.setDocAvailableId(docAvailableTime1.getDocAvailableId());
@@ -344,5 +348,20 @@ public  Info deleteDoctorLeave(@RequestParam("leaveId")int leaveId) {
 }
  
 
-
+@RequestMapping(value = { "/getDoctorAvailabledStatusForFirstTime"}, method = RequestMethod.POST)
+public  Info getDoctorAvailabledStatusForFirstTime(@RequestParam("doctorId")int doctorId) {
+	
+	Info info=new Info();
+	info.setError(true);
+	info.setMessage("Your Availabled Time not set. Please set first Availabled Time first.");
+	String date=new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+	int res=fixDoctorAppointScheduleRepository.getAvalableTimeStatus(doctorId, date);
+	System.out.println("getAvalableTimeStatus  :"+res);
+	if(res>0)
+	{
+		info.setError(false);
+		info.setMessage("Your Availabled Time Set.");
+	}
+	return info;
+}
 }

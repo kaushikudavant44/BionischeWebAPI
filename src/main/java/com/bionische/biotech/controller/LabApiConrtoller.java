@@ -8,7 +8,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
+import java.util.Random; 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +34,8 @@ import com.bionische.biotech.model.LabSubscriptionDetails;
 import com.bionische.biotech.model.LabTests;
 import com.bionische.biotech.model.LabTestsList;
 import com.bionische.biotech.model.PateintReportPaymentDetails;
+import com.bionische.biotech.model.lab.RadiologistPndtDetails;
+import com.bionische.biotech.radiology.repository.RadiologistPndtDetailsRepository;
 import com.bionische.biotech.repository.AppointmentTimeRepository;
 import com.bionische.biotech.repository.BabyBornReportsRepository;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
@@ -54,6 +56,7 @@ import com.bionische.biotech.repository.PatientDetailsRepository;
 import com.bionische.biotech.repository.PatientNotificationRepository;
 import com.bionische.biotech.repository.SharingReportWithDocRepository;
 import com.bionische.biotech.repository.TransactionDetailsRepository;
+import com.bionische.biotech.repository.WalletDetailsRepository;
 import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.SendEMailService;
 import com.bionische.biotech.service.SendFcmNotificationService;
@@ -122,6 +125,9 @@ public class LabApiConrtoller {
 	
 	@Autowired
 	LabAppointmentCountRepository labAppointmentCountRepository;
+	
+	@Autowired
+	RadiologistPndtDetailsRepository radiologistPndtDetailsRepository;
 
 @Autowired
 LabTestsRepository labTypesRepository;
@@ -151,7 +157,8 @@ CreateDirectoryService createDirectoryService;
 @Autowired
 LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 
-
+@Autowired
+WalletDetailsRepository walletDetailsRepository;
 	
 	@RequestMapping(value = { "/getAllLabTests" }, method = RequestMethod.GET)
 	public @ResponseBody LabTestsList getAllLabTests()
@@ -201,6 +208,20 @@ LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 		e.printStackTrace();
 		}
 		return labDetailsList;
+	}
+	
+	@RequestMapping(value = { "/getRadiologistUserNameAndPasswordByLabId" }, method = RequestMethod.POST)
+	public @ResponseBody RadiologistPndtDetails getRadiologistUserNameAndPasswordByLabId(@RequestParam("labId") int labId) {
+		
+		return radiologistPndtDetailsRepository.findByLabId(labId);
+	}
+	
+	
+	@RequestMapping(value = { "/insertRadiologistUserNameAndPassword" }, method = RequestMethod.POST)
+	public @ResponseBody RadiologistPndtDetails insertRadiologistUserNameAndPassword(@RequestBody RadiologistPndtDetails radiologistPndtDetails) {
+	
+		
+		return radiologistPndtDetailsRepository.save(radiologistPndtDetails);
 	}
 	/*   Ganesh 2019-02-19
 	 * 
@@ -332,10 +353,14 @@ LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
 		}
 
 	@RequestMapping(value = { "/getLabAppointmentTime" }, method = RequestMethod.POST)
-	public @ResponseBody AppointmentTimeList getLabAppointmentTime(@RequestParam("labId") int labId, @RequestParam("date") String date, @RequestParam("fromTime") int fromTime, @RequestParam("toTime") int toTime) 
+	public @ResponseBody AppointmentTimeList getLabAppointmentTime(@RequestParam("labId") int labId, @RequestParam("date") String date) 
 		{
 		AppointmentTimeList appointmentTimeList=new AppointmentTimeList();
 		
+		
+		LabDetails labDetails=labDetailsRepository.findByLabId(labId);
+	int fromTime=Integer.parseInt(labDetails.getFromTime());
+	int toTime=Integer.parseInt(labDetails.getToTime());
 		List<AppointmentTime> appointmentTime=new ArrayList<>();
 		List<AppointmentTime> allAppointmentTime=new ArrayList<>();
 		

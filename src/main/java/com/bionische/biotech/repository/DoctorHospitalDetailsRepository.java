@@ -19,5 +19,7 @@ public interface DoctorHospitalDetailsRepository extends JpaRepository<DoctorHos
 	@Modifying
 	@Query("UPDATE DoctorHospitalDetails  SET delStatus =:delStatus WHERE hospitalId=:hospitalId AND doctorId=:doctorId")
 	int deleteDoctorHospital(@Param("hospitalId")int hospitalId, @Param("doctorId")int doctorId,@Param("delStatus")int delStatus);
+
+	DoctorHospitalDetails findByDoctorIdAndHospitalId(int doctorId, int hospitalId);
 	
 }

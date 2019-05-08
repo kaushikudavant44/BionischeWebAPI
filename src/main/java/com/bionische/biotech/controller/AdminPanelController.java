@@ -1,7 +1,9 @@
 package com.bionische.biotech.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ import com.bionische.biotech.model.AdminDetails;
 import com.bionische.biotech.model.AdminLogin;
 import com.bionische.biotech.model.DoctorCertificateDetails;
 import com.bionische.biotech.model.DoctorDetails;
+import com.bionische.biotech.model.GetAdvertiseDetails;
 import com.bionische.biotech.model.GetDocAvailableTimeDetails;
 import com.bionische.biotech.model.GetDoctorHospitalDetails;
 import com.bionische.biotech.model.GetLabRatingReview;
@@ -48,9 +51,11 @@ import com.bionische.biotech.model.RatingDetails;
 import com.bionische.biotech.model.TermsAndConditions;
 import com.bionische.biotech.model.UserQueryDetails;
 import com.bionische.biotech.repository.AdminDetailsRepository;
+import com.bionische.biotech.repository.AdvertiseDetailsRepository;
 import com.bionische.biotech.repository.AppointmentTimeRepository;
 import com.bionische.biotech.repository.DoctorCertificateDetailsRepository;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
+import com.bionische.biotech.repository.GetAdvertiseDetailsRepository;
 import com.bionische.biotech.repository.GetDocAvailableTimeDetailsRepository;
 import com.bionische.biotech.repository.GetDoctorHospitalDetailsRepository;
 import com.bionische.biotech.repository.GetLabRatingReviewRepository;
@@ -68,7 +73,9 @@ import com.bionische.biotech.repository.RatingDetailsRepository;
 import com.bionische.biotech.repository.TermsAndConditionsRepository;
 import com.bionische.biotech.repository.UserQueryDetailsRepository;
 import com.bionische.biotech.service.PrescriptionOrderService;
+import com.bionische.biotech.service.SendEMailService;
 import com.bionische.biotech.service.SendFcmNotificationService;
+import com.bionische.biotech.service.SendTextMessageService;
 import com.bionische.biotech.stemcell.model.GetStemCellsDetails;
 import com.bionische.biotech.stemcell.repository.GetStemCellsDetailsRepository;
 
@@ -158,6 +165,14 @@ public class AdminPanelController {
 	SendFcmNotificationService sendFcmNotificationService;
 	@Autowired
 	UserQueryDetailsRepository userQueryDetailsRepository;
+	@Autowired
+	GetAdvertiseDetailsRepository getAdvertiseDetailsRepository;
+	@Autowired
+	AdvertiseDetailsRepository advertiseDetailsRepository;
+	@Autowired
+	SendTextMessageService sendTextMessageService;
+	@Autowired
+	SendEMailService sendEMailService;
 	/*
 	 * 
 	 * @RequestMapping(value = { "/getDoctorAppointmentDetailsByPatientId" }, method
@@ -177,6 +192,39 @@ public class AdminPanelController {
 	 * return getDoctorAppointmentDetailsList; }
 	 */
 
+	@RequestMapping(value = { "/adminloginProcess" }, method = RequestMethod.POST)
+	public @ResponseBody AdminLogin patientLoginProcess(@RequestParam("email") String email,
+			@RequestParam("password") String password) {
+
+		System.out.println("dttfy;" + email);
+		AdminDetails adminDetails = new AdminDetails();
+
+		AdminLogin adminLogin = new AdminLogin();
+		Info info = new Info();
+
+		adminDetails = adminDetailsRepository.findByEmail(email);
+		if (adminDetails != null) {
+			info.setError(true);
+			if (adminDetails.getPassword().equals(password)) {
+				adminLogin.setAdminDetails(adminDetails);
+				info.setError(false);
+				info.setMessage("Login Successfull");
+				adminLogin.setInfo(info);
+			} else {
+				info.setError(true);
+				info.setMessage("Please enter valid credential");
+				adminLogin.setInfo(info);
+			}
+		} else {
+			info.setError(true);
+			info.setMessage("Invalid User");
+			adminLogin.setInfo(info);
+		}
+
+		System.out.println("res " + adminLogin.toString());
+		return adminLogin;
+	}
+	
 	@RequestMapping(value = { "/insertUserQuery" }, method = RequestMethod.POST)
 	public @ResponseBody Info insertUserQuery(@RequestBody UserQueryDetails userQueryDetails) {
 		Info info=new Info();
@@ -194,6 +242,67 @@ public class AdminPanelController {
 		
 		return info;
 	}
+	
+
+	@RequestMapping(value = { "/getUnsolveUserQuery" }, method = RequestMethod.GET)
+	public @ResponseBody List<UserQueryDetails> getUnsolveUserQuery() {
+		 
+		try {
+		List<UserQueryDetails> uerQueryDetailsList=userQueryDetailsRepository.findByStatusOrderByTicketNoDesc(0);
+		 
+		return uerQueryDetailsList;
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+		return null;
+	}
+	
+	
+	
+	@RequestMapping(value = { "/sendReplayToUserQuery" }, method = RequestMethod.GET)
+	public @ResponseBody Info sendReplayToUserQuery(@RequestParam("ticketNo")int ticketNo, @RequestParam("reply")String reply) {
+		 
+		try {
+			String dateTime=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		int res=userQueryDetailsRepository.sendReplyToUserQuery(ticketNo, reply, dateTime);
+		 if(res>0)
+		 {
+			 
+			 UserQueryDetails userQueryDetails= userQueryDetailsRepository.findByTicketNo(ticketNo);
+			 Info info=new Info();
+			 info.setError(false);
+			 info.setMessage("Reply sent on users mail");
+			 
+			 try {
+				 sendEMailService.sendMail("Bionische # : "+ticketNo +" Details", reply, userQueryDetails.getEmail());
+			 }catch (Exception e) {
+				System.out.println("Email "+e.getMessage());// TODO: handle exception
+			}
+			 return info;
+		 }
+		
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+		return null;
+	}
+	
+	@RequestMapping(value = { "/getSolveUserQuery" }, method = RequestMethod.GET)
+	public @ResponseBody List<UserQueryDetails> getSolveUserQuery() {
+		 
+		try {
+		List<UserQueryDetails> uerQueryDetailsList=userQueryDetailsRepository.findByStatusOrderByTicketNoDesc(1);
+		 
+		return uerQueryDetailsList;
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+		return null;
+	}
+	
 	
 	@RequestMapping(value = { "/getVerificationPendingCount" }, method = RequestMethod.GET)
 	public @ResponseBody GetVerificationPendingCount getVerificationPendingCount() {
@@ -552,38 +661,7 @@ public class AdminPanelController {
 
 	}
 
-	@RequestMapping(value = { "/adminloginProcess" }, method = RequestMethod.POST)
-	public @ResponseBody AdminLogin patientLoginProcess(@RequestParam("email") String email,
-			@RequestParam("password") String password) {
-
-		System.out.println("dttfy;" + email);
-		AdminDetails adminDetails = new AdminDetails();
-
-		AdminLogin adminLogin = new AdminLogin();
-		Info info = new Info();
-
-		adminDetails = adminDetailsRepository.findByEmail(email);
-		if (adminDetails != null) {
-			info.setError(true);
-			if (adminDetails.getPassword().equals(password)) {
-				adminLogin.setAdminDetails(adminDetails);
-				info.setError(false);
-				info.setMessage("Login Successfull");
-				adminLogin.setInfo(info);
-			} else {
-				info.setError(true);
-				info.setMessage("Please enter valid credential");
-				adminLogin.setInfo(info);
-			}
-		} else {
-			info.setError(true);
-			info.setMessage("Invalid User");
-			adminLogin.setInfo(info);
-		}
-
-		System.out.println("res " + adminLogin.toString());
-		return adminLogin;
-	}
+	
 
 	@RequestMapping(value = { "/getMedicalOrderDetailsByMedicalIdAndDate" }, method = RequestMethod.POST)
 	public @ResponseBody List<GetMedicalOrderDetails> getMedicalOrderDetailsByMedicalIdAndDate(
@@ -768,6 +846,7 @@ public class AdminPanelController {
 			 {
 				 info.setError(false);
 				 info.setMessage("Doctor DelStatus Update Successfully");
+				 sendEMailService.sendMail("Document Verification", "Your Verification Completed. Welcome to Bionische", doctorDetails.getEmail());
 				 
 				 if(doctorDetails.getInt1()==0) {
 				 sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "Bionische", "Your Verification Completed. Welcome to Bionische", DateConverter.currentDateAndTime(),1);
@@ -802,7 +881,8 @@ public class AdminPanelController {
 			 {
 				 info.setError(false);
 				 info.setMessage("Doctor DelStatus Update Successfully");
-				 
+				 sendEMailService.sendMail("Document Verification Reject", "Your Verification Reject. Because "+message+". Please Upload valid document", doctorDetails.getEmail());
+					
 				 if(doctorDetails.getInt1()==0) {
 				 sendFcmNotificationService.notifyUser(doctorDetails.getLocation(), "Bionische", msg, DateConverter.currentDateAndTime(),2);
 				 }else if(doctorDetails.getInt1()==1) {
@@ -907,9 +987,12 @@ public class AdminPanelController {
 			labCertificateDetailsRepository.updateCertificateDelStatus(labId, 1, message);
 			 if(res>0)
 			 {
+				 
 				 info.setError(false);
 				 info.setMessage("Lab DelStatus Update Successfully");
 				 LabDetails labDetails=	 labDetailsRepository.findByLabId(labId);
+				 sendEMailService.sendMail("Document Verification Reject", "Your Verification Reject. Because "+message+". Please Upload valid document", labDetails.getEmail());
+					
 				 sendFcmNotificationService.notificationOnWeb(labDetails.getToken(), "Lab Certificate Rejected ", "You are uploaded Lab certificate Rejected from Bionische please upload valid file", Constants.SITE_URL);
 			 }
 			 else 
@@ -934,6 +1017,8 @@ public class AdminPanelController {
 				 info.setError(false);
 				 info.setMessage("Lab DelStatus Update Successfully");
 				 LabDetails labDetails=	 labDetailsRepository.findByLabId(labId);
+				 sendEMailService.sendMail("Document Verification", "Your Verification Completed. Welcome to bionische. Now you can access your Biocare account.", labDetails.getEmail());
+					
 				 sendFcmNotificationService.notificationOnWeb(labDetails.getToken(), "Lab Certificate Accepted ", "You are uploaded Lab certificate Accepted from Bionische", Constants.SITE_URL);
 		
 			 }
@@ -984,6 +1069,8 @@ public class AdminPanelController {
 				 info.setError(false);
 				 info.setMessage("medical DelStatus Update Successfully");
 				 MedicalDetails medicalDetails=medicalDetailsRepository.findByMedicalId(medicalId);
+				 sendEMailService.sendMail("Document Verification Reject", "Your Verification Reject. Because "+message+". Please Upload valid document", medicalDetails.getEmail());
+					
 				 sendFcmNotificationService.notificationOnWeb(medicalDetails.getToken(), "Pharmacy Certificate Rejected ", "You are uploaded Pharmacy certificate Rejected from Bionische please upload valid file", Constants.SITE_URL);
 					
 			 }
@@ -1009,6 +1096,8 @@ public class AdminPanelController {
 				 info.setError(false);
 				 info.setMessage("Pharmacy DelStatus Update Successfully");
 				 MedicalDetails medicalDetails=medicalDetailsRepository.findByMedicalId(medicalId);
+				 sendEMailService.sendMail("Document Verification", "Your Verification Completed. Welcome to bionische. Now you can access your Biocare account.", medicalDetails.getEmail());
+					
 				 sendFcmNotificationService.notificationOnWeb(medicalDetails.getToken(), "Pharmacy Certificate Accepted ", "You are uploaded Pharmacy certificate Accept from Bionische Now you can use Application", Constants.SITE_URL);
 			
 			 }
@@ -1172,4 +1261,37 @@ public class AdminPanelController {
 		}
 		return info; 
 	} 
+	
+	
+
+	@RequestMapping(value = { "/getPendingVerificationAdvertise" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetAdvertiseDetails> getPendingVerificationAdvertise(@RequestParam("userType")int userType) {
+		
+		return getAdvertiseDetailsRepository.getByFromTypeAndDelStatus(userType,2);
+	}
+	
+	@RequestMapping(value = { "/getApprovedAdvertise" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetAdvertiseDetails> getApprovedAdvertise(@RequestParam("userType")int userType) {
+		
+		return getAdvertiseDetailsRepository.getByFromTypeAndDelStatus(userType,0);
+	}
+	
+	
+	@RequestMapping(value = { "/changeAdvertiseStatus" }, method = RequestMethod.POST)
+	public @ResponseBody Info changeAdvertiseStatus(@RequestParam("adsId")int adsId,@RequestParam("delStatus")int delStatus) {
+		
+		int res= advertiseDetailsRepository.updateStatus(adsId,delStatus);
+		if(res>0)
+		{
+			Info info=new Info();
+			info.setError(false);
+			if(delStatus==1)
+			info.setMessage("Reject/Delete Successufully");
+			else if(delStatus==0)
+				info.setMessage("Approved Successufully");
+			return info;
+		}
+		return null;
+	}
+	
 }

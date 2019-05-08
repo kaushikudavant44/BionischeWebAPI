@@ -174,7 +174,7 @@ System.out.println(e.getMessage());
 					Info doctorSuscriptionInfo = new Info();
 					doctorSuscriptionInfo.setError(true);
 					DoctorSubscriptionDetails doctorSubscriptionDetailsRes = doctorSubscriptionDetailsRepository
-							.findByPackageExpDateGreaterThanEqualAndDoctorIdAndTxnStatus(
+							.findTop1ByPackageExpDateGreaterThanEqualAndDoctorIdAndTxnStatusOrderBySuscriptionIdDesc(
 									new SimpleDateFormat("yyyy-MM-dd").format(new Date()), doctorDetails.getDoctorId(),
 									1);
 					if (doctorSubscriptionDetailsRes != null) {
@@ -240,7 +240,7 @@ System.out.println(e.getMessage());
 					Info labSuscriptionInfo = new Info();
 					labSuscriptionInfo.setError(true);
 					LabSubscriptionDetails labSubscriptionDetailsRes = labSubscriptionDetailsRepository
-							.findByPackageExpDateGreaterThanEqualAndLabIdAndTxnStatus(
+							.findTop1ByPackageExpDateGreaterThanEqualAndLabIdAndTxnStatusOrderBySuscriptionIdDesc(
 									new SimpleDateFormat("yyyy-MM-dd").format(new Date()), labDetails.getLabId(), 1);
 
 					if (labSubscriptionDetailsRes != null) {
@@ -419,7 +419,7 @@ System.out.println(e.getMessage());
 					info.setMessage("Login Successfull");
 					int updatePatientTokenAndDevice = patientDetailsRepository
 							.updatePatientTokenAsString2ByPatientId(patientDetails.getPatientId(), token, deviceType);
-					patientDetails.setPassword("");
+					 
 					patientLogin.setPatientDetails(patientDetails);
 					patientLogin.setInfo(info);
 					Info suscriptionInfo = new Info();
@@ -482,7 +482,7 @@ System.out.println(e.getMessage());
 					
 					updateTokenAndDeviceTypeService.updateDoctorTokenAslocationByDoctorId(doctorDetails.getDoctorId(),
 							token, deviceType);
-					doctorDetails.setPassword("");
+				 
 					doctorLogin.setDoctorDetails(doctorDetails);
 					
 					info.setError(false);
@@ -495,7 +495,7 @@ System.out.println(e.getMessage());
 					Info doctorSuscriptionInfo = new Info();
 					doctorSuscriptionInfo.setError(true);
 					DoctorSubscriptionDetails doctorSubscriptionDetailsRes = doctorSubscriptionDetailsRepository
-							.findByPackageExpDateGreaterThanEqualAndDoctorIdAndTxnStatus(
+							.findTop1ByPackageExpDateGreaterThanEqualAndDoctorIdAndTxnStatusOrderBySuscriptionIdDesc(
 									new SimpleDateFormat("yyyy-MM-dd").format(new Date()), doctorDetails.getDoctorId(),
 									1);
 					if (doctorSubscriptionDetailsRes != null) {

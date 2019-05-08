@@ -56,6 +56,7 @@ import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.LabCertificateDetails;
 import com.bionische.biotech.model.LabDetails;
 import com.bionische.biotech.model.MedicalDetails;
+import com.bionische.biotech.model.OtpSessionDetails;
 import com.bionische.biotech.model.PatientAddress;
 import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.model.PatientMemberRelation;
@@ -280,7 +281,19 @@ public class RestApiController {
 	@RequestMapping(value = { "/insertPatientSuscriptionDetails" }, method = RequestMethod.POST)
 	public @ResponseBody PatientSuscriptionDetails insertPatientSuscriptionDetails(
 			@RequestBody PatientSuscriptionDetails patientSuscriptionDetails) {
-		return patientSuscriptionDetailsRepository.save(patientSuscriptionDetails);
+		
+		
+		patientSuscriptionDetails=patientSuscriptionDetailsRepository.save(patientSuscriptionDetails);
+		
+		WalletDetails walletDetails=new WalletDetails();
+		walletDetails.setUserId(patientSuscriptionDetails.getPatientId());
+		walletDetails.setUserType(1);
+		walletDetails.setWalletAmount(0);
+		
+		walletDetails =walletDetailsRepository.save(walletDetails); 
+				
+				
+		return patientSuscriptionDetails;
 
 	}
 
@@ -1065,9 +1078,17 @@ public class RestApiController {
 
 				GetPatientContactDetailsById getPatientContactDetailsById = getPatientContactDetailsByIdRepository
 						.getPatientContactDetailsByDoctorAppointId(appId);
+				
+				if (status == 3 || status==2) {
 				MESSAGE = getPatientContactDetailsById.getfName() + " " + getPatientContactDetailsById.getlName()
-						+ ", your doctor consult appointment cancel because of some issue reschedule your appointment https://www.bionische.com/showBookDoctorAppointment?appPatientId=1&currency=&doctorCity=1&countryId=1&stateId=1&CityId=1&specId=1&appDate="
+						+ ", your doctor consult appointment cancel because of some issue reschedule your appointment"+ Constants.SITE_URL+"showBookDoctorAppointment?appPatientId=1&currency=&doctorCity=1&countryId=1&stateId=1&CityId=1&specId=1&appDate="
 						+ formatter.format(date) + "&consultType=1&submit=Submit";
+				}
+				else if(status == 1) {
+				MESSAGE = getPatientContactDetailsById.getfName() + " " + getPatientContactDetailsById.getlName()
+				+ ", your appointment with Dr. "+getAppointmentDetails.getDoctorName()+" is completed. Please login to your Biocare account for prescription & other details."+Constants.SITE_URL;
+				 
+				}
 				sendTextMessageService.sendTextSms(MESSAGE, getPatientContactDetailsById.getContactNo());
 
 				sendEMailService.sendMail("APPOINTMENT CANCEL", MESSAGE, getPatientContactDetailsById.getEmail());
@@ -1921,10 +1942,10 @@ public class RestApiController {
 	// Get Patient username details
 
 	@RequestMapping(value = { "/getPatientByUserNameForForgotPassword" }, method = RequestMethod.POST)
-	public @ResponseBody PatientDetails getPatientByUserNameForForgotPassword(@RequestParam("userName") String uName)
+	public @ResponseBody OtpSessionDetails getPatientByUserNameForForgotPassword(@RequestParam("userName") String uName)
 
 	{
- 
+		OtpSessionDetails otpSessionDetails=new OtpSessionDetails();
 		try {
 
 			PatientDetails patientDetailsRes = patientDetailsRepository.findByUserNameAndDelStatus(uName, 0);
@@ -1936,40 +1957,47 @@ public class RestApiController {
 				patientDetailsRes.setPassword(otp);
 				String contactNo="******"+patientDetailsRes.getContactNo().substring(patientDetailsRes.getContactNo().length()-4, patientDetailsRes.getContactNo().length());
 				patientDetailsRes.setContactNo(contactNo);
-				return patientDetailsRes;
+				
+				otpSessionDetails.setId(patientDetailsRes.getPatientId());
+				otpSessionDetails.setContactNo(contactNo);
+				otpSessionDetails.setOtp(otp);
+				otpSessionDetails.setUserName(uName);
+			 
 				
 			} 
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		return null;
+		return otpSessionDetails;
 
 	}
 
 	@RequestMapping(value = { "/doctorDetailsByUsrname" }, method = RequestMethod.POST)
-	public @ResponseBody DoctorDetails doctorDetailsByUsrname(@RequestParam("userName") String userName)
+	public @ResponseBody OtpSessionDetails doctorDetailsByUsrname(@RequestParam("userName") String userName)
 
 	{
-		Info info = new Info();
+		OtpSessionDetails otpSessionDetails=new OtpSessionDetails();
+		 
 		DoctorDetails doctorDetails = new DoctorDetails();
 		try {
 			doctorDetails = doctorDetailsRepository.getLoginUserName(userName);
 if(doctorDetails!=null)
 {
- 
-	      
+	
+	String contactNo="******"+doctorDetails.getContactNo().substring(doctorDetails.getContactNo().length()-4, doctorDetails.getContactNo().length());
+	otpSessionDetails.setContactNo(contactNo);
 	 
 	String otp = String.valueOf(Constants.generateOTP(6));
 	sendTextMessageService.sendTextSms("One Time Password is "+otp+" for Forgot Password", doctorDetails.getContactNo());
-	doctorDetails.setPassword(otp);
-	String contactNo="******"+doctorDetails.getContactNo().substring(doctorDetails.getContactNo().length()-4, doctorDetails.getContactNo().length());
-	doctorDetails.setContactNo(contactNo);
+	otpSessionDetails.setOtp(otp);
+	otpSessionDetails.setUserName(userName);
+	otpSessionDetails.setId(doctorDetails.getDoctorId());
 }
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		return doctorDetails;
+		return otpSessionDetails;
 
 	}
 	
@@ -2815,9 +2843,10 @@ if(doctorDetails!=null)
 	public @ResponseBody Info sendOtpOnMobile(@RequestParam("contactNo") String contactNo) {
 		Info info = new Info();
 		// create instance of Random class
-		Random rand = new Random();
+		 
 		// Generate random integers in range 0 to 999
-		int generatedOTP = rand.nextInt(1000000);
+		String generatedOTP=String.valueOf(Constants.generateOTP(6));
+		 
 
 		MESSAGE = generatedOTP + " is your One Time Password for verification of user mobile number";
 		try {
@@ -2888,33 +2917,52 @@ if(doctorDetails!=null)
 	}
 
 	@RequestMapping(value = { "/isReferalCorrect" }, method = RequestMethod.POST)
-	public @ResponseBody ReferalDetails isReferalCorrect(@RequestParam("referal") String referal) {
+	public @ResponseBody Info isReferalCorrect(@RequestParam("referal") String referal) {
 
-		ReferalDetails referalDetails = new ReferalDetails();
-
+	//	ReferalDetails referalDetails = new ReferalDetails();
+		Info info =new Info();
 		try {
 
-			referalDetails = referalDetailsRepository.findByReferal(referal);
+			ReferalDetails referalDetails = referalDetailsRepository.findByReferal(referal);
 
+			if (referalDetails != null) {
+				info.setMessage("Code Applied Successfuly");
+				info.setError(false);
+			} else {
+				info.setMessage("Wrong Code please try again");
+				info.setError(true);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return referalDetails;
+		return info;
 	}
 
 	@RequestMapping(value = { "/isPatientReferalCorrect" }, method = RequestMethod.POST)
-	public @ResponseBody PatientDetails isPatientReferalCorrect(@RequestParam("referal") String referal) {
+	public @ResponseBody Info isPatientReferalCorrect(@RequestParam("referal") String referal) {
 
-		PatientDetails patientDetails = new PatientDetails();
-
+	Info info=new Info();
+		
 		try {
 
-			patientDetails = patientDetailsRepository.findByReferal(referal);
+			PatientDetails patientDetails = patientDetailsRepository.findByReferal(referal);
 
+			if(patientDetails!=null) {
+				
+				info.setMessage("Code Applied Successfuly");
+				info.setError(false);
+				
+			}else {
+				
+				info.setMessage("Wrong Code please try again");
+				info.setError(true);
+				
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return patientDetails;
+		return info;
 	}
 
 	@RequestMapping(value = { "/getUserWalletDetails" }, method = RequestMethod.POST)

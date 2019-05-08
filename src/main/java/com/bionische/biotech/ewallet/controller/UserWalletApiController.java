@@ -1,5 +1,6 @@
 package com.bionische.biotech.ewallet.controller;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,15 +143,17 @@ public class UserWalletApiController {
 		return getWalletTransactionDetailsList;
 	}
 	 */
-	@RequestMapping(value = { "/insertMoneyInWallet" }, method = RequestMethod.POST)
+	/*@RequestMapping(value = { "/insertMoneyInWallet" }, method = RequestMethod.POST)
 	public @ResponseBody WalletDetails insertMoneyInWallet(@RequestBody WalletDetails walletDetails)
 	{
 		try {
 			
-			System.out.println("Wallet ="+walletDetails.toString());
+			
 			 WalletDetails userWalletDetails=new WalletDetails();
-
+			
 			userWalletDetails=	walletDetailsRepository.save(walletDetails);
+			
+			
 			return userWalletDetails;
 
 		}catch (Exception e) {
@@ -161,7 +164,7 @@ public class UserWalletApiController {
 
 		} 
 		
-	}
+	}*/
 	
 	@RequestMapping(value = { "/insertWalletTransaction" }, method = RequestMethod.POST)
 	public @ResponseBody TransactionWalletDetails insertWalletTransaction(@RequestBody TransactionWalletDetails transactionWalletDetails)
@@ -235,10 +238,12 @@ public class UserWalletApiController {
 		
 	try {
 	System.out.println(userId+" And "+userType);
-	
+		
+	GetWalletTransactionDetails getWalletTransactionDetails=new GetWalletTransactionDetails();
+		
 		getWalletTransactionDetailsList=getWalletTransactionDetailsRepository.getWalletTransactionDetails(userId,userType);
 		
-	
+		
 		
 		System.out.println("wallet details ="+getWalletTransactionDetailsList.toString());
 	}

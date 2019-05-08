@@ -102,6 +102,7 @@ public class PatientPersonalHistoryApiController {
 	public @ResponseBody PatientHistoryChiefComplaints insertPatientHistoryChiefComplaints(@RequestBody PatientHistoryChiefComplaints patientHistoryChiefComplaints)
 	{
 		PatientHistoryChiefComplaints patientHistoryChiefComplaintsRes=patientHistoryChiefComplaintsRepository.findByPatientId(patientHistoryChiefComplaints.getPatientId());
+	if(patientHistoryChiefComplaintsRes!=null)
 		patientHistoryChiefComplaints.setChiefcomplaintsId(patientHistoryChiefComplaintsRes.getChiefcomplaintsId());
 		return patientHistoryChiefComplaintsRepository.save(patientHistoryChiefComplaints);
 		

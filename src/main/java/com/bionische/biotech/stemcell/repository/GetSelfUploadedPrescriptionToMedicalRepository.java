@@ -1,5 +1,6 @@
 package com.bionische.biotech.stemcell.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,13 +12,13 @@ import com.bionische.biotech.model.GetSelfUploadedPrescriptionToMedical;
 
 public interface GetSelfUploadedPrescriptionToMedicalRepository extends JpaRepository<GetSelfUploadedPrescriptionToMedical, Integer>{
 
-	@Query(value="SELECT r.medical_req_id, r.medical_id, m.medical_name, " + 
+	/*@Query(value="SELECT r.medical_req_id, r.medical_id, m.medical_name, " + 
 			"r.order_date, r.patient_id, CONCAT(p.f_name,' ',p.l_name)AS patient_name, r.delivery_type, " + 
 			" r.total_amt, r.pincode, p.contact AS patient_contact, r.payment_status, r.del_status, r.status, " + 
 			" r.address, m.email AS medical_email, m.contact as medical_contact, r.payment_date,r.prescription_name FROM patient_details p, medical_details m, " + 
 			" self_uploaded_prescription_to_medical r WHERE r.medical_id=:medicalId AND r.status=:status AND " + 
 			" r.patient_id=p.patient_id AND r.medical_id=m.medical_id ORDER BY r.medical_req_id DESC",nativeQuery=true)
-	List<GetSelfUploadedPrescriptionToMedical> getUploadedPrescriptionMedicalOrderDetailsByMedicalIdAndStatus(@Param("medicalId")int medicalId, @Param("status")int status);
+	List<GetSelfUploadedPrescriptionToMedical> getUploadedPrescriptionMedicalOrderDetailsByMedicalIdAndStatus(@Param("medicalId")int medicalId, @Param("status")int status);*/
 	
 	
 	@Query(value="SELECT r.medical_req_id, r.medical_id, m.medical_name, " + 
@@ -37,5 +38,23 @@ public interface GetSelfUploadedPrescriptionToMedicalRepository extends JpaRepos
 			"self_uploaded_prescription_to_medical r WHERE r.status=2 AND  " + 
 			"r.patient_id=p.patient_id AND r.medical_id=m.medical_id AND r.medical_req_id=:requestId",nativeQuery=true)
 	GetSelfUploadedPrescriptionToMedical getPatientOrderDetailsByRequestId(@Param("requestId")int requestId);
+	
+	/*@Query(value="SELECT r.medical_req_id, r.medical_id, m.medical_name, " + 
+			"r.order_date, r.patient_id, CONCAT(p.f_name,' ',p.l_name)AS patient_name,  r.delivery_type, " + 
+			"r.total_amt, r.pincode, p.contact AS patient_contact, r.payment_status, r.del_status, r.status, " + 
+			"r.address,  m.email AS medical_email, m.contact AS medical_contact, r.payment_date,r.prescription_name  FROM patient_details p, medical_details m, " + 
+			"self_uploaded_prescription_to_medical r WHERE r.patient_id=p.patient_id AND  " + 
+			"r.patient_id=p.patient_id AND r.medical_id=m.medical_id AND r.medical_req_id=:requestId",nativeQuery=true)
+	GetSelfUploadedPrescriptionToMedical getUploadedPatientOrderDetailsByRequestId(@Param("requestId")int requestId);*/
+	
+	
+	@Query(value="SELECT r.medical_req_id, r.medical_id, m.medical_name, " + 
+			"r.order_date, r.patient_id, CONCAT(p.f_name,' ',p.l_name)AS patient_name,  r.delivery_type, " + 
+			"r.total_amt, r.pincode, p.contact AS patient_contact, r.payment_status, r.del_status, r.status, " + 
+			"r.address, m.email AS medical_email, m.contact AS medical_contact, r.payment_date,r.prescription_name FROM patient_details p, medical_details m, " + 
+			"self_uploaded_prescription_to_medical r WHERE r.patient_id=:patientId AND r.order_date>:date AND " + 
+			"r.patient_id=p.patient_id AND r.medical_id=m.medical_id ORDER BY r.medical_req_id DESC",nativeQuery=true)
+	List<GetSelfUploadedPrescriptionToMedical> getPatientOrderDetailsByPatientId(@Param("patientId")int patientId,@Param("date")Date date);
+	
 	
 }

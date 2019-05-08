@@ -11,7 +11,7 @@ public interface LabSubscriptionDetailsRepository extends JpaRepository<LabSubsc
 	
 	LabSubscriptionDetails save(LabSubscriptionDetails LabSubscriptionDetails);
 	
-	LabSubscriptionDetails findByPackageExpDateGreaterThanEqualAndLabIdAndTxnStatus(String date, int labId,int txnStatus);
+	LabSubscriptionDetails findTop1ByPackageExpDateGreaterThanEqualAndLabIdAndTxnStatusOrderBySuscriptionIdDesc(String date, int labId,int txnStatus);
 
 	LabSubscriptionDetails findByTxnStatusNotAndLabId(int i, int labId);
 

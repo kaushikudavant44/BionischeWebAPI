@@ -12,13 +12,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bionische.biotech.model.Info;
-import com.bionische.biotech.model.PatientDetails;
 import com.bionische.biotech.radiology.model.ChildsModel;
 import com.bionische.biotech.radiology.model.IndicationsModel;
+import com.bionische.biotech.radiology.model.NewPndtPatientDetails;
 import com.bionische.biotech.radiology.model.PNDTPatientDetails;
+import com.bionische.biotech.radiology.model.PndtIndications;
 import com.bionische.biotech.radiology.model.PndtPatientBasicDetails;
 import com.bionische.biotech.radiology.model.PndtPatientHeader;
 import com.bionische.biotech.radiology.model.TestDetails;
+import com.bionische.biotech.radiology.repository.NewPndtPatientDetailsRepository;
+import com.bionische.biotech.radiology.repository.PndtIndicationsRepository;
 import com.bionische.biotech.radiology.repository.PndtPatientBasicDetailsRepository;
 import com.bionische.biotech.radiology.repository.PndtPatientChildRepository;
 import com.bionische.biotech.radiology.repository.PndtPatientHeaderRepository;
@@ -55,6 +58,11 @@ public class PNDTPatientController {
 	@Autowired
 	PndtPatientHeaderRepository pndtPatientHeaderRepository;
 
+	@Autowired
+	PndtIndicationsRepository pndtIndicationsRepository;
+	
+	@Autowired
+	NewPndtPatientDetailsRepository newPndtPatientDetailsRepository;
 	
 	/**
 	 * 
@@ -65,6 +73,14 @@ public class PNDTPatientController {
 	public @ResponseBody PndtPatientHeader savePndtPatientHeader(@RequestBody PndtPatientHeader pndtPatientHeader) {
 
 		return pndtPatientHeaderRepository.save(pndtPatientHeader);
+
+	}
+	
+	
+	@RequestMapping(value = { "/saveNewPndtUserDetails" }, method = RequestMethod.POST)
+	public @ResponseBody NewPndtPatientDetails saveNewPndtUserDetails(@RequestBody NewPndtPatientDetails newPndtPatientDetails) {
+
+		return newPndtPatientDetailsRepository.save(newPndtPatientDetails);
 
 	}
 	
@@ -82,24 +98,34 @@ public class PNDTPatientController {
 	
 	
 	@RequestMapping(value = { "/getPndtPatientDetails" }, method = RequestMethod.POST)
-	public @ResponseBody PNDTPatientDetails getPndtPatientDetails(@RequestParam("patientId")int patientId) {
+	public @ResponseBody PNDTPatientDetails getPndtPatientDetails(@RequestParam("patientName")String patientName) {
 
-		PNDTPatientDetails pndtPatientDetails=pndtPatientRepository.findByPndtPatientDetailsByPatientId(patientId);
+		PNDTPatientDetails pndtPatientDetails=pndtPatientRepository.findByPndtPatientDetailsByPatientName(patientName);
+		
+		//System.out.println("pndtPatientDetails= "+pndtPatientDetails.toString());
+		//List<IndicationsModel> indicationList=pndtPatientIndicationRepository.findByPndtId(pndtPatientDetails.getPndtId());
+		
+	//	List<ChildsModel> childList=pndtPatientChildRepository.findByPndtId(pndtPatientDetails.getPndtId());
 		
 		
-		List<IndicationsModel> indicationList=pndtPatientIndicationRepository.findByPndtId(pndtPatientDetails.getPndtId());
-		
-		List<ChildsModel> childList=pndtPatientChildRepository.findByPndtId(pndtPatientDetails.getPndtId());
-		
-		
-		pndtPatientDetails.setIndicationsModelList(indicationList);
+		//pndtPatientDetails.setIndicationsModelList(indicationList);
 	
-		pndtPatientDetails.setChildsModelList(childList);
+		//pndtPatientDetails.setChildsModelList(childList);
 		
 		return pndtPatientDetails;
 
 	}
+	
+	
+	@RequestMapping(value = { "/getPndtPatientDetailsByLabId" }, method = RequestMethod.POST)
+	public @ResponseBody List<PNDTPatientDetails> getPndtPatientDetailsByLabId(@RequestParam("labId")int labId) {
 
+		List<PNDTPatientDetails> pndtPatientDetails=pndtPatientRepository.findPndtPatientDetailsByLabId(labId);
+
+		return pndtPatientDetails;
+
+	}
+	
 	@RequestMapping(value = { "/getPndtPatientHeader" }, method = RequestMethod.POST)
 	public @ResponseBody PndtPatientHeader getPndtPatientHeader(@RequestParam("patientId")int patientId) {
 
@@ -234,5 +260,22 @@ public class PNDTPatientController {
 
 		return testDetails;
 	}
+	
+	@RequestMapping(value = { "/getAllIndications" }, method = RequestMethod.GET)
+	public @ResponseBody List<PndtIndications> getAllIndications() {
+		
+		List<PndtIndications> pndtIndications=new ArrayList<>();
+		
+		try {
+			pndtIndications = pndtIndicationsRepository.findAll();
+			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());// TODO: handle exception
+		}
+
+		return pndtIndications;
+	}
+	
+	
 
 }
