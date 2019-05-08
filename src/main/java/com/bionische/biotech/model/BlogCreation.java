@@ -14,9 +14,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BlogCreation {
 	
-	
-	
-	
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
