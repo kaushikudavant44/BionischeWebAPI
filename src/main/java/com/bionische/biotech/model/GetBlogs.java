@@ -21,6 +21,7 @@ public class GetBlogs {
 
 	private String blogImage;
 
+	private String blogContent;
 
 	private int likesCount;
 
@@ -73,16 +74,21 @@ public class GetBlogs {
 		this.blogBy = blogBy;
 	}
 
+	public String getBlogContent() {
+		return blogContent;
+	}
+
+	public void setBlogContent(String blogContent) {
+		this.blogContent = blogContent;
+	}
+
 	@Override
 	public String toString() {
 		return "GetBlogs [blogId=" + blogId + ", blogDate=" + blogDate + ", blogTitle=" + blogTitle + ", blogBy="
-				+ blogBy + ", blogImage=" + blogImage + ", likesCount=" + likesCount + "]";
+				+ blogBy + ", blogImage=" + blogImage + ", blogContent=" + blogContent + ", likesCount=" + likesCount
+				+ "]";
 	}
 
-
-
-	
-
-	
+	 
 	
 }
