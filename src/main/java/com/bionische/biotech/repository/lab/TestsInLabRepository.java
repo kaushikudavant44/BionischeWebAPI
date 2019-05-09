@@ -21,7 +21,7 @@ public interface TestsInLabRepository extends JpaRepository<TestsInLab, Integer>
 	@Transactional
 	@Modifying
 	@Query("UPDATE TestsInLab  SET delStatus =:delStatus WHERE labId=:labId AND testId=:testId")
-	  int updateDelStatus(int labId, int testId, int delStatus);
+	  int updateDelStatus(@Param("labId")int labId, @Param("testId")int testId, @Param("delStatus")int delStatus);
 	
 	
 }
