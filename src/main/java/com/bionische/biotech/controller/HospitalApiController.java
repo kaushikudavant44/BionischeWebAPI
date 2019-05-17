@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bionische.biotech.Common.ResourceNotFoundException;
 import com.bionische.biotech.adminpanel3d.model.Info;
 import com.bionische.biotech.model.DoctorHospitalDetails;
 import com.bionische.biotech.model.GetHospitalDetails;
@@ -20,7 +23,6 @@ import com.bionische.biotech.repository.DoctorHospitalDetailsRepository;
 import com.bionische.biotech.repository.GetHospitalDetailsByTypeRepository;
 import com.bionische.biotech.repository.GetHospitalDetailsRepository;
 import com.bionische.biotech.repository.HospitalDetailsRepository;
-import com.sun.java.swing.plaf.windows.resources.windows;
 
 @RestController
 public class HospitalApiController {
@@ -168,6 +170,24 @@ public class HospitalApiController {
 		}
 
 		return getHospitalDetailsList;
+	}
+	
+	
+	@RequestMapping(value = { "/getHospitalsByTypeAndKeyword" }, method = RequestMethod.POST)
+	public @ResponseBody ResponseEntity<List<GetHospitalDetails>> getHospitalsByTypeAndKeyword(@RequestParam("type") int type, @RequestParam("keyword") String keyword) {
+		
+		List<GetHospitalDetails> getHospitalDetailsList = new ArrayList<GetHospitalDetails>();
+
+	 
+			getHospitalDetailsList = getHospitalDetailsRepository.getHospitalsByTypeAndKeyword(type,keyword);
+		 
+			if (getHospitalDetailsList.isEmpty()) {
+				throw new ResourceNotFoundException("Hospital", "keyword", keyword);
+			} else {
+
+				return new ResponseEntity<List<GetHospitalDetails>>(getHospitalDetailsList, HttpStatus.OK);
+	 
+			}	 
 	}
 	
 	

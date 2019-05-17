@@ -28,4 +28,10 @@ public interface GetHospitalDetailsRepository extends JpaRepository<GetHospitalD
 			+ " AND h.cityid=c.city_id AND h.state_id=s.state_id AND h.del_status=0 AND d.hospital_id=h.hospital_id AND d.del_status=0;",nativeQuery=true)
 	List<GetHospitalDetails> findHospitalByType(@Param("type")int type);
 
+	@Query(value="SELECT d.id, h.type, d.doctor_id, h.hospital_name, h.contact_no, h.email_id, \r\n" + 
+			"h.country_id,h.state_id,h.address,h.cityid,h.hospital_id,c.city_name,s.state_name \r\n" + 
+			"FROM doctor_hospital_details d, hospital_details h, city c, state s WHERE h.type=:type"
+			+ " AND h.cityid=c.city_id AND h.state_id=s.state_id AND h.del_status=0 AND h.hospital_name LIKE %:keyword% AND d.hospital_id=h.hospital_id AND d.del_status=0;",nativeQuery=true)
+	List<GetHospitalDetails> getHospitalsByTypeAndKeyword(@Param("type")int type, @Param("keyword")String keyword);
+
 }
