@@ -1,26 +1,28 @@
 package com.bionische.biotech.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Random;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.bionische.biotech.ConstantFileUploadPath;
 import com.bionische.biotech.model.Info;
+import com.bionische.biotech.model.UploadFileResponse;
 
 @RestController
 public class VpsFileUploadApiController {
@@ -107,7 +109,7 @@ public class VpsFileUploadApiController {
 			if(! Files.exists(path)) {
 				Files.createDirectories(path.getParent());
 				}
-			
+			path=Paths.get("F:\\sts-bundle\\sts-3.9.3.RELEASE\\folderD\\"+imageName);
 			Files.write(path, bytes);
 			info.setError(false);
 			info.setMessage("File Upload Successfully");
@@ -121,8 +123,38 @@ public class VpsFileUploadApiController {
 
 	}
 
+	@PostMapping("/uploadMultipleFiles")
+    public @ResponseBody List<String> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files,
+			 @RequestParam("imageType") int imageType,
+			@RequestParam("userId") int userId) {
+		
+		List<String> fileNameList=new ArrayList<String>();
+		System.out.println("uploadMultipleFiles :"+files.length);
+		 for(MultipartFile file: files) {
+				
+			String imageName=  new SimpleDateFormat("ddMMyyyyHHmmss").format(new Date())
+					+ userId + getFileExtension(file);
+			System.out.println("uploadMultipleFiles : imageName");
+			fileNameList.add(imageName);
+		try {
+			uploadFile(file,imageName,imageType, userId);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	} 
+		
+       return fileNameList;
+    }
+ 
+     
+
+	
 	private String getFileExtension(MultipartFile inFile) {
 		String fileExtention = inFile.getOriginalFilename().substring(inFile.getOriginalFilename().lastIndexOf('.'));
 		return fileExtention;
 	}
+	
+	 
 }
