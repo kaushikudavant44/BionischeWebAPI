@@ -104,12 +104,14 @@ public class VpsFileUploadApiController {
 
 				path = Paths.get(ConstantFileUploadPath.DOCTOR_PATH + userId + "/signature/" + imageName);
 			}
-		
+		 else if (imageType == 13) {
+		path = Paths.get(ConstantFileUploadPath.PATIENT_PATH + userId + "/video/" + imageName);
+		 }
 		try {
 			if(! Files.exists(path)) {
 				Files.createDirectories(path.getParent());
 				}
-			path=Paths.get("F:\\sts-bundle\\sts-3.9.3.RELEASE\\folderD\\"+imageName);
+			 
 			Files.write(path, bytes);
 			info.setError(false);
 			info.setMessage("File Upload Successfully");
