@@ -7,4 +7,6 @@ import com.bionische.biotech.radiology.model.NewPndtPatientDetails;
 public interface NewPndtPatientDetailsRepository extends JpaRepository<NewPndtPatientDetails, Integer>{
 
 	NewPndtPatientDetails save(NewPndtPatientDetails newPndtPatientDetails);
+	
+	NewPndtPatientDetails findByPndtPatientId(int pndtPatientId);
 }

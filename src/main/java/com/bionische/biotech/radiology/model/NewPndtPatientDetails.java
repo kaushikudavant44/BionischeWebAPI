@@ -8,22 +8,44 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="new_pndt_patient_details")
+@Table(name = "new_pndt_patient_details")
 public class NewPndtPatientDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "pndt_patient_id")
 	int pndtPatientId;
-	
+
+	@Column(name = "m_name")
+	String mName;
+
+	@Column(name = "l_name")
+	String lName;
+
 	@Column(name = "patient_name")
 	String patientName;
-	
+
 	@Column(name = "mobile_no")
 	String mobileNo;
-	
+
 	@Column(name = "del_status")
 	int delStatus;
+
+	public String getmName() {
+		return mName;
+	}
+
+	public void setmName(String mName) {
+		this.mName = mName;
+	}
+
+	public String getlName() {
+		return lName;
+	}
+
+	public void setlName(String lName) {
+		this.lName = lName;
+	}
 
 	public int getPndtPatientId() {
 		return pndtPatientId;
@@ -59,10 +81,8 @@ public class NewPndtPatientDetails {
 
 	@Override
 	public String toString() {
-		return "NewPndtPatientDetails [pndtPatientId=" + pndtPatientId + ", patientName=" + patientName + ", mobileNo="
-				+ mobileNo + ", delStatus=" + delStatus + "]";
+		return "NewPndtPatientDetails [pndtPatientId=" + pndtPatientId + ", mName=" + mName + ", lName=" + lName
+				+ ", patientName=" + patientName + ", mobileNo=" + mobileNo + ", delStatus=" + delStatus + "]";
 	}
-	
-	
-	
+
 }

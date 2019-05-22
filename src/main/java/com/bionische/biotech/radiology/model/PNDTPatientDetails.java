@@ -1,5 +1,6 @@
 package com.bionische.biotech.radiology.model;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -8,7 +9,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import com.bionische.biotech.Common.DateConverter;
 
@@ -20,9 +27,21 @@ public class PNDTPatientDetails {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "pndt_id")
 	private int pndtId;
-	
+
+	@Column(name = "pndt_patient_id")
+	private int pndtPatientId;
+
+	@Column(name = "pndt_header_id")
+	private int pndtHeaderId;
+
 	@Column(name = "patient_name")
 	private String patientName;
+
+	@Column(name = "m_name")
+	private String mName;
+
+	@Column(name = "l_name")
+	private String lName;
 
 	@Column(name = "state")
 	private String state;
@@ -78,7 +97,7 @@ public class PNDTPatientDetails {
 	@Column(name = "indication_mtp_abnormal")
 	private String indicationMTPAbnormal;
 
-	@Column(name = "gen_disease_history",nullable=true)
+	@Column(name = "gen_disease_history", nullable = true)
 	private String genDiseaseHistory;
 
 	@Column(name = "indication_diango_proc")
@@ -120,18 +139,53 @@ public class PNDTPatientDetails {
 	@Column(name = "string1")
 	private int string1;
 
-	@Transient
-	private List<IndicationsModel> indicationsModelList;
+	@Column(name = "status")
+	private int status;
 
 	@Transient
 	private List<ChildsModel> childsModelList;
 
-	public List<IndicationsModel> getIndicationsModelList() {
-		return indicationsModelList;
+	@Column(name = "created_date", updatable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreatedDate
+	Date created_date;
+
+	@Column(name = "modified_date")
+	@LastModifiedDate
+	@Temporal(TemporalType.TIMESTAMP)
+	@UpdateTimestamp
+	Date modified_date;
+
+	public Date getCreated_date() {
+		return created_date;
 	}
 
-	public void setIndicationsModelList(List<IndicationsModel> indicationsModelList) {
-		this.indicationsModelList = indicationsModelList;
+	public void setCreated_date(Date created_date) {
+		this.created_date = created_date;
+	}
+
+	public Date getModified_date() {
+		return modified_date;
+	}
+
+	public void setModified_date(Date modified_date) {
+		this.modified_date = modified_date;
+	}
+
+	public int getPndtHeaderId() {
+		return pndtHeaderId;
+	}
+
+	public void setPndtHeaderId(int pndtHeaderId) {
+		this.pndtHeaderId = pndtHeaderId;
+	}
+
+	public int getPndtPatientId() {
+		return pndtPatientId;
+	}
+
+	public void setPndtPatientId(int pndtPatientId) {
+		this.pndtPatientId = pndtPatientId;
 	}
 
 	public List<ChildsModel> getChildsModelList() {
@@ -150,8 +204,6 @@ public class PNDTPatientDetails {
 		this.delStatus = delStatus;
 	}
 
-	
-
 	public int getLabId() {
 		return labId;
 	}
@@ -159,8 +211,6 @@ public class PNDTPatientDetails {
 	public void setLabId(int labId) {
 		this.labId = labId;
 	}
-
-	
 
 	public int getPatientType() {
 		return patientType;
@@ -177,10 +227,6 @@ public class PNDTPatientDetails {
 	public void setString1(int string1) {
 		this.string1 = string1;
 	}
-
-	
-
-	
 
 	public String getPatientName() {
 		return patientName;
@@ -422,10 +468,35 @@ public class PNDTPatientDetails {
 		this.pndtId = pndtId;
 	}
 
+	public String getmName() {
+		return mName;
+	}
+
+	public void setmName(String mName) {
+		this.mName = mName;
+	}
+
+	public String getlName() {
+		return lName;
+	}
+
+	public void setlName(String lName) {
+		this.lName = lName;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
 	@Override
 	public String toString() {
-		return "PNDTPatientDetails [pndtId=" + pndtId + ", patientName=" + patientName + ", state=" + state
-				+ ", numberOfChild=" + numberOfChild + ", numberOfMaleChild=" + numberOfMaleChild
+		return "PNDTPatientDetails [pndtId=" + pndtId + ", pndtPatientId=" + pndtPatientId + ", pndtHeaderId="
+				+ pndtHeaderId + ", patientName=" + patientName + ", mName=" + mName + ", lName=" + lName + ", state="
+				+ state + ", numberOfChild=" + numberOfChild + ", numberOfMaleChild=" + numberOfMaleChild
 				+ ", numberOfFemaleChild=" + numberOfFemaleChild + ", relativeType=" + relativeType + ", relativeName="
 				+ relativeName + ", address=" + address + ", refDoctor=" + refDoctor + ", selfDoctor=" + selfDoctor
 				+ ", weeksOfPregnancy=" + weeksOfPregnancy + ", nameOfDoctor=" + nameOfDoctor + ", numberOfIndication="
@@ -439,14 +510,8 @@ public class PNDTPatientDetails {
 				+ ", resultOfProcedure=" + resultOfProcedure + ", dateResOfProcedure=" + dateResOfProcedure
 				+ ", invasivePreNatalDiagnoProc=" + invasivePreNatalDiagnoProc + ", indicationMTPabnormality="
 				+ indicationMTPabnormality + ", delStatus=" + delStatus + ", labId=" + labId + ", patientType="
-				+ patientType + ", string1=" + string1 + ", indicationsModelList=" + indicationsModelList
-				+ ", childsModelList=" + childsModelList + "]";
+				+ patientType + ", string1=" + string1 + ", status=" + status + ", childsModelList=" + childsModelList
+				+ ", created_date=" + created_date + ", modified_date=" + modified_date + "]";
 	}
-
-	
-
-	
-
-	
 
 }

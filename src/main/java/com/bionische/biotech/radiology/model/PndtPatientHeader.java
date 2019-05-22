@@ -35,8 +35,8 @@ public class PndtPatientHeader {
 	@Column(name="year")
 	int year;
 	
-	@Column(name="doctor_id")
-	int doctor_id;
+	@Column(name="lab_id")
+	int lab_id;
 	
 	@Column(name="created_date",updatable=false)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -81,12 +81,14 @@ public class PndtPatientHeader {
 		this.year = year;
 	}
 
-	public int getDoctor_id() {
-		return doctor_id;
+	
+
+	public int getLab_id() {
+		return lab_id;
 	}
 
-	public void setDoctor_id(int doctor_id) {
-		this.doctor_id = doctor_id;
+	public void setLab_id(int lab_id) {
+		this.lab_id = lab_id;
 	}
 
 	public Date getCreated_date() {
@@ -108,9 +110,11 @@ public class PndtPatientHeader {
 	@Override
 	public String toString() {
 		return "PndtPatientHeader [pndt_header_id=" + pndt_header_id + ", patient_id=" + patient_id + ", month=" + month
-				+ ", year=" + year + ", doctor_id=" + doctor_id + ", created_date=" + created_date + ", modified_date="
+				+ ", year=" + year + ", lab_id=" + lab_id + ", created_date=" + created_date + ", modified_date="
 				+ modified_date + "]";
 	}
+
+	
 	
 	
 	

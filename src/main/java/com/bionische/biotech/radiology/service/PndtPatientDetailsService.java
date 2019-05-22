@@ -11,7 +11,7 @@ public interface PndtPatientDetailsService {
 	
 	Info insertPndtPatientDetails(PNDTPatientDetails pndtPatientDetails);
 	
-	List<IndicationsModel> getIndicationByPndtId(int pndtId);
+	//List<IndicationsModel> getIndicationByPndtId(int pndtId);
 	List<ChildsModel> getChildsByPndtId(int pndtId);
 
 }

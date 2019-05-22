@@ -3,8 +3,10 @@ package com.bionische.biotech.radiology.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bionische.biotech.radiology.model.PNDTPatientDetails;
 
@@ -19,5 +21,10 @@ public interface PndtPatientRepository extends JpaRepository<PNDTPatientDetails,
 	
 	
 	List<PNDTPatientDetails> findPndtPatientDetailsByLabId(int labId);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE PNDTPatientDetails m SET m.status =1  WHERE m.pndtId=:pndtId")
+	int updatePatientUploadStatusByPndtId(@Param("pndtId") int pndt);
 }
  

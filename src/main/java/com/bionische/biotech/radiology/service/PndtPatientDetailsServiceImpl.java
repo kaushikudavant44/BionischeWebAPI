@@ -44,12 +44,7 @@ public class PndtPatientDetailsServiceImpl implements PndtPatientDetailsService 
 				pndtPatientChildRepository.save(pndtPatientDetails.getChildsModelList().get(i));
 			}
 			
-			for (int i = 0; i < pndtPatientDetails.getIndicationsModelList().size(); i++) {
-
-				pndtPatientDetails.getIndicationsModelList().get(i).setPndtId(pndtId);
-				pndtPatientIndicationRepository.save(pndtPatientDetails.getIndicationsModelList().get(i));
-
-			}
+			
 
 			
 
@@ -71,7 +66,7 @@ public class PndtPatientDetailsServiceImpl implements PndtPatientDetailsService 
 
 	}
 
-	@Override
+	/*@Override
 	public List<IndicationsModel> getIndicationByPndtId(int pndtId) {
 
 		List<IndicationsModel> indicationModelList = new ArrayList<IndicationsModel>();
@@ -83,7 +78,7 @@ public class PndtPatientDetailsServiceImpl implements PndtPatientDetailsService 
 		}
 
 		return indicationModelList;
-	}
+	}*/
 	
 	@Override
 	public List<ChildsModel> getChildsByPndtId(int pndtId) {
