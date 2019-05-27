@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.bionische.biotech.ConstantFileUploadPath;
 import com.bionische.biotech.model.Info;
+import com.bionische.biotech.model.MultipleFileResponse;
 
 @RestController
 public class VpsFileUploadApiController {
@@ -125,20 +127,22 @@ public class VpsFileUploadApiController {
 	}
 
 	@PostMapping("/uploadMultipleFiles")
-    public @ResponseBody List<String> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files,
+    public @ResponseBody List<MultipleFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files,
 			 @RequestParam("imageType") int imageType,
 			@RequestParam("userId") int userId) {
 		
-		List<String> fileNameList=new ArrayList<String>();
+		
+		List<MultipleFileResponse> multipleFileResponseList=new ArrayList<MultipleFileResponse>();
 		System.out.println("uploadMultipleFiles :"+files.length);
-		 for(MultipartFile file: files) {
-				
+		 
+		 for(int i=0;i<files.length;i++) {
+			 
 			String imageName=  new SimpleDateFormat("ddMMyyyyHHmmss").format(new Date())
-					+ userId + getFileExtension(file);
+					+ userId +""+i+ getFileExtension(files[i]);
 			System.out.println("uploadMultipleFiles : imageName");
-			fileNameList.add(imageName);
+			multipleFileResponseList.add(new MultipleFileResponse(i,imageName));
 		try {
-			uploadFile(file,imageName,imageType, userId);
+			uploadFile(files[i],imageName,imageType, userId);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -146,7 +150,7 @@ public class VpsFileUploadApiController {
 		
 	} 
 		
-       return fileNameList;
+       return multipleFileResponseList;
     }
  
      
