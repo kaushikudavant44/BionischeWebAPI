@@ -103,6 +103,9 @@ public class VpsFileUploadApiController {
 		 else if (imageType == 13) {
 		path = Paths.get(ConstantFileUploadPath.PATIENT_PATH + userId + "/video/" + imageName);
 		 }
+		 else if (imageType == 14) {
+				path = Paths.get(ConstantFileUploadPath.PATIENT_PATH + userId + "/prescription/" + imageName);
+				 }
 		try {
 			if(! Files.exists(path)) {
 				Files.createDirectories(path.getParent());
