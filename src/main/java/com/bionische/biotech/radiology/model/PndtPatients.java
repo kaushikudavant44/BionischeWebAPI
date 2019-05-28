@@ -94,9 +94,6 @@ public class PndtPatients {
 		this.nameOfDoctor = nameOfDoctor;
 	}
 
-	
-	
-
 	public String getCreatedDate() {
 		return DateConverter.convertToDMY(createdDate);
 	}

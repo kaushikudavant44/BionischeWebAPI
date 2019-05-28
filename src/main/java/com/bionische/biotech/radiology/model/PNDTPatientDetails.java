@@ -145,7 +145,7 @@ public class PNDTPatientDetails {
 	@Transient
 	private List<ChildsModel> childsModelList;
 
-	@Column(name = "created_date", updatable = false)
+	@Column(name="created_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	Date created_date;
