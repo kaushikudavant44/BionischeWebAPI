@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bionische.biotech.ewallet.model.TransactionWalletDetails;
-import com.bionische.biotech.ewallet.model.WalletDetails;
 import com.bionische.biotech.model.AppointmentDetails;
 import com.bionische.biotech.model.ConsultingDetails;
 import com.bionische.biotech.model.DoctorDetails;
+import com.bionische.biotech.model.GetConsultingBill;
 import com.bionische.biotech.model.GetDocAndLabForRating;
 import com.bionische.biotech.model.GetLabAppointment;
 import com.bionische.biotech.model.Info;
@@ -29,6 +29,7 @@ import com.bionische.biotech.model.PrescriptionDetails;
 import com.bionische.biotech.repository.AppointmentDetailsRepository;
 import com.bionische.biotech.repository.ConsultingDetailsRepository;
 import com.bionische.biotech.repository.DoctorDetailsRepository;
+import com.bionische.biotech.repository.GetConsultingBillRepository;
 import com.bionische.biotech.repository.GetLabAppointmentRrepository;
 import com.bionische.biotech.repository.GetPrescriptionWithBillRepository;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
@@ -76,6 +77,8 @@ public class ConsultingDetailsController {
 	
 	@Autowired
 	PatientDetailsRepository patientDetailsRepository;
+	@Autowired
+	GetConsultingBillRepository getConsultingBillRepository; 
 	
 	@RequestMapping(value = { "/getConsultingByDoctorIdAndDate" }, method = RequestMethod.POST)
 	public @ResponseBody List getConsultingByDoctorIdAndDate(@RequestParam("doctorId") int doctorId,
@@ -590,9 +593,22 @@ public class ConsultingDetailsController {
 	}
 	
 	
+	@RequestMapping(value = { "/getConsultingBillByMeetId" }, method = RequestMethod.POST)
+	public @ResponseBody GetConsultingBill getConsultingBillByMeetId(@RequestParam("meetId") int meetId)
+
+	{
+	try {
+		return getConsultingBillRepository.getConsultingBillByMeetId(meetId);
+	}
+	catch (Exception e) {
+		// TODO: handle exception
+		System.out.println(e.getMessage());
+		return null;
+	}
+	}
 }
 
-
+ 
 
 
 
