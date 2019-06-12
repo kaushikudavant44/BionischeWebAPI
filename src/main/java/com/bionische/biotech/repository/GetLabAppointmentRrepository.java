@@ -104,4 +104,16 @@ List<GetLabAppointment> getLabAppmtDetailsByPatientIdAndDate(@Param("patientId")
 			+ " a.lab_id=l.lab_id AND p.patient_id=a.patient_id AND  p.family_id=:familyId AND a.rating_status=0 AND FIND_IN_SET(tt.lab_test_id, a.test_id_list)  AND"
 			+ " t.time_id=a.time_id GROUP BY a.lab_app_id ORDER BY a.lab_app_date DESC, a.del_status, a.time_id",nativeQuery=true)
 	List<GetLabAppointment> getLabAppointmentForRating(@Param("familyId")int familyId,@Param("date")String date);
+
+	 
+	@Query(value="SELECT a.lab_app_id, t.time_id , a.status, a.payment_status, a.total_amount, a.patient_id, t.time, a.lab_app_date, l.address, a.test_id_list, a.doctor_id, "
+			+ " CASE  WHEN a.doctor_id = 0 THEN 'Not Specify'  WHEN a.doctor_id != 0 THEN (SELECT CONCAT( d.f_name,' ', d.l_name) FROM doctor_details d WHERE doctor_id=a.doctor_id) END AS doctor_name, a.refference,"
+			+ " GROUP_CONCAT( tt.lab_test_name SEPARATOR ', ')AS lab_test_name, CONCAT( p.f_name,' ', p.l_name)AS patient_name,"
+			+ " a.lab_id, p.contact AS patient_contact, p.email AS patient_email, l.lab_name, a.del_status FROM lab_tests tt,"
+			+ " t_lab_appointment_details a, lab_details l, appointment_time t, patient_details p WHERE"
+			+ " a.lab_app_date>=CURDATE() AND a.lab_id=l.lab_id AND p.patient_id=a.patient_id AND"
+			+ "  a.patient_id=:patientId AND FIND_IN_SET(tt.lab_test_id, a.test_id_list)  AND t.time_id=a.time_id GROUP BY a.lab_app_id ORDER BY a.lab_app_date"
+			+ " DESC, a.del_status, a.time_id",nativeQuery=true)
+List<GetLabAppointment> getLabAppmtDetailsByPatientId(@Param("patientId")int patientId);
+
 }

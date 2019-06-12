@@ -19,6 +19,13 @@ public interface GetAppointmentDetailsRepository extends JpaRepository<GetAppoin
 	
 	@Query(value="SELECT a.appoint_id,a.int_1, a.doctor_id, a.patient_id, a.date, a.hospital_id, a.del_status, a.status, CONCAT(p.f_name,' ', p.l_name)AS patient_name, (CASE WHEN a.amount>0 THEN a.amount ELSE d.fees END ) as amount,a.payment_status,"
 			+" CONCAT(d.f_name,' ', d.l_name)AS doctor_name, h.address, h.hospital_name,t.time_id, t.time,p.profile_photo from appointment_time t, doctor_appointment a, doctor_details d,"
+			+" hospital_details h, patient_details p WHERE a.date>=CURDATE() AND a.patient_id=:patientId AND a.hospital_id=h.hospital_id AND"
+			+" a.doctor_id=d.doctor_id AND a.patient_id=p.patient_id AND a.time=t.time_id ORDER BY a.date DESC",nativeQuery=true)
+	List<GetAppointmentDetails> getAppointmentDetailsByPatientId(@Param("patientId")int patientId);
+	
+	
+	@Query(value="SELECT a.appoint_id,a.int_1, a.doctor_id, a.patient_id, a.date, a.hospital_id, a.del_status, a.status, CONCAT(p.f_name,' ', p.l_name)AS patient_name, (CASE WHEN a.amount>0 THEN a.amount ELSE d.fees END ) as amount,a.payment_status,"
+			+" CONCAT(d.f_name,' ', d.l_name)AS doctor_name, h.address, h.hospital_name,t.time_id, t.time,p.profile_photo from appointment_time t, doctor_appointment a, doctor_details d,"
 			+" hospital_details h, patient_details p WHERE  a.appoint_id=:appointmentId AND a.hospital_id=h.hospital_id AND"
 			+" a.doctor_id=d.doctor_id AND a.patient_id=p.patient_id AND a.time=t.time_id ORDER BY a.date DESC",nativeQuery=true)
 	List<GetAppointmentDetails> getAppointmentDetailsByAppointmentid(@Param("appointmentId")int appointmentId);

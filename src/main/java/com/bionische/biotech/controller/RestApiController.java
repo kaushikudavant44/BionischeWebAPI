@@ -1061,6 +1061,20 @@ public class RestApiController {
 		return appointmentDetailsList;
 	}
 
+	@RequestMapping(value = { "/getAppmtDetailsByPatientId" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetAppointmentDetails> getAppmtDetailsByPatientId(
+			@RequestParam("patientId") int patientId) {
+	 
+		List<GetAppointmentDetails> appointmentDetailsList = new ArrayList<>();
+		try {
+			appointmentDetailsList = getAppointmentDetailsRepository.getAppointmentDetailsByPatientId( patientId);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return appointmentDetailsList;
+	}
+	
 	@RequestMapping(value = { "/updateDoctorAppointmentStatus" }, method = RequestMethod.POST)
 	public @ResponseBody Info updateDoctorAppointmentStatus(@RequestParam("appId") int appId,
 			@RequestParam("status") int status) {

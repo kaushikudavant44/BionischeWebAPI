@@ -523,6 +523,23 @@ public class LabPatientApiConrtoller {
 		return null;
 	}
 	
+	@RequestMapping(value = { "/getLabAppmtDetailsByPatientId" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetLabAppointment> getLabAppmtDetailsByPatientId(@RequestParam("patientId") int patientId) {
+	 
+		try {
+		 
+			List<GetLabAppointment> getLabAppointmentRes=getLabAppointmentRrepository.getLabAppmtDetailsByPatientId(patientId);
+			System.out.println("labDetailsListRes "+getLabAppointmentRes.toString());
+			 
+		 
+			 return getLabAppointmentRes;
+		}
+		catch (Exception e) {
+		e.printStackTrace();
+		}
+		return null;
+	}
+	
 	
 	@RequestMapping(value = { "/getLabAppointmentByLabId" }, method = RequestMethod.POST)
 	public @ResponseBody List<GetLabAppointment> getLabAppointmentByLabId(@RequestParam("labId") int labId, @RequestParam("fromDate") String  fromDate, @RequestParam("toDate") String  toDate) {
