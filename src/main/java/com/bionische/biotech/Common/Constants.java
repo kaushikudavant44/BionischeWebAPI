@@ -4,8 +4,8 @@ import java.util.Random;
 
 public class Constants {
 
-	public static String SITE_URL="https://www.bionische.com/biocare/";
-	public static String BIONISCHE_ICON="https://www.bionische.com/biocare/resources/images/favicon.ico";
+	public static String SITE_URL="https://www.bionische.com/";
+	public static String BIONISCHE_ICON="https://www.bionische.com/resources/images/favicon.ico";
 	
 	public static char[] generateOTP(int length) {
 	      String numbers = "1234567890";

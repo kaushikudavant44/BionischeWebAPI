@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.bionische.biotech.ConstantFileUploadPath;
 import com.bionische.biotech.model.Info;
 import com.bionische.biotech.model.MultipleFileResponse;
+import com.bionische.biotech.s3.AmazonS3ClientService;
 
 @RestController
 public class VpsFileUploadApiController {
@@ -54,7 +56,13 @@ public class VpsFileUploadApiController {
 	 * = inFile.getOriginalFilename().substring(inFile.getOriginalFilename().
 	 * lastIndexOf('.')); return fileExtention; }
 	 */
-	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+	
+	 @Autowired
+	    private AmazonS3ClientService amazonS3ClientService;
+
+	 
+	 
+	/*@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
 	public @ResponseBody Info uploadFile(@RequestParam(value = "files") MultipartFile file,
 			@RequestParam("imageName") String imageName, @RequestParam("imageType") int imageType,
 			@RequestParam("userId") int userId) throws IOException {
@@ -154,6 +162,106 @@ public class VpsFileUploadApiController {
     }
  
      
+*/
+	 
+	 
+	 @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+		public @ResponseBody Info uploadFile(@RequestParam(value = "files") MultipartFile file,
+				@RequestParam("imageName") String imageName, @RequestParam("imageType") int imageType,
+				@RequestParam("userId") int userId) throws IOException {
+
+			Info info = new Info();
+		 
+			System.out.println("File Name: " + file.getOriginalFilename());
+		 
+			String fileExtention = getFileExtension(file);
+
+			if (imageType == 1) {
+
+			 
+				info =this.amazonS3ClientService.uploadFileToS3Bucket(file,imageName,"doctor/" + userId + "/profile/", true);
+				 
+			} else if (imageType == 2) {
+
+	 
+				info =	 this.amazonS3ClientService.uploadFileToS3Bucket(file,imageName,"patient/" + userId + "/profile/", true);
+			} else if (imageType == 3) {
+
+				 
+				info =this.amazonS3ClientService.uploadFileToS3Bucket(file,imageName,"parmacy/" + userId + "/profile/", true);
+			}
+
+			else if (imageType == 4) {
+ 
+				info =this.amazonS3ClientService.uploadFileToS3Bucket(file,imageName,"lab/" + userId + "/profile/", true);
+			}
+
+			else if (imageType == 5) {
+
+			 
+				info =this.amazonS3ClientService.uploadFileToS3Bucket(file,imageName,"patient/" + userId + "/reports/", true);
+			 
+			} else if (imageType == 6) {
+
+			 
+				info =this.amazonS3ClientService.uploadFileToS3Bucket(file,imageName,"pharmacy/" + userId + "/documents/", true);
+			} else if (imageType == 7) {
+
+			 
+				info =this.amazonS3ClientService.uploadFileToS3Bucket(file,imageName,"doctor/" + userId + "/documents/", true);
+			} else if (imageType == 8) {
+
+			 
+				info =this.amazonS3ClientService.uploadFileToS3Bucket(file,imageName,"lab/" + userId + "/documents/", true);
+			}
+			
+			 else if (imageType == 10) {
+
+		 
+				 info = this.amazonS3ClientService.uploadFileToS3Bucket(file,imageName,"doctor/" + userId + "/signature/", true);
+				}
+			 else if (imageType == 13) {
+	 
+				 info =this.amazonS3ClientService.uploadFileToS3Bucket(file,imageName,"patient/" + userId + "/video/", true);
+			 }
+			 else if (imageType == 14) {
+				 
+				 info =this.amazonS3ClientService.uploadFileToS3Bucket(file,imageName,"patient/" + userId + "/prescription/", true);
+					 }
+			 
+				 
+			return info;
+
+		}
+
+		@PostMapping("/uploadMultipleFiles")
+	    public @ResponseBody List<MultipleFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files,
+				 @RequestParam("imageType") int imageType,
+				@RequestParam("userId") int userId) {
+			
+			
+			List<MultipleFileResponse> multipleFileResponseList=new ArrayList<MultipleFileResponse>();
+			System.out.println("uploadMultipleFiles :"+files.length);
+			 
+			 for(int i=0;i<files.length;i++) {
+				 
+				String imageName=  new SimpleDateFormat("ddMMyyyyHHmmss").format(new Date())
+						+ userId +""+i+ getFileExtension(files[i]);
+				System.out.println("uploadMultipleFiles : imageName");
+				multipleFileResponseList.add(new MultipleFileResponse(i,imageName));
+			try {
+				uploadFile(files[i],imageName,imageType, userId);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		} 
+			
+	       return multipleFileResponseList;
+	    }
+	 
+	     
 
 	
 	private String getFileExtension(MultipartFile inFile) {

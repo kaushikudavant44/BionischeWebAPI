@@ -23,7 +23,6 @@ import com.bionische.biotech.model.PharmacySubscriptionDetails;
 import com.bionische.biotech.repository.MedicalDetailsRepository;
 import com.bionische.biotech.repository.PharmacySubscriptionDetailsRepository;
 import com.bionische.biotech.repository.WalletDetailsRepository;
-import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.SendEMailService;
 @RestController
 public class MedicalApiController {
@@ -32,9 +31,7 @@ public class MedicalApiController {
 	
 	@Autowired
 	SendEMailService sendEMailService;
-	
-	@Autowired
-	CreateDirectoryService createDirectoryService;
+ 
 	@Autowired
 	PharmacySubscriptionDetailsRepository pharmacySubscriptionDetailsRepository;
 	
@@ -80,8 +77,7 @@ public class MedicalApiController {
 		
 		try {
 			medicalDetailsRes=medicalDetailsRepository.save(medicalDetails); 
-			if(medicalDetails.getMedicalId()!=0)
-				createDirectoryService.createNewDirectorForPharmacy(medicalDetailsRes.getMedicalId()+"");
+			 
 			medicalDetailsRes.setPassword("");
 		System.out.println(medicalDetailsRes.toString());
 		 

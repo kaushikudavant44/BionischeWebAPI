@@ -730,19 +730,28 @@ public class LabPatientApiConrtoller {
 			
 			
 			int reportStatusRes=patientReportsDetailsRepository.updatePaymentStatusByAppointmentId(appointmentId, txnStatus);
-			if(reportStatusRes>0 ) {
+		 
+			if(resTransaction>0 ) {
 				
 				PatientDetails patientDetails=patientDetailsRepository.findByPatientId(labAppointmentDetails.getPatientId());
 				LabDetails labDetails=labDetailsRepository.findByLabId(labAppointmentDetails.getLabAppId());
 				
 				info.setError(true);
 				info.setMessage("Payment updated");
-			
+			try {
 				sendTextMessageService.sendTextSms("Transaction Id"+labAppointmentDetails.getTxnId()+" "+patientDetails.getfName()+" "+patientDetails.getlName()+" your lab report payment "+reportAmount+" Rs. done successfully for lab"+ labDetails.getLabName()+".", patientDetails.getContactNo());
 			//	sendTextMessageService.sendTextSms("Transaction Id"+labAppointmentDetails.getTxnId()+" "+labDetails.getLabName()+" your lab report payment "+reportAmount+" Rs. done successfully by ."+patientDetails.getfName()+" "+patientDetails.getlName()+".", labDetails.getContact());
-				
+			}
+			catch (Exception e1) {
+				System.out.println(e1.getMessage());
+			}
+			try {
 				 	 String msg="Transaction Id"+labAppointmentDetails.getTxnId()+" "+labDetails.getLabName()+" Appointment payment "+reportAmount+" rs. done successfully by ."+patientDetails.getfName()+" "+patientDetails.getlName()+", "+ labDetails.getContact();
 				sendFcmNotificationService.notificationOnWeb(labDetails.getToken(),"New Appointment Booked", msg, "");
+			}
+			catch (Exception e2) {
+				System.out.println(e2.getMessage());
+			}
 			}
 			else {
 				info.setError(true);

@@ -8,7 +8,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random; 
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,7 +57,6 @@ import com.bionische.biotech.repository.PatientNotificationRepository;
 import com.bionische.biotech.repository.SharingReportWithDocRepository;
 import com.bionische.biotech.repository.TransactionDetailsRepository;
 import com.bionische.biotech.repository.WalletDetailsRepository;
-import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.SendEMailService;
 import com.bionische.biotech.service.SendFcmNotificationService;
 import com.bionische.biotech.service.SendTextMessageService;
@@ -150,9 +149,7 @@ SharingReportWithDocRepository sharingReportWithDocRepository;
  
 @Autowired
 LabSubscriptionDetailsRepository labSubscriptionDetailsRepository;
-
-@Autowired
-CreateDirectoryService createDirectoryService;
+ 
 
 @Autowired
 LabAppOfLastThirtyDaysRepository labAppOfLastThirtyDaysRepository;
@@ -1091,8 +1088,7 @@ System.out.println(e.getMessage());
 		try {
 			
 			labDetailsRes=labDetailsRepository.save(labDetails);  
-			if(labDetails.getLabId()!=0)
-				createDirectoryService.createNewDirectorForLab(labDetailsRes.getLabId()+"");
+			 
 			sendEMailService.sendMail("Your Lab has been Successfully Registered", "Your Lab has been Successfully Registered", labDetailsRes.getEmail());
 			 
 		}

@@ -116,7 +116,6 @@ import com.bionische.biotech.repository.StateRepository;
 import com.bionische.biotech.repository.TermsAndConditionsRepository;
 import com.bionische.biotech.repository.WalletDetailsRepository;
 import com.bionische.biotech.repository.lab.LabAppointmentDetailsRepository;
-import com.bionische.biotech.service.CreateDirectoryService;
 import com.bionische.biotech.service.FixDoctorScheduleService;
 import com.bionische.biotech.service.SendEMailService;
 import com.bionische.biotech.service.SendFcmNotificationService;
@@ -235,9 +234,7 @@ public class RestApiController {
 
 	@Autowired
 	PatientMemberRelationRepository patientMemberRelationRepository;
-
-	@Autowired
-	CreateDirectoryService createDirectoryService;
+ 
 
 	@Autowired
 	DoctorNotificationRepository doctorNotificationRepository;
@@ -329,9 +326,7 @@ public class RestApiController {
 			System.out.println("Refferal Code is= " + reffCode);
 
 			doctorDetailsRes = doctorDetailsRepository.save(doctorDetails);
-			if (doctorDetails.getDoctorId() != 0) {
-				createDirectoryService.createNewDirectorForDoctor(doctorDetailsRes.getDoctorId() + "");
-			}
+			 
 			doctorDetailsRes.setPassword("");
 			System.out.println(doctorDetailsRes.toString());
 
@@ -420,9 +415,7 @@ public class RestApiController {
 			}
 
 			patientDetailsRes = patientDetailsRepository.save(patientDetails);
-			if (patientDetails.getPatientId() != 0)
-				createDirectoryService.createNewDirectorForPatient(patientDetailsRes.getPatientId() + "");
-			System.out.println(patientDetailsRes.toString());
+			 
 
 			if (patientDetailsRes != null) {
 				// GetPatientContactDetailsById
