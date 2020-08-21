@@ -17,15 +17,6 @@ import com.bionische.biotech.model.Info;
 
 
 /*
-aws.access.key.id =AKIA2RPEIHRMV3VIZB3J
-aws.access.key.secret =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
-aws.region = ap-south-1
-aws.s3.audio.bucket =elasticbeanstalk-ap-south-1-724717550681
-*/
-
-
-
-/*
 <dependency>
 <groupId>com.amazonaws</groupId>
 <artifactId>aws-java-sdk</artifactId>
